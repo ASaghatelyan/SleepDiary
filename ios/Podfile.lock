@@ -353,7 +353,7 @@ PODS:
     - React-Core
   - RNFileViewer (2.1.5):
     - React-Core
-  - RNGestureHandler (2.2.0):
+  - RNGestureHandler (2.1.1):
     - React-Core
   - RNScreens (3.11.0):
     - React-Core
@@ -583,7 +583,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
   RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
-  RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
+  RNGestureHandler: e1ad51d31a580755079d5124d3ab66f0fcaa8311
   RNScreens: fd535547baa4ef8aeaee1a8b1e3ffd17b8df44a4
   RNStoreReview: d7d2a006e14030fe101cac9da487a17f98d73eff
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121

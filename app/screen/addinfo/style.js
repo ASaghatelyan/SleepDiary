@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 35
+        marginBottom:15,
+        marginTop:22
     },
     weeKDaysForm: {
         width: 54,
@@ -42,11 +43,11 @@ const styles = StyleSheet.create({
         fontFamily: "Quicksand-Regular",
     },
     weekSide: {
-
         flex: 1,
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginTop: 35
     },
     week: {
         fontSize: 18,
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 13,
     },
     addFormImg: {
         width: 25,
@@ -630,3 +630,57 @@ export default styles
 //       </ScrollView>
 //   );
 // }
+
+
+// {weekCount.map((item, index) => { 
+                            
+//     return  item.map((item,index)=>{ 
+//           return (
+//               <View key={index}>
+//                   <TouchableOpacity onPress={() => {
+//                       console.log(index);
+//                       moment().format('d') > index ? (setActiveColor(!activColor),
+//                           setActiveIndex(index)) : null
+//                   }}
+//                       style={
+//                           [styles.weeKDaysForm,
+//                           {
+//                               borderTopLeftRadius: index === 0 ? 10 : 0,
+//                               borderBottomLeftRadius: index === 0 ? 10 : 0,
+//                               borderTopRightRadius: index === 6 ? 10 : 0,
+//                               borderBottomEndRadius: index === 6 ? 10 : 0,
+//                               backgroundColor: activeIndex === index ? '#FFC430' : null
+//                           },
+//                           ]}>
+//                       <Text
+//                           style={[styles.weeKDaysText, { color: activeIndex === index ? '#FFF' : '#2B91BF' }]}>{item.week}</Text>
+//                   </TouchableOpacity>
+//               </View>
+//           )
+//       })
+
+// })}
+
+// {weekDay.map((item, index) => {
+//     return (
+//         <View key={index}>
+//             <TouchableOpacity onPress={() => {
+//                 moment().format('d') > index ? (setActiveColor(!activColor),
+//                     setActiveIndex(index)) : null
+//             }}
+//                 style={
+//                     [styles.weeKDaysForm,
+//                     {
+//                         borderTopLeftRadius: index === 0 ? 10 : 0,
+//                         borderBottomLeftRadius: index === 0 ? 10 : 0,
+//                         borderTopRightRadius: index === 6 ? 10 : 0,
+//                         borderBottomEndRadius: index === 6 ? 10 : 0,
+//                         backgroundColor: activeIndex === index ? '#FFC430' : null
+//                     },
+//                     ]}>
+//                 <Text
+//                     style={[styles.weeKDaysText, { color: activeIndex === index ? '#FFF' : '#2B91BF' }]}>{item.week}</Text>
+//             </TouchableOpacity>
+//         </View>
+//     )
+// })}

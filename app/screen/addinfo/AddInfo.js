@@ -1,14 +1,14 @@
-import {View, ScrollView, StatusBar, Image, Text, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
+import { View, ScrollView, StatusBar, Image, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './style';
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment';
-import {GlobalButton, AcceptButton} from '../../component';
+import { GlobalButton, AcceptButton, DataPickerGlobal } from '../../component';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function AddInfo(props) {
-    const [activeIndex, setActiveIndex] = useState(0)
+    const [activeIndex, setActiveIndex] = useState((Number(moment().format('d')) - 1))
     const [activColor, setActiveColor] = useState(false)
     const [dayInfo, setDayInfo] = useState()
     const [date, setDate] = useState('00:00')
@@ -21,66 +21,127 @@ export function AddInfo(props) {
     const [openGoSleep, setOpenGoSleep] = useState(false)
     const [openFallAsleep, setOpenFallAsleep] = useState(false)
     const [openWakeUpFrom, setOpenWakeUpFrom] = useState(false)
+    const [showHide, setShowHide] = useState(false)
+    const [openDataTime, setOpenDataTime] = useState(null)
+
     const [openWakeUpTo, setOpenWakeUpTo] = useState(false)
     const [openWakeUpTime, setOpenWakeUpTime] = useState(false)
     const [openOutOfBed, setOpenOutOfBed] = useState(false)
-    const [alcoDrinks, setAlcoDrinks] = useState('00:00')
-    const [exerciseFrom, setExerciseFrom] = useState("from 00:00")
-    const [exerciseTo, setExerciseTo] = useState("to 00:00")
-    const [napFrom, setNapFrom] = useState("from 00:00")
-    const [napTo, setNapTo] = useState("to 00:00")
-    const [intoBed, setIntoBed] = useState("00:00")
-    const [goSleep, setGoSleep] = useState("00:00")
-    const [wakeUpTime, setWakeUpTime] = useState("00:00")
-    const [outOfBed, setOutOfBed] = useState("00:00")
-    const [fallAsleep, setFallAsleep] = useState("00:00")
-    const [wakeUpFrom, setWakeUpFrom] = useState("from 00:00")
-    const [wakeUpTo, setWakeUpTo] = useState("to 00:00")
+    const [alcoDrinks, setAlcoDrinks] = useState({
+        x: '00:00',
+        y: ""
+    })
+    const [exerciseFrom, setExerciseFrom] = useState({
+        x: "from 00:00",
+        y: ""
+    })
+    const [exerciseTo, setExerciseTo] = useState({
+        x: "to 00:00",
+        y: " "
+    })
+    const [napFrom, setNapFrom] = useState({
+        x: "from 00:00",
+        y: " "
+    })
+    const [napTo, setNapTo] = useState({
+        x: "to 00:00",
+        y: " "
+    })
+    const [intoBed, setIntoBed] = useState({
+        x: '00:00',
+        y: " "
+    })
+    const [goSleep, setGoSleep] = useState({
+        x: '00:00',
+        y: " "
+    })
+    const [wakeUpTime, setWakeUpTime] = useState({
+        x: '00:00',
+        y: Number(0)
+    })
+    const [outOfBed, setOutOfBed] = useState({
+        x: '00:00',
+        y: " "
+    })
+    const [fallAsleep, setFallAsleep] = useState({
+        x: '00:00',
+        y: " "
+    })
+    const [wakeUpFrom, setWakeUpFrom] = useState({
+        x: "to 00:00",
+        y: " "
+    })
+    const [wakeUpTo, setWakeUpTo] = useState({
+        x: "to 00:00",
+        y: " "
+    })
     const [medInput, setMedInput] = useState('')
     const [textAreaInput, setTextAreaInput] = useState('')
     const [loading, setLoading] = useState(false)
-    const [saveData, setSaveData] = useState('')
+    const [weekCountIndex, setWeekCountIndex] = useState(0)
     const [allData, setAllData] = useState([])
     const dayDataSave = useRef([])
     const [activeLeft, setActiveLeft] = useState(true)
     const [activeRight, setActiveRight] = useState(true)
-    const [acceptBtn, setAcceptBtn] = useState(false)
-    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "San"]
+    const [addWakeUp, setAddWakeUp] = useState([{
+        wakeUpDataFrom: 'from 00:00',
+        wakeUpDataTo: 'to 00:00',
+    }])
     const countries = ["Work", "School", "Day off", "Vacation"]
-    const [week1, setWeek1] = useState([
-            {
-                week: "Mon",
-                data: {}
-            },
-            {
-                week: "Tue",
-                data: {}
-            },
-            {
-                week: "Wed",
-                data: {}
-            },
-            {
-                week: "Thu",
-                data: {}
-            },
-            {
-                week: "Fri",
-                data: {}
-            },
-            {
-                week: "Sat",
-                data: {}
-            },
-            {
-                week: "Sat",
-                data: {}
-            },
-        ]
-    )
+    const [weekDay, setWeekDay] = useState([
+        {
+            week: "Mon",
+            data: {}
+        },
+        {
+            week: "Tue",
+            data: {}
+        },
+        {
+            week: "Wed",
+            data: {}
+        },
+        {
+            week: "Thu",
+            data: {}
+        },
+        {
+            week: "Fri",
+            data: {}
+        },
+        {
+            week: "Sat",
+            data: {}
+        },
+        {
+            week: "Sat",
+            data: {}
+        },
+    ])
+    const [weekCount, setWeekCount] = useState(weekDay)
+    console.log(addWakeUp);
+
+    function convertMS(ms) {
+        var d, h, m, s;
+        s = Math.floor(ms / 1000);
+        m = Math.floor(s / 60);
+        s = s % 60;
+        h = Math.floor(m / 60);
+        m = m % 60;
+        d = Math.floor(h / 24);
+        h = h % 24;
+        h += d * 24;
+        // return (  h +':' +   m)
+        return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m)
+    }
+
+
+    // console.log(convertMS(exerciseFrom.y - alcoDrinks.y), 'ffffffwwwwwwwwwwwwwwww');
+    // console.log(weekDay[activeIndex].data.exerciseFrom.y);
+    // console.log(convertMS(weekDay[activeIndex].data.exerciseFrom.y - weekDay[activeIndex].data.alcoDrinks.y), 'ffffffwwwwwwwwwwwwwwww');
 
     let dayData = {
-        fullDate : week1[activeIndex].data.fullDate,
+        fullDate: weekDay[activeIndex].data.fullDate,
         dayInfo,
         alcoDrinks,
         exerciseFrom,
@@ -100,43 +161,11 @@ export function AddInfo(props) {
     }
 
 
-    useEffect(() => {
-        week1.map((data, index) => {
-            if(moment().format('ddd') === data.week){
-                setActiveIndex(index)
-            }
-        })
-    }, [])
-
-
-    useEffect(() => {
-        let arr = week1
-        if(activeIndex !== 0){
-            arr.map((data, index) => {
-                if(!Object.keys(data.data).length && activeIndex >= index){
-                    let minus = activeIndex - index
-                    data.data.fullDate = moment().subtract(minus, 'days').format('dddd, MMM DD, YYYY')
-                }
-            })
-        }
-
-    }, [activeIndex])
-    console.log(week1);
-
 
     const storeData = async (value) => {
         try {
             const jsonValue = JSON.stringify(value)
             await AsyncStorage.setItem('days', JSON.stringify(value))
-        } catch (e) {
-            // saving error
-        }
-    }
-
-    const loadData = async (value) => {
-        try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('load', JSON.stringify(true))
         } catch (e) {
             // saving error
         }
@@ -151,394 +180,283 @@ export function AddInfo(props) {
         }
     }
 
-    const getLoadData = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('load')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-            // error reading value
-        }
-    }
-
-
-    useEffect(() => {
-        getInfo()
-    }, [dayDataSave.current]);
-
-
     let getInfo = async () => {
-        let infoDay = await getData() 
+        let infoDay = await getData()
+        dayDataSave.current = infoDay
         if (infoDay === null) {
-            storeData([])
+            await storeData([])
         }
-        let arr = week1
-        infoDay.map((data, index) =>{
-            week1.map((item, i) => {
-                if(moment(data.fullDate).format('ddd') === item.week){
+        let arr = weekDay
+        infoDay.map((data, index) => {
+            weekDay.map((item, i) => {
+                if (moment(data.fullDate).format('ddd') === item.week) {
                     arr[i].data = data
                 }
             })
-        } )
-        setWeek1([...arr])
+        })
+        setWeekDay([...arr])
     }
-
-    let handleAdddata = async () => {
-        loadData(true)
-        setLoading(true)
-        let infoDay = await getData()
-        let loadingData = await loadData()
-        setAllData(infoDay)
-        let time = setTimeout(() => {
-            dayDataSave.current = infoDay
-            storeData([...infoDay, dayData])
-            setLoading(false)
-            setAcceptBtn(true)
-            clearTimeout(time)
-        }, 1500);
-        let arr = week1
-        arr[activeIndex].data = dayData
-        setWeek1([...arr])
-        setTextAreaInput('')
-        ///anel
-
-    }
+    useEffect(() => {
+        getInfo()
+    }, []);
 
     useEffect(() => {
+        moment().format('ddd') === "Thu" ? setWeekCount([weekCount, weekDay]) : null
+        weekDay.map((data, index) => {
+            if (moment().format('ddd') === data.week) {
+                setActiveIndex(index)
+            }
+        })
+    }, [])
 
-    }, [dayDataSave])
+    useEffect(() => {
+        let arr = weekDay
+        if (activeIndex !== 0) {
+            arr.map((data, index) => {
+                if (!Object.keys(data.data).length && activeIndex >= index) {
+                    let minus = activeIndex - index
+                    data.data.fullDate = moment().subtract(minus, 'days').format('dddd, MMM DD, YYYY')
+                }
+            })
+        }
+    }, [activeIndex])
 
+
+    let handleAdddata = async () => {
+        setLoading(true)
+        let infoDay = await getData()
+        setAllData(infoDay)
+        dayDataSave.current = [...infoDay, dayData]
+        await storeData([...infoDay, dayData])
+        let time = setTimeout(() => {
+            setLoading(false)
+            clearTimeout(time)
+        }, 1500);
+        let arr = weekDay
+        arr[activeIndex].data = dayData
+        setWeekDay([...arr])
+        setTextAreaInput('')
+        setAlcoDrinks({
+            x: '00:00',
+            y: ""
+        })
+        setDate('')
+        setDayInfo('')
+        setExerciseFrom({
+            x: "from 00:00",
+            y: ""
+        })
+        setExerciseTo({
+            x: "to 00:00",
+            y: " "
+        })
+        setFallAsleep({
+            x: '00:00',
+            y: " "
+        })
+        setGoSleep({
+            x: '00:00',
+            y: " "
+        })
+        setIntoBed({
+            x: '00:00',
+            y: " "
+        })
+        setMedInput('')
+        setNapFrom({
+            x: "from 00:00",
+            y: " "
+        })
+        setNapTo({
+            x: "to 00:00",
+            y: " "
+        })
+        setOutOfBed({
+            x: '00:00',
+            y: " "
+        })
+        setWakeUpFrom({
+            x: "to 00:00",
+            y: " "
+        })
+        setWakeUpTime({
+            x: '00:00',
+            y: Number(0)
+        })
+        setWakeUpTo({
+            x: "to 00:00",
+            y: " "
+        })
+    }
+    // console.log(dayDataSave.current, 'alllllll');
+    // console.log(weekCount);
+
+    function convertMtoH(n) {
+        var num = n;
+        var hours = (num / 60);
+        var rhours = Math.floor(hours);
+        var minutes = (hours - rhours) * 60;
+        var rminutes = Math.round(minutes);
+        return num = rhours + " : " + rminutes;
+    }
+
+    function convertHtoM(timeInHour) {
+        var timeParts = timeInHour.split(":");
+        return Number(timeParts[0]) * 60 + Number(timeParts[1]);
+    }
+
+    console.log(weekDay);
+    // console.log(dayDataSave.current[0].wakeUpFrom.y-dayDataSave.current[0].alcoDrinks.y);
     return (
         loading ?
             <View style={styles.activLoad}>
-                <ActivityIndicator size="small" color="#0000ff"/>
+                <ActivityIndicator size="small" color="#0000ff" />
             </View>
             :
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content'/>
+                <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
                 <View style={styles.topSide}>
                     <View style={styles.weekSide}>
                         <View>
                             <TouchableOpacity>
                                 <Image source={require('../../assets/img/leftpassive.png')}
-                                       style={{width: 10, height: 15}}/>
+                                    style={{ width: 10, height: 15 }} />
                             </TouchableOpacity>
                         </View>
                         <Text style={styles.week}>Week 1</Text>
                         <View>
                             <TouchableOpacity>
-                                <Image source={require('../../assets/img/right.png')} style={{width: 10, height: 15}}/>
+                                <Image source={require('../../assets/img/right.png')} style={{ width: 10, height: 15 }} />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.weekDayName}>
-                        {week1.map((item, index) => {
+                        {weekDay.map((item, index) => {
                             return (
-                                    <View>
-                                        <TouchableOpacity onPress={() => {
-                                            moment().format('d') > index ? (setActiveColor(!activColor),
-                                                setActiveIndex(index),
-                                                console.log(index)) : null
-                                        }
-                                        }
-                                                          style={
-                                                              [styles.weeKDaysForm,
-                                                                  {
-                                                                      borderTopLeftRadius: index === 0 ? 10 : 0,
-                                                                      borderBottomLeftRadius: index === 0 ? 10 : 0,
-                                                                      borderTopRightRadius: index === 6 ? 10 : 0,
-                                                                      borderBottomEndRadius: index === 6 ? 10 : 0,
-                                                                      backgroundColor: activeIndex === index ? '#FFC430' : null
-                                                                  },
-
-                                                              ]}>
-                                            <Text
-                                                style={[styles.weeKDaysText, {color: activeIndex === index ? '#FFF' : '#2B91BF'}]}>{item.week}</Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                <View key={index}>
+                                    <TouchableOpacity onPress={() => {
+                                        setAddWakeUp([...[{
+                                            wakeUpDataFrom: 'from 00:00',
+                                            wakeUpDataTo: 'to 00:00',
+                                        }]])
+                                        moment().format('d') > index ? (setActiveColor(!activColor),
+                                            setActiveIndex(index)) : null
+                                    }}
+                                        style={
+                                            [styles.weeKDaysForm,
+                                            {
+                                                borderTopLeftRadius: index === 0 ? 10 : 0,
+                                                borderBottomLeftRadius: index === 0 ? 10 : 0,
+                                                borderTopRightRadius: index === 6 ? 10 : 0,
+                                                borderBottomEndRadius: index === 6 ? 10 : 0,
+                                                backgroundColor: activeIndex === index ? '#FFC430' : null
+                                            },
+                                            ]}>
+                                        <Text
+                                            style={[styles.weeKDaysText, { color: activeIndex === index ? '#FFF' : '#2B91BF' }]}>{item.week}</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )
                         })}
-
                     </View>
                 </View>
-
-                {Object.keys(week1[activeIndex].data).length > 1 ?
+                {Object.keys(weekDay[activeIndex].data).length > 1 ?
                     <View style={styles.content}>
-                        <Text style={styles.title}>{week1[activeIndex].data.fullDate}</Text>
+                        <Text style={styles.title}>{weekDay[activeIndex].data.fullDate}</Text>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Is this a Work/ School/ Day off/ Vacation?</Text>
-                            <SelectDropdown
-                                data={countries}
-                                buttonStyle={styles.selectStyle}
-                                defaultButtonText="Choose"
-                                buttonTextStyle={styles.selectText}
-                                dropdownIconPosition='right'
-                                rowTextStyle={{
-                                    color: '#2B91BF',
-                                    fontFamily: "Quicksand-Regular",
-                                }}
-                                dropdownStyle={
-                                    {
-                                        backgroundColor: '#FFF',
-                                        borderRadius: 10
-                                    }
-                                }
-                                onSelect={(selectedItem, index) => {
-                                    setDayInfo(selectedItem)
-                                }}
-                                buttonTextAfterSelection={(selectedItem, index) => {
-                                    return selectedItem
-                                }}
-                                rowTextForSelection={(item, index) => {
-                                    return item
-                                }}
-                                renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
-                                                                 style={styles.iconStyle}/>}
-                            />
+                            <TouchableOpacity style={styles.dataPicker}  >
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.dayInfo}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenAlco(true)}>
-                                <Text style={styles.selectText}>{alcoDrinks}</Text>
+                            <TouchableOpacity style={styles.dataPicker} >
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.alcoDrinks.x}</Text>
                             </TouchableOpacity>
-                            <DatePicker
-
-                                modal
-                                mode={'time'}
-                                open={openAlco}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenAlco(false)
-                                    setAlcoDrinks(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenAlco(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
-                                    <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExFrom(true)}>
-                                        <Text style={styles.selectText}>{exerciseFrom}</Text>
+                                    <TouchableOpacity style={styles.dataPicker}  >
+                                        <Text style={styles.selectText}>{weekDay[activeIndex].data.exerciseFrom.x}</Text>
                                     </TouchableOpacity>
-                                    <DatePicker
-                                        modal
-                                        mode={'time'}
-                                        open={openExFrom}
-                                        date={new Date()}
-                                        onConfirm={(time) => {
-                                            setOpenExFrom(false)
-                                            setExerciseFrom(moment(time).format('HH:mm'))
-                                        }}
-                                        onCancel={() => {
-                                            setOpenExFrom(false)
-                                        }}
-                                    />
                                 </View>
-                                <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExTo(true)}>
-                                    <Text style={styles.selectText}>{exerciseTo}</Text>
+                                <TouchableOpacity style={styles.dataPicker}  >
+                                    <Text style={styles.selectText}>{weekDay[activeIndex].data.exerciseTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openExTo}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenExTo(false)
-                                    setExerciseTo(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenExTo(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last take a nap?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
-                                    <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapFrom(true)}>
-                                        <Text style={styles.selectText}>{napFrom}</Text>
+                                    <TouchableOpacity style={styles.dataPicker} >
+                                        <Text style={styles.selectText}>{weekDay[activeIndex].data.napFrom.x}</Text>
                                     </TouchableOpacity>
-                                    <DatePicker
-                                        modal
-                                        mode={'time'}
-                                        open={openNapFrom}
-                                        date={new Date()}
-                                        onConfirm={(time) => {
-                                            setOpenNapFrom(false)
-                                            setNapFrom(moment(time).format('HH:mm'))
-                                        }}
-                                        onCancel={() => {
-                                            setOpenNapFrom(false)
-                                        }}
-                                    />
                                 </View>
-                                <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapTo(true)}>
-                                    <Text style={styles.selectText}>{napTo}</Text>
+                                <TouchableOpacity style={styles.dataPicker} >
+                                    <Text style={styles.selectText}>{weekDay[activeIndex].data.napTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openNapTo}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenNapTo(false)
-                                    setNapTo(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenNapTo(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you get into bed?</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenIntoBed(true)}>
-                                <Text style={styles.selectText}>{intoBed}</Text>
+                            <TouchableOpacity style={styles.dataPicker} >
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.intoBed.x}</Text>
                             </TouchableOpacity>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openIntoBed}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenIntoBed(false)
-                                    setIntoBed(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenIntoBed(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you turn off the lights to go sleep?</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenGoSleep(true)}>
-                                <Text style={styles.selectText}>{goSleep}</Text>
+                            <TouchableOpacity style={styles.dataPicker} >
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.goSleep.x}</Text>
                             </TouchableOpacity>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openGoSleep}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenGoSleep(false)
-                                    setGoSleep(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenGoSleep(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>How long did it take you to fall asleep?</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenFallAsleep(true)}>
-                                <Text style={styles.selectText}>{fallAsleep}</Text>
+                            <TouchableOpacity style={styles.dataPicker} >
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.fallAsleep.x}</Text>
                             </TouchableOpacity>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openFallAsleep}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenFallAsleep(false)
-                                    setFallAsleep(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenFallAsleep(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
-                                    <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpFrom(true)}>
-                                        <Text style={styles.selectText}>{wakeUpFrom}</Text>
+                                    <TouchableOpacity style={styles.dataPicker} >
+                                        <Text style={styles.selectText}>{weekDay[activeIndex].data.wakeUpFrom.x}</Text>
                                     </TouchableOpacity>
-                                    <DatePicker
-                                        modal
-                                        mode={'time'}
-                                        open={openWakeUpFrom}
-                                        date={new Date()}
-                                        onConfirm={(time) => {
-                                            setOpenWakeUpFrom(false)
-                                            setWakeUpFrom(moment(time).format('HH:mm'))
-                                        }}
-                                        onCancel={() => {
-                                            setOpenWakeUpFrom(false)
-                                        }}
-                                    />
                                 </View>
-                                <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpTo(true)}>
-                                    <Text style={styles.selectText}>{wakeUpTo}</Text>
+                                <TouchableOpacity style={styles.dataPicker} >
+                                    <Text style={styles.selectText}>{weekDay[activeIndex].data.wakeUpTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openWakeUpTo}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenWakeUpTo(false)
-                                    setWakeUpTo(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenWakeUpTo(false)
-                                }}
-                            />
                             <View style={styles.addForm}>
                                 <TouchableOpacity>
-                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg}/>
+                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What was your final wake up time?</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpTime(true)}>
-                                <Text style={styles.selectText}>{wakeUpTime}</Text>
+                            <TouchableOpacity style={styles.dataPicker} >
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.wakeUpTime.x}</Text>
                             </TouchableOpacity>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openWakeUpTime}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenWakeUpTime(false)
-                                    setWakeUpTime(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenWakeUpTime(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you get out of bed?</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenOutOfBed(true)}>
-                                <Text style={styles.selectText}>{outOfBed}</Text>
+                            <TouchableOpacity style={styles.dataPicker}>
+                                <Text style={styles.selectText}>{weekDay[activeIndex].data.outOfBed.x}</Text>
                             </TouchableOpacity>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openOutOfBed}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenOutOfBed(false)
-                                    setOutOfBed(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenOutOfBed(false)
-                                }}
-                            />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
-                            <View style={{position: 'relative', width: 166, height: 35}}>
+                            <View style={{ position: 'relative', width: 166, height: 35 }}>
                                 <TextInput
                                     style={styles.inputStyle}
+                                    editable={false}
                                     numberOfLines={1}
-                                    value={medInput}
+                                    value={weekDay[activeIndex].data.medInput}
                                     onChangeText={(e) => setMedInput(e)}
                                 />
                             </View>
@@ -547,19 +465,27 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>Sleep medications</Text>
                             <TextInput
                                 placeholderTextColor={'#2B91BF'}
+                                editable={false}
                                 style={styles.textArea}
                                 numberOfLines={6}
                                 multiline={true}
-                                value={week1[activeIndex].data.textAreaInput}
+                                value={weekDay[activeIndex].data.textAreaInput}
                                 onChangeText={(e) => setTextAreaInput(e)}
                             />
                         </View>
-
-                        <AcceptButton />
+                        {weekDay.map((item, index) => {
+                            if (index === activeIndex) {
+                                return (<AcceptButton key={index} handleCount={() => {
+                                    alert(`${item.week}`)
+                                    console.log(convertMS(weekDay[activeIndex].data.exerciseFrom.y - weekDay[activeIndex].data.alcoDrinks.y))
+                                }} />)
+                            }
+                        })}
                     </View>
                     :
                     <View style={styles.content}>
-                        <Text style={styles.title}>{week1[activeIndex].data.fullDate}</Text>
+
+                        <Text style={styles.title}>{weekDay[activeIndex].data.fullDate}</Text>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Is this a Work/ School/ Day off/ Vacation?</Text>
                             <SelectDropdown
@@ -588,23 +514,27 @@ export function AddInfo(props) {
                                     return item
                                 }}
                                 renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
-                                                                 style={styles.iconStyle}/>}
+                                    style={styles.iconStyle} />}
                             />
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenAlco(true)}>
-                                <Text style={styles.selectText}>{alcoDrinks}</Text>
+                                <Text style={styles.selectText}>{alcoDrinks.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
-
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openAlco}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenAlco(false)
-                                    setAlcoDrinks(moment(time).format('HH:mm'))
+                                    console.log(new Date(time), 'rrr');
+                                    setAlcoDrinks({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenAlco(false)
@@ -613,19 +543,24 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExFrom(true)}>
-                                        <Text style={styles.selectText}>{exerciseFrom}</Text>
+                                        <Text style={styles.selectText}>{exerciseFrom.x}</Text>
                                     </TouchableOpacity>
                                     <DatePicker
+                                        is24hourSource={'device'}
                                         modal
-                                        mode={'time'}
+                                        mode={'datetime'}
                                         open={openExFrom}
                                         date={new Date()}
                                         onConfirm={(time) => {
                                             setOpenExFrom(false)
-                                            setExerciseFrom(moment(time).format('HH:mm'))
+                                            console.log(new Date(time), 'cccc');
+                                            setExerciseFrom({
+                                                x: moment(time).format('hh:mm A'),
+                                                y: new Date(time).getTime()
+                                            })
                                         }}
                                         onCancel={() => {
                                             setOpenExFrom(false)
@@ -633,17 +568,21 @@ export function AddInfo(props) {
                                     />
                                 </View>
                                 <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExTo(true)}>
-                                    <Text style={styles.selectText}>{exerciseTo}</Text>
+                                    <Text style={styles.selectText}>{exerciseTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openExTo}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenExTo(false)
-                                    setExerciseTo(moment(time).format('HH:mm'))
+                                    setExerciseTo({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenExTo(false)
@@ -652,19 +591,23 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last take a nap?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapFrom(true)}>
-                                        <Text style={styles.selectText}>{napFrom}</Text>
+                                        <Text style={styles.selectText}>{napFrom.x}</Text>
                                     </TouchableOpacity>
                                     <DatePicker
+                                        is24hourSource={'device'}
                                         modal
-                                        mode={'time'}
+                                        mode={'datetime'}
                                         open={openNapFrom}
                                         date={new Date()}
                                         onConfirm={(time) => {
                                             setOpenNapFrom(false)
-                                            setNapFrom(moment(time).format('HH:mm'))
+                                            setNapFrom({
+                                                x: moment(time).format('hh:mm A'),
+                                                y: new Date(time).getTime()
+                                            })
                                         }}
                                         onCancel={() => {
                                             setOpenNapFrom(false)
@@ -672,17 +615,21 @@ export function AddInfo(props) {
                                     />
                                 </View>
                                 <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapTo(true)}>
-                                    <Text style={styles.selectText}>{napTo}</Text>
+                                    <Text style={styles.selectText}>{napTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openNapTo}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenNapTo(false)
-                                    setNapTo(moment(time).format('HH:mm'))
+                                    setNapTo({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenNapTo(false)
@@ -692,16 +639,20 @@ export function AddInfo(props) {
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you get into bed?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenIntoBed(true)}>
-                                <Text style={styles.selectText}>{intoBed}</Text>
+                                <Text style={styles.selectText}>{intoBed.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openIntoBed}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenIntoBed(false)
-                                    setIntoBed(moment(time).format('HH:mm'))
+                                    setIntoBed({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenIntoBed(false)
@@ -711,16 +662,20 @@ export function AddInfo(props) {
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you turn off the lights to go sleep?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenGoSleep(true)}>
-                                <Text style={styles.selectText}>{goSleep}</Text>
+                                <Text style={styles.selectText}>{goSleep.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openGoSleep}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenGoSleep(false)
-                                    setGoSleep(moment(time).format('HH:mm'))
+                                    setGoSleep({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenGoSleep(false)
@@ -730,16 +685,20 @@ export function AddInfo(props) {
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>How long did it take you to fall asleep?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenFallAsleep(true)}>
-                                <Text style={styles.selectText}>{fallAsleep}</Text>
+                                <Text style={styles.selectText}>{fallAsleep.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openFallAsleep}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenFallAsleep(false)
-                                    setFallAsleep(moment(time).format('HH:mm'))
+                                    setFallAsleep({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenFallAsleep(false)
@@ -748,61 +707,74 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <View>
-                                    <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpFrom(true)}>
-                                        <Text style={styles.selectText}>{wakeUpFrom}</Text>
-                                    </TouchableOpacity>
-                                    <DatePicker
-                                        modal
-                                        mode={'time'}
-                                        open={openWakeUpFrom}
-                                        date={new Date()}
-                                        onConfirm={(time) => {
-                                            setOpenWakeUpFrom(false)
-                                            setWakeUpFrom(moment(time).format('HH:mm'))
-                                        }}
-                                        onCancel={() => {
-                                            setOpenWakeUpFrom(false)
-                                        }}
-                                    />
-                                </View>
-                                <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpTo(true)}>
-                                    <Text style={styles.selectText}>{wakeUpTo}</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <DatePicker
-                                modal
-                                mode={'time'}
-                                open={openWakeUpTo}
-                                date={new Date()}
-                                onConfirm={(time) => {
-                                    setOpenWakeUpTo(false)
-                                    setWakeUpTo(moment(time).format('HH:mm'))
-                                }}
-                                onCancel={() => {
-                                    setOpenWakeUpTo(false)
-                                }}
-                            />
+                            {addWakeUp.map((item, index) => {
+                                return (
+                                    <View key={index} style={{ marginVertical: 10 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View>
+                                                <TouchableOpacity style={styles.dataPicker} onPress={() => {
+                                                    setOpenDataTime({
+                                                        type: 'wakeUpDataFrom',
+                                                        index: index
+                                                    })
+                                                    setShowHide(true)
+                                                }}>
+                                                    <Text style={styles.selectText}>{item.wakeUpDataFrom}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <TouchableOpacity style={styles.dataPicker} onPress={() => {
+                                                setOpenDataTime({
+                                                    type: 'wakeUpDataTo',
+                                                    index: index
+                                                })
+                                                setShowHide(true)
+                                            }}>
+                                                <Text style={styles.selectText}>{item.wakeUpDataTo}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <DataPickerGlobal
+                                                    open={openWakeUpTo}
+                                                    confirm={(time) => {
+                                                        let data = [...addWakeUp];
+                                                        data[index].wakeUpDataTo = moment(time).format('HH:mm');
+                                                        setAddWakeUp([...data]);
+                                                    }}
+                                                    cancel={() => {
+
+                                                    }}
+                                                />
+                                    </View>
+                                )
+                            })}
                             <View style={styles.addForm}>
-                                <TouchableOpacity>
-                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg}/>
+                                <TouchableOpacity onPress={() => {
+                                    let obj = {
+                                        wakeUpDataFrom: 'from 00:00',
+                                        wakeUpDataTo: 'to 00:00',
+                                    }
+                                    setAddWakeUp([...addWakeUp, obj])
+                                }}>
+                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What was your final wake up time?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpTime(true)}>
-                                <Text style={styles.selectText}>{wakeUpTime}</Text>
+                                <Text style={styles.selectText}>{wakeUpTime.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openWakeUpTime}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenWakeUpTime(false)
-                                    setWakeUpTime(moment(time).format('HH:mm'))
+                                    setWakeUpTime({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenWakeUpTime(false)
@@ -812,16 +784,20 @@ export function AddInfo(props) {
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you get out of bed?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenOutOfBed(true)}>
-                                <Text style={styles.selectText}>{outOfBed}</Text>
+                                <Text style={styles.selectText}>{outOfBed.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                is24hourSource={'device'}
                                 modal
-                                mode={'time'}
+                                mode={'datetime'}
                                 open={openOutOfBed}
                                 date={new Date()}
                                 onConfirm={(time) => {
                                     setOpenOutOfBed(false)
-                                    setOutOfBed(moment(time).format('HH:mm'))
+                                    setOutOfBed({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime()
+                                    })
                                 }}
                                 onCancel={() => {
                                     setOpenOutOfBed(false)
@@ -830,7 +806,7 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
-                            <View style={{position: 'relative', width: 166, height: 35}}>
+                            <View style={{ position: 'relative', width: 166, height: 35 }}>
                                 <TextInput
                                     style={styles.inputStyle}
                                     numberOfLines={1}
@@ -851,618 +827,25 @@ export function AddInfo(props) {
                                 onChangeText={(e) => setTextAreaInput(e)}
                             />
                         </View>
-                        {/* {acceptBtn ?
-          <AcceptButton />
-          :
-          <GlobalButton text={'Save'} handlePress={handleAdddata} />
-        } */}
-                        <GlobalButton text={'Save'} handlePress={handleAdddata}/>
+                        <GlobalButton text={'Save'} handlePress={handleAdddata} />
                     </View>
                 }
-
-            </ScrollView>
+                <DataPickerGlobal
+                    showHide={showHide}
+                    open={openWakeUpFrom}
+                    confirm={(time) => {
+                        console.log(time);
+                        setShowHide(false)
+                        let data = addWakeUp;
+                        data[openDataTime.index][openDataTime.type] = moment(time).format('hh:mm A');
+                        console.log(data);
+                         setAddWakeUp([...data]);
+                    }}
+                    cancel={() => {
+                        setShowHide(false)
+                        setOpenDataTime(null)
+                    }}
+                />
+``            </ScrollView>
     );
 }
-
-
-// import { View, ScrollView, StatusBar, Image, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-// import React, { useRef, useState, useEffect } from 'react';
-// import styles from './style';
-// import DatePicker from 'react-native-date-picker'
-// import moment from 'moment';
-// import { GlobalButton, AcceptButton } from '../../component';
-// import SelectDropdown from 'react-native-select-dropdown'
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// export function AddInfo(props) {
-//   const [dayInfo, setDayInfo] = useState()
-//   const [date, setDate] = useState('00:00')
-//   const [openAlco, setOpenAlco] = useState(false)
-//   const [openExFrom, setOpenExFrom] = useState(false)
-//   const [openExTo, setOpenExTo] = useState(false)
-//   const [openNapFrom, setOpenNapFrom] = useState(false)
-//   const [openNapTo, setOpenNapTo] = useState(false)
-//   const [openIntoBed, setOpenIntoBed] = useState(false)
-//   const [openGoSleep, setOpenGoSleep] = useState(false)
-//   const [openFallAsleep, setOpenFallAsleep] = useState(false)
-//   const [openWakeUpFrom, setOpenWakeUpFrom] = useState(false)
-//   const [openWakeUpTo, setOpenWakeUpTo] = useState(false)
-//   const [openWakeUpTime, setOpenWakeUpTime] = useState(false)
-//   const [openOutOfBed, setOpenOutOfBed] = useState(false)
-//   const [alcoDrinks, setAlcoDrinks] = useState('00:00')
-//   const [exerciseFrom, setExerciseFrom] = useState("from 00:00")
-//   const [exerciseTo, setExerciseTo] = useState("to 00:00")
-//   const [napFrom, setNapFrom] = useState("from 00:00")
-//   const [napTo, setNapTo] = useState("to 00:00")
-//   const [intoBed, setIntoBed] = useState("00:00")
-//   const [goSleep, setGoSleep] = useState("00:00")
-//   const [wakeUpTime, setWakeUpTime] = useState("00:00")
-//   const [outOfBed, setOutOfBed] = useState("00:00")
-//   const [fallAsleep, setFallAsleep] = useState("00:00")
-//   const [wakeUpFrom, setWakeUpFrom] = useState("from 00:00")
-//   const [wakeUpTo, setWakeUpTo] = useState("to 00:00")
-//   const [medInput, setMedInput] = useState('')
-//   const [textAreaInput, setTextAreaInput] = useState('')
-//   const [loading, setLoading] = useState(false)
-//   const [saveData, setSaveData] = useState('')
-//   const [allData, setAllData] = useState([])
-//   const dayDataSave = useRef([])
-//   const [activeLeft, setActiveLeft] = useState(true)
-//   const [activeRight, setActiveRight] = useState(true)
-//   const [acceptBtn, setAcceptBtn] = useState(false)
-//   const [indexWeek,setIndexWeeek] = useState(0)
-//   const [newData,setNewData] = useState()
-//   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "San"]
-//   const countries = ["Work", "School", "Day off", "Vacation"]
-
-//   let dayData = {
-//     dayInfo,
-//     exerciseFrom,
-//     exerciseTo,
-//     napFrom,
-//     napTo,
-//     intoBed,
-//     goSleep,
-//     wakeUpTime,
-//     outOfBed,
-//     fallAsleep,
-//     wakeUpFrom,
-//     wakeUpTo,
-//     medInput,
-//     textAreaInput,
-//     loading
-//   }
-// console.log(newData);
-//   const storeData = async (value) => {
-//     try {
-//       const jsonValue = JSON.stringify(value)
-//       await AsyncStorage.setItem('days', JSON.stringify(value))
-//     } catch (e) {
-//       // saving error
-//     }
-//   }
-
-//   const loadData = async (value) => {
-//     try {
-//       const jsonValue = JSON.stringify(value)
-//       await AsyncStorage.setItem('load', JSON.stringify(true))
-//     } catch (e) {
-//       // saving error
-//     }
-//   }
-
-//   const getData = async () => {
-//     try {
-//       const jsonValue = await AsyncStorage.getItem('days')
-//       return jsonValue != null ? JSON.parse(jsonValue) : null;
-//     } catch (e) {
-//       // error reading value
-//     }
-//   }
-
-//   const getLoadData = async () => {
-//     try {
-//       const jsonValue = await AsyncStorage.getItem('load')
-//       return jsonValue != null ? JSON.parse(jsonValue) : null;
-//     } catch (e) {
-//       // error reading value
-//     }
-//   }
-
-
-//   useEffect(() => {
-//     getInfo()
-//   }, [dayDataSave.current]);
-
-//   let getInfo = async () => {
-//     let infoDay = await getData()
-//     let loadingData = await getLoadData()
-//     if (infoDay === null) {
-//       storeData([])
-//     }
-//     dayDataSave.current = infoDay
-//     console.log(infoDay, 'infoDayinfoDay');
-//   }
-
-//   let handleAdddata = async () => {
-//     loadData(true)
-//     setLoading(true)
-//     let infoDay = await getData()
-//     let loadingData = await loadData()
-//     setAllData(infoDay)
-//     let time = setTimeout(() => {
-//       dayDataSave.current = infoDay
-//       storeData([...infoDay, dayData])
-//       setLoading(false)
-//       setAcceptBtn(true)
-//       clearTimeout(time)
-//     }, 1500);
-//   }
-//   const data = [
-//     {
-//       week:"Mon",
-//       picker:'Choose',
-//       drink:"00:00",
-//       exercise1:"00:00",
-//       exercise2:"00:00",
-//       time1:"00:00",
-//       time2:"00:00",
-//       into:"00:00",
-//       sleep:"00:00",
-//       durring1:"00:00",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     },
-//     {
-//       week: "Tue",
-
-//       picker:'Choose',
-//       drink:"555",
-//       exercise1:"00:dsf",
-//       exercise2:"00:dsfds",
-//       time1:"00:sdfsd",
-//       time2:"00:dsfds",
-//       into:"00:dsfsdf",
-//       sleep:"00:dsfds",
-//       durring1:"00:sdf",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     },  {
-//       week: "Wed",
-
-//       picker:'Choose',
-//       drink:"00:00",
-//       exercise1:"dsfsd:00",
-//       exercise2:"00:00",
-//       time1:"00:00",
-//       time2:"00:00",
-//       into:"00:sdfsd",
-//       sleep:"00:00",
-//       durring1:"00:00",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     }, {
-//       week: "Thu",
-//       picker:'Choose',
-//       drink:"sdf:00",
-//       exercise1:"sdf:00",
-//       exercise2:"00:00",
-//       time1:"00:00",
-//       time2:"00:00",
-//       into:"00:00",
-//       sleep:"00:00",
-//       durring1:"00:00",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     }, {
-//       week: "Fri",
-
-//       picker:'Choose',
-//       drink:"00:00",
-//       exercise1:"00:00",
-//       exercise2:"00:00",
-//       time1:"00:00",
-//       time2:"00:00",
-//       into:"00:00",
-//       sleep:"00:00",
-//       durring1:"00:00",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     }, {
-//       week: "Sat",
-
-
-//       picker:'Choose',
-//       drink:"00:00",
-//       exercise1:"00:00",
-//       exercise2:"00:00",
-//       time1:"00:00",
-//       time2:"00:00",
-//       into:"00:00",
-//       sleep:"00:00",
-//       durring1:"00:00",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     },
-//     {
-//       week:"San",
-
-//       picker:'Choose',
-//       drink:"00:00",
-//       exercise1:"00:00",
-//       exercise2:"00:00",
-//       time1:"00:00",
-//       time2:"00:00",
-//       into:"00:00",
-//       sleep:"00:00",
-//       durring1:"00:00",
-//       durring2:"00:00",
-//       final:"00:00",
-//       bet:"00:00",
-//     },
-//   ]
-//   return (
-//     loading ?
-//       <View style={styles.activLoad}>
-//         <ActivityIndicator size="small" color="#0000ff" />
-//       </View>
-//       :
-//     <ScrollView contentContainerStyle={styles.scrollView}>
-//       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
-//       <View style={styles.topSide}>
-//         <View style={styles.weekDayName}>
-//           {data.map((item, index) => {
-//             // if(index === 0){
-//             //   setNewData(item)
-//             // }
-//             return (
-//               <View key={index}>
-//                 <TouchableOpacity
-//                 onPress={()=>{
-//                   setIndexWeeek(index)
-//                   setNewData(item)
-//                   console.log(item)
-//                 }}
-//                   style={
-//                     [styles.weeKDaysForm,
-//                     {
-//                       borderTopLeftRadius: index === 0 ? 10 : 0,
-//                       borderBottomLeftRadius: index === 0 ? 10 : 0,
-//                       borderTopRightRadius: index === 6 ? 10 : 0,
-//                       borderBottomEndRadius: index === 6 ? 10 : 0
-//                     }
-//                     ]} >
-//                   <Text style={styles.weeKDaysText}>{item.week}</Text>
-//                 </TouchableOpacity>
-//               </View>
-//             )
-//           })}
-//         </View>
-//         <View style={styles.weekSide}>
-//           <View>
-//             <TouchableOpacity>
-//               <Image source={require('../../assets/img/leftpassive.png')} style={{ width: 10, height: 15 }} />
-//             </TouchableOpacity>
-//           </View>
-//           <Text style={styles.week}>Week 1</Text>
-//           <View>
-//             <TouchableOpacity >
-//               <Image source={require('../../assets/img/right.png')} style={{ width: 10, height: 15 }} />
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-//       </View>
-//       <View style={styles.content}>
-//         <Text style={styles.title}>{moment().format('dddd, MMM DD, YYYY')}</Text>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>Is this a Work/ School/ Day off/ Vacation?</Text>
-//           <SelectDropdown
-//             data={countries}
-//             buttonStyle={styles.selectStyle}
-//             defaultButtonText="Choose"
-//             buttonTextStyle={styles.selectText}
-//             dropdownIconPosition='right'
-//             rowTextStyle={{
-//               color: '#2B91BF',
-//               fontFamily: "Quicksand-Regular",
-//             }}
-//             dropdownStyle={
-//               {
-//                 backgroundColor: '#FFF',
-//                 borderRadius: 10
-//               }
-//             }
-//             onSelect={(selectedItem, index) => {
-//               setDayInfo(selectedItem)
-//             }}
-//             buttonTextAfterSelection={(selectedItem, index) => {
-//               return selectedItem
-//             }}
-//             rowTextForSelection={(item, index) => {
-//               return item
-//             }}
-//             renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')} style={styles.iconStyle} />}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
-//           <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenAlco(true)}>
-//             <Text style={styles.selectText}>{alcoDrinks}</Text>
-//           </TouchableOpacity>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openAlco}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenAlco(false)
-//               setAlcoDrinks(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenAlco(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What time did you last exercise?</Text>
-//           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-//             <View>
-//               <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExFrom(true)}>
-//                 <Text style={styles.selectText}>{exerciseFrom}</Text>
-//               </TouchableOpacity>
-//               <DatePicker
-//                 modal
-//                 mode={'time'}
-//                 open={openExFrom}
-//                 date={new Date()}
-//                 onConfirm={(time) => {
-//                   setOpenExFrom(false)
-//                   setExerciseFrom(moment(time).format('HH:mm'))
-//                 }}
-//                 onCancel={() => {
-//                   setOpenExFrom(false)
-//                 }}
-//               />
-//             </View>
-//             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExTo(true)}>
-//               <Text style={styles.selectText}>{exerciseTo}</Text>
-//             </TouchableOpacity>
-//           </View>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openExTo}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenExTo(false)
-//               setExerciseTo(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenExTo(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What time did you last take a nap?</Text>
-//           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-//             <View>
-//               <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapFrom(true)}>
-//                 <Text style={styles.selectText}>{napFrom}</Text>
-//               </TouchableOpacity>
-//               <DatePicker
-//                 modal
-//                 mode={'time'}
-//                 open={openNapFrom}
-//                 date={new Date()}
-//                 onConfirm={(time) => {
-//                   setOpenNapFrom(false)
-//                   setNapFrom(moment(time).format('HH:mm'))
-//                 }}
-//                 onCancel={() => {
-//                   setOpenNapFrom(false)
-//                 }}
-//               />
-//             </View>
-//             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapTo(true)}>
-//               <Text style={styles.selectText}>{napTo}</Text>
-//             </TouchableOpacity>
-//           </View>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openNapTo}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenNapTo(false)
-//               setNapTo(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenNapTo(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What time did you get into bed?</Text>
-//           <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenIntoBed(true)}>
-//             <Text style={styles.selectText}>{intoBed}</Text>
-//           </TouchableOpacity>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openIntoBed}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenIntoBed(false)
-//               setIntoBed(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenIntoBed(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What time did you turn off the lights to go sleep?</Text>
-//           <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenGoSleep(true)}>
-//             <Text style={styles.selectText}>{goSleep}</Text>
-//           </TouchableOpacity>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openGoSleep}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenGoSleep(false)
-//               setGoSleep(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenGoSleep(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>How long did it take you to fall asleep?</Text>
-//           <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenFallAsleep(true)}>
-//             <Text style={styles.selectText}>{fallAsleep}</Text>
-//           </TouchableOpacity>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openFallAsleep}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenFallAsleep(false)
-//               setFallAsleep(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenFallAsleep(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
-//           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-//             <View>
-//               <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpFrom(true)}>
-//                 <Text style={styles.selectText}>{wakeUpFrom}</Text>
-//               </TouchableOpacity>
-//               <DatePicker
-//                 modal
-//                 mode={'time'}
-//                 open={openWakeUpFrom}
-//                 date={new Date()}
-//                 onConfirm={(time) => {
-//                   setOpenWakeUpFrom(false)
-//                   setWakeUpFrom(moment(time).format('HH:mm'))
-//                 }}
-//                 onCancel={() => {
-//                   setOpenWakeUpFrom(false)
-//                 }}
-//               />
-//             </View>
-//             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpTo(true)}>
-//               <Text style={styles.selectText}>{wakeUpTo}</Text>
-//             </TouchableOpacity>
-//           </View>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openWakeUpTo}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenWakeUpTo(false)
-//               setWakeUpTo(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenWakeUpTo(false)
-//             }}
-//           />
-//           <View style={styles.addForm}>
-//             <TouchableOpacity >
-//               <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What was your final wake up time?</Text>
-//           <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenWakeUpTime(true)}>
-//             <Text style={styles.selectText}>{wakeUpTime}</Text>
-//           </TouchableOpacity>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openWakeUpTime}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenWakeUpTime(false)
-//               setWakeUpTime(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenWakeUpTime(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>What time did you get out of bed?</Text>
-//           <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenOutOfBed(true)}>
-//             <Text style={styles.selectText}>{outOfBed}</Text>
-//           </TouchableOpacity>
-//           <DatePicker
-//             modal
-//             mode={'time'}
-//             open={openOutOfBed}
-//             date={new Date()}
-//             onConfirm={(time) => {
-//               setOpenOutOfBed(false)
-//               setOutOfBed(moment(time).format('HH:mm'))
-//             }}
-//             onCancel={() => {
-//               setOpenOutOfBed(false)
-//             }}
-//           />
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>Sleep medications</Text>
-//           <View style={{ position: 'relative', width: 166, height: 35 }}>
-//             <TextInput
-//               style={styles.inputStyle}
-//               numberOfLines={1}
-//               value={medInput}
-//               onChangeText={(e) => setMedInput(e)}
-//             />
-//           </View>
-//         </View>
-//         <View style={styles.chooseType}>
-//           <Text style={styles.globalText}>Sleep medications</Text>
-//           <TextInput
-//             placeholder='Record any other factors that may affect your sleep:'
-//             placeholderTextColor={'#2B91BF'}
-//             style={styles.textArea}
-//             numberOfLines={6}
-//             multiline={true}
-//             value={textAreaInput}
-//             onChangeText={(e) => setTextAreaInput(e)}
-//           />
-//         </View>
-//         {data.map((item,index) =>{
-//             return(
-//               <View>
-//                 <Text style={{color:"red"}}>ddd</Text>
-//               </View>
-//             )
-//         })}
-//         {/* {acceptBtn ?
-//           <AcceptButton />
-//           :
-//           <GlobalButton text={'Save'} handlePress={handleAdddata} />
-//         } */}
-//         <GlobalButton text={'Save'} handlePress={handleAdddata} />
-//       </View>
-//     </ScrollView>
-//   );
-// }
