@@ -5,9 +5,10 @@ import styles from './style';
 export function DataPickerGlobal(props) {
     return (
         <DatePicker
-            is24hourSource={'device'}
-            modal
-            mode={'datetime'}
+        is24hourSource={'device'}
+        // textColor='#FFF'
+        modal
+        mode={'datetime'}
             open={props.showHide}
             date={new Date()}
             onConfirm={props.confirm}

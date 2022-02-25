@@ -1,8 +1,8 @@
-import { View, ScrollView, StatusBar, Image, Text, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { View, ScrollView, StatusBar, Image, Text, Modal, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import styles from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ExportPdf  from './ExportPdf';
+import ExportPdf from './ExportPdf';
 import WebView from 'react-native-webview';
 import TabeleComp from './TabeleComp';
 
@@ -62,12 +62,13 @@ const htmlContent = `
         </html>
       `;
 
-export function GeneralInfo() {
+export function GeneralInfo(props) {
 
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
-       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
+      <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
       <View style={styles.topSide}>
         <Text style={styles.headerText}>Information</Text>
       </View>
@@ -77,20 +78,58 @@ export function GeneralInfo() {
         <Text style={styles.text}>This means that the information you put in will be erased if you delete the app. </Text>
         <Text style={styles.text}>It also means that only the operator of the app will have access to user information.</Text>
         <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn}  onPress={async()=>{
-            let data = await AsyncStorage.removeItem('days')
+          <TouchableOpacity style={styles.btn} onPress={() => {
+            setModalVisible(true)
           }}>
             <Image source={require('../../assets/img/reset.png')} style={styles.vectorImg} />
             <Text style={styles.btnText}>Reset Data</Text>
           </TouchableOpacity>
         </View>
       </View>
-      {/*<ExportPdf/>*/}
+      {/* <ExportPdf/> */}
       {/* <TabeleComp/> */}
-      {/* <WebView
-
-  source={{html:htmlContent}}
+      {/* <WebView 
+     source={{html:htmlContent}}
    /> */}
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Are you sure,that you want to delete all data?</Text>
+            <View style={styles.modalBtnView}>
+              <View>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>No</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={async () => {
+                    let data = await AsyncStorage.removeItem('days')
+                    let removeStartDate = await AsyncStorage.removeItem('start')
+                    let removeWeekData = await AsyncStorage.removeItem('weekData')
+                    setModalVisible(!modalVisible)
+                    props.navigation.replace('Start')
+                  }}
+                >
+                  <Text style={styles.textStyle}>Yes</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }

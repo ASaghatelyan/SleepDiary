@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import React from 'react';
-import { Start ,Splash} from '../screen';
+import { Start, Splash } from '../screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
@@ -10,11 +10,11 @@ export default function StackNavigation(props) {
     return (
         <NavigationContainer>
             <Stack.Navigator
-            screenOptions={{
+                screenOptions={{
                     headerShown: false
                 }}>
-            {/*<Stack.Screen name="Splash" component={Splash} />*/}
-            {/*    <Stack.Screen name="Start" component={Start} />*/}
+                <Stack.Screen name="Splash" component={Splash} />
+                <Stack.Screen name="Start" component={Start} />
                 <Stack.Screen name="TabNavigation" component={TabNavigation} />
 
             </Stack.Navigator>

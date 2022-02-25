@@ -5,17 +5,24 @@ import { GlobalButton, Logo } from '../../component';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import moment from 'moment';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Start(props) {
     const [dayInfo, setDayInfo] = useState()
     const [modalVisible, setModalVisible] = useState(false);
     const [input, setInput] = useState()
 
+
+    const startDate = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('start', JSON.stringify(value))
+        } catch (e) {
+        }
+    }
     return (
         <ScrollView contentContainerStyle={styles.scrollView}>
             <StatusBar backgroundColor={'#FFFFFF'} barStyle='dark-content' />
-
             <Logo />
             <View style={styles.groupView}>
                 <Image source={require('../../assets/img/group.png')} style={styles.group} />
@@ -35,7 +42,10 @@ export function Start(props) {
                 </TouchableOpacity>
             </View>
             <View>
-                <GlobalButton text={'Continue'} handlePress={() => props.navigation.replace('TabNavigation')} />
+                <GlobalButton text={'Continue'} handlePress={() => {
+                    startDate(dayInfo)
+                    props.navigation.replace('TabNavigation')
+                }} />
                 <Modal
                     style={{ width: 500, height: 500 }}
                     animationType="slide"
@@ -46,8 +56,9 @@ export function Start(props) {
                         setModalVisible(!modalVisible);
                     }}>
                     <Calendar
-                        maxDate={`${moment().format('DD MMM YYYY')}`}
+                        maxDate={`${moment(new Date()).format('DD MMM YYYY')}`}
                         renderHeader={(date) => {
+                            console.log(date);
                             return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
                         }}
                         onDayLongPress={(e) => {
@@ -65,6 +76,7 @@ export function Start(props) {
                         }}
                         onDayPress={(e) => {
                             setInput(moment(e).format('DD MMM YYYY'))
+                            setDayInfo(moment(e).format('DD MMM YYYY'))
                             setModalVisible(!modalVisible)
                         }}
                         firstDay={1}

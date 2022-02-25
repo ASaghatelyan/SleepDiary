@@ -136,6 +136,47 @@ const styles = StyleSheet.create({
     selectText: {
         color: '#2B91BF',
         fontFamily: "Quicksand-Regular",
+    },
+    modalView: {
+        width: '90%',
+        height: '30%',
+        backgroundColor: '#EFEFEF',
+        paddingVertical:30,
+        paddingHorizontal:20,
+        borderRadius:10,
+        alignItems:'center',
+        justifyContent:'space-between'
+    },
+    centeredView: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center' 
+    },
+    modalBtnView:{
+        width:'100%',
+        flexDirection:'row',
+        justifyContent:'space-between',
+        paddingHorizontal:40
+    },
+    button:{
+        alignItems:'center',
+        justifyContent:'center', 
+        width:70,
+        height:30,
+    },
+    modalText:{
+        fontFamily: "Quicksand-Bold",
+        fontSize: 16,
+        lineHeight: 22,
+        color: '#00405E',
+        textAlign:'center'
+        
+    },
+    textStyle:{
+        fontFamily: "Quicksand-Medium",
+        fontSize: 14,
+        marginLeft: 12,
+        color: '#00405E'
     }
 })
 
