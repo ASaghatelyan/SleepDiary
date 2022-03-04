@@ -55,7 +55,16 @@ export function Start(props) {
                         Alert.alert("Modal has been closed.");
                         setModalVisible(!modalVisible);
                     }}>
+
                     <Calendar
+                       hideArrows={true}
+                       disableMonthChange={true}
+                       enableSwipeMonths={true}
+                        minDate={`${(moment(new Date()).format('DD MMM YYYY'))}`}
+                        renderHeader={(date) => {
+                            console.log(date);
+                            return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
+                        }}
                         maxDate={`${moment(new Date()).format('DD MMM YYYY')}`}
                         renderHeader={(date) => {
                             console.log(date);
@@ -70,20 +79,19 @@ export function Start(props) {
                         onPressArrowLeft={(goBack) => {
                             goBack()
                         }}
+                        
                         enableSwipeMonths
                         onPressArrowRight={(goFuture) => {
                             goFuture()
                         }}
                         onDayPress={(e) => {
-                            setInput(moment(e).format('DD MMM YYYY'))
-                            setDayInfo(moment(e).format('DD MMM YYYY'))
+                            setInput(moment(e.dateString).format('DD MMM YYYY'))
+                            setDayInfo(moment(e.dateString).format('DD MMM YYYY'))
                             setModalVisible(!modalVisible)
                         }}
                         firstDay={1}
-                        style={{ height: "100%" }
-                        }
+                        style={{ height: "100%" }}
                     />
-                    <CalendarList />
                 </Modal>
             </View>
         </ScrollView>

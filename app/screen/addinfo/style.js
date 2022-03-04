@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#EFEFEF',
         flex: 1,
         height: 132,
-        paddingHorizontal: 16
     },
     weekDayName: {
         width: '100%',
@@ -147,10 +146,39 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'space-between'
     },
+    modalViewTime:{
+        width: '80%',
+        height: 200,
+        backgroundColor: '#EFEFEF',
+        paddingVertical:30,
+        paddingHorizontal:20,
+        borderRadius:10,
+        flexDirection:'column',
+        alignItems:'center',
+        justifyContent:'space-between',
+        marginVertical:50
+    },
+    infoTextInput:{
+        marginTop:30,
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'space-between', 
+    },
+    btnModal:{
+        width:"100%",
+        alignItems:'center',
+        flexDirection:'row',
+        justifyContent:'flex-end', 
+    },
+    btnModalTetx:{
+        color:'#009688',
+        fontSize:14,
+        fontWeight:'bold'
+    },
     centeredView: {
         flex:1,
         alignItems: 'center',
-        justifyContent: 'center' 
+        justifyContent: 'center' , 
     },
     modalBtnView:{
         width:'100%',
@@ -169,8 +197,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 22,
         color: '#00405E',
-        textAlign:'center'
-        
+        textAlign:'center' 
     },
     textStyle:{
         fontFamily: "Quicksand-Medium",

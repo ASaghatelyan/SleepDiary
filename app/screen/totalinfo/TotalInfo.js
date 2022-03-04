@@ -7,13 +7,18 @@ import PureChart from 'react-native-pure-chart';
 import moment from "moment";
 
 export function TotalInfo(props) {
+  const [results,setResults]=useState([{}])
   const [starCount, setStarCount] = useState(0)
   const [allData, setAllData] = useState([])
   const [sleepTime, setSleepTime] = useState(0)
   const [effectiveSleep, setEffectiveSleep] = useState()
   const [avergeStarsCount, setAvergeStarsCount] = useState()
   const [avergeTimInBed, setAvergeTimeInBed] = useState()
+  const [avergeAwakeningsTime, setAvergeAwakeningsTime] = useState()
+  const [avergeNapTime, setAvergeNapTime] = useState()
+  const [avergeFallASleepTime, setAvergeFallASleepTime] = useState()
   const [count, setCount] = useState(0)
+  const [show,setShow]=useState(false)
   const weekDays = ["1", "2", "3", "4", "5", "6", "7", '8', 'All']
   const data = [
     {
@@ -35,43 +40,30 @@ export function TotalInfo(props) {
       title: 'Averge sleep quality',
     },
   ]
-
-
+ 
+  let first=results.map((item)=>  ( { x: `2022-03-04`, y: item.sleepTime }) ) 
+  let second = results.map((item)=>  ( { x: `2022-03-04`, y: item.awakenings }) ) 
+  let third = results.map((item)=>  ( { x: `2022-03-04`, y: item.fallaSleepTime }) ) 
+ 
   let sampleData = [
     {
       seriesName: 'series1',
-      data: [
-        { x: '2018-02-01', y: 30 },
-        { x: '2018-02-02', y: 200 },
-        { x: '2018-02-03', y: 170 },
-        { x: '2018-02-04', y: 250 },
-        { x: '2018-02-05', y: 10 }
-      ],
+      data: first,
       color: '#297AB1'
     },
     {
       seriesName: 'series2',
-      data: [
-        { x: '2018-02-01', y: 20 },
-        { x: '2018-02-02', y: 100 },
-        { x: '2018-02-03', y: 140 },
-        { x: '2018-02-04', y: 550 },
-        { x: '2018-02-05', y: 40 }
-      ],
+      data: second,
       color: 'yellow'
     },
     {
       seriesName: 'series3',
-      data: [
-        { x: '2018-02-01', y: 40 },
-        { x: '2018-02-02', y: 240 },
-        { x: '2018-02-03', y: 140 },
-        { x: '2018-02-04', y: 230 },
-        { x: '2018-02-05', y: 20 }
-      ],
-      color: '#297AB1'
+      data: third,
+      color: '#AF7AB1'
     },
   ]
+
+
 
   function convertMtoH(n) {
     var num = n;
@@ -108,34 +100,42 @@ export function TotalInfo(props) {
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
       getInfo()
+      setShow(false)
     });
     return unsubscribe;
   }, [props.navigation]);
 
   let getInfo = async () => {
-    let infoDay = await getWeekData()
-    if (infoDay === null) {
-      setSleepTime(0)
-      setAvergeStarsCount(0)
-      setAvergeTimeInBed(0)
-      setEffectiveSleep(0)
-      setCount(0)
-    }
+    let infoDay = await getWeekData() 
+    // if (infoDay === null) {
+    //   setSleepTime(0)
+    //   setAvergeStarsCount(0)
+    //   setAvergeTimeInBed(0)
+    //   setEffectiveSleep(0)
+    //   setCount(0)
+    // }
     infoDay !== null && infoDay.map((item, index) => {
-      const a = []
       const starCount = []
+      const sleepTime = []
       const effectiveSleepTime = []
       const timeInTheBed = []
-
+      const awakeningsTime = []
+      const napsTime = []
+      const fallaSleep = []
+      // const  first awaking time - statr of sleep / days count  
       let x = 0
+      let res = []
+      setResults(res)
       return item.map((item, index) => {
+        Object.keys(item.data).length > 1 && res.push( item.data.results[0]);
         Object.keys(item.data).length > 1 && setCount(++x)
-        a.push(Object.keys(item.data).length > 1 && item.data.results[0].sleepTime)
-        setSleepTime(a.reduce(
+ 
+        Object.keys(item.data).length > 1 && sleepTime.push(item.data.results[0].sleepTime)
+        setSleepTime(sleepTime.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
           0))
 
-        starCount.push(Object.keys(item.data).length > 1 && item.data.starCount)
+        Object.keys(item.data).length > 1 && starCount.push(item.data.starCount)
         starCount.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
           0)
@@ -143,20 +143,38 @@ export function TotalInfo(props) {
           (previousValue, currentValue) => previousValue + currentValue,
           0));
 
-        effectiveSleepTime.push(Object.keys(item.data).length > 1 && item.data.results[0].effective)
+        Object.keys(item.data).length > 1 && effectiveSleepTime.push(item.data.results[0].effective)
         setEffectiveSleep(effectiveSleepTime.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
           0));
 
-        timeInTheBed.push(Object.keys(item.data).length > 1 && item.data.results[0].timeInBed)
+        Object.keys(item.data).length > 1 && timeInTheBed.push(item.data.results[0].timeInBed)
         setAvergeTimeInBed(timeInTheBed.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
           0))
+
+        Object.keys(item.data).length > 1 && awakeningsTime.push(item.data.results[0].awakenings)
+        setAvergeAwakeningsTime(awakeningsTime.reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          0));
+
+        Object.keys(item.data).length > 1 && fallaSleep.push(item.data.results[0].fallaSleepTime)
+        setAvergeFallASleepTime(fallaSleep.reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          0));
+
+        Object.keys(item.data).length > 1 && napsTime.push(item.data.results[0].naps)
+        setAvergeNapTime(napsTime.reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          0));
+
       })
     })
     setAllData(infoDay)
+  
+ 
   }
-
+ 
 
 
   return (
@@ -228,10 +246,17 @@ export function TotalInfo(props) {
               </View>
             )
           })}
-          {/*<PureChart data={sampleData} type='bar' />*/}
+        
         </View>
+        {show &&( <View style={{paddingHorizontal:2}}>
+          <PureChart  data={sampleData} type='bar'   
+     width={'100%'}
+     height={200}
+          
+    />
+         </View>)}
         <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity style={styles.btn} onPress={()=>setShow(!show)} >
             <Image source={require('../../assets/img/vector.png')} style={styles.vectorImg} />
             <Text style={styles.btnText}>Development</Text>
           </TouchableOpacity>

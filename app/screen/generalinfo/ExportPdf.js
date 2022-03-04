@@ -7,9 +7,7 @@ import FileViewer from 'react-native-file-viewer';
 import { Alert } from 'react-native';
 import WebView from 'react-native-webview';
 
-const data = {
-
-}
+ 
 
 const ExportPdf = () => {
   const pageOptions = {
