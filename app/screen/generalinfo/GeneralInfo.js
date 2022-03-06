@@ -1,75 +1,235 @@
 import { View, ScrollView, StatusBar, Image, Text, Modal, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ExportPdf from './ExportPdf';
 import WebView from 'react-native-webview';
 import TabeleComp from './TabeleComp';
+import moment from 'moment';
 
-const htmlContent = `
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <title>Invoice</title>
-            <link rel="license" href="https://www.opensource.org/licenses/mit-license/">
-            <style>
-              // ${htmlStyles}
-            </style>
-          </head>
-          <body>
-            <header>
-              <h1>Invoice</h1>
-             
-            </header>
-           
-              <table class="inventory">
-                <thead>
-                  <tr>
-                    <th><span>Item</span></th>
-                    <th><span>Description</span></th>
-                    <th><span>Rate</span></th>
-                    <th><span>Quantity</span></th>
-                    <th><span>Price</span></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><span>Front End Consultation</span></td>
-                    <td><span>Experience Review</span></td>
-                    <td><span data-prefix>$</span><span>amtt</span></td>
-                    <td><span>4</span></td>
-                    <td><span data-prefix>$</span><span> ddfsdfs</span></td>
-                  </tr>
-                </tbody>
-              </table>
-              <table class="balance">
-                <tr>
-                  <th><span>Total</span></th>
-                  <td><span data-prefix>$</span><span>ddddddd</span></td>
-                </tr>
-                <tr>
-                  <th><span>Amount Paid</span></th>
-                  <td><span data-prefix>$</span><span>0.00</span></td>
-                </tr>
-                <tr>
-                  <th><span>Balance Due</span></th>
-                  <td><span data-prefix>$</span><span>ddddddddd</span></td>
-                </tr>
-              </table>
-           
-            </aside>
-          </body>
-        </html>
-      `;
 
 export function GeneralInfo(props) {
-
+  // const weekState = useRef([])
+  const [weekState,setSeekState]=useState([])
   const [modalVisible, setModalVisible] = useState(false);
+console.log(  moment(new Date(1646533560000)).format('hh:mm')
+);
+console.log(new Date('Tue Mar 01 2022 00:00:00 ').getTime());
 
+  let getInfo = async () => {
+    let weekInfo = await getWeekData()
+    setSeekState(weekInfo)
+  }
+
+  const getWeekData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('weekData')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+    }
+  }
+  useEffect(() => {
+    getInfo()
+   
+  }, [])
+ 
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      getInfo()  
+    });
+    return unsubscribe;
+  }, [props.navigation ]);
+
+ 
+
+  //  weekState.current.map((item,index)=>{
+  //   // 
+  //   return   item.map((data)=>{
+  //     Object.keys(data.data).length>1 && console.log(data.data,'dddaattaa');
+  //    }) 
+
+
+  //  })
+
+  // weekState.current.map((item, index) => {
+  //   return item.map((data) => {
+
+  //   })
+  // })
+  const htmlContent = `
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Invoice</title>
+      <link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+      <style>
+        ${htmlStyles}
+      </style>
+    </head>
+    <body>
+    <div class="App">
+    <header className='headerTable'>SLEEP DIARY </header>
+    <table >
+    <thead>
+      <tr class='headerSpans'>
+        <th class='todays'><span >Today's Data</span></th>
+        <th class='week'><span >Day of the week</span></th>
+        <th class='typeOfDay'>
+          <span >Type of Day
+            <p class='type'>Work,School</p>
+            <p class='type'>Off,Vacation</p>
+          </span >
+        </th>
+        <th><span>Noon</span></th>
+        <th><span>1PM</span></th>
+        <th><span>2</span></th>
+        <th><span>3</span></th>
+        <th><span>4</span></th>
+        <th><span>5</span></th>
+        <th><span>6PM</span></th>
+        <th><span>7</span></th>
+        <th><span>8</span></th>
+        <th><span>9</span></th>
+        <th><span>10</span></th>
+        <th><span>11PM</span></th>
+        <th><span>Midnight</span></th>
+        <th><span>1AM</span></th>
+        <th><span>2</span></th>
+        <th><span>3</span></th>
+        <th><span>4</span></th>
+        <th><span>5</span></th>
+        <th><span>6AM</span></th>
+        <th><span>7</span></th>
+        <th><span>8</span></th>
+        <th><span>9</span></th>
+        <th><span>10</span></th>
+        <th><span>11AM</span></th>
+      </tr>
+    </thead>
+    ${weekState.map((item, index) => {
+    return item.map((data) => {
+      if ( Object.keys(data.data).length>1 ) 
+      {   return (
+       `<tbody>
+            <tr>
+              <th><p class='data'>${moment(data.data.fullDate).format('D/MMM/YYYY')}</p></th>
+              <th><p class='fullDate'>${moment(data.data.fullDate).format('ddd')}</p></th>
+              <th ><p class='dayInfo'>${data.data.dayInfo}</p></th>
+              <th class='splite'>
+                <span class='top-left'></span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+              <th class='splite'>
+                <span class='top-left'>L</span>
+                <span class='bottom-right'>T</span>
+              </th>
+            </tr>
+          </tbody>`
+      )}
+    })
+  })
+    }
+    </table>
+    </div>
+    </body >
+  </html >
+    `;
+ 
+           
+
+   
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
-      <View style={styles.topSide}>
+      {/* <View style={styles.topSide}>
         <Text style={styles.headerText}>Information</Text>
       </View>
       <View style={styles.bottomSide}>
@@ -85,12 +245,12 @@ export function GeneralInfo(props) {
             <Text style={styles.btnText}>Reset Data</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
       {/* <ExportPdf/> */}
       {/* <TabeleComp/> */}
-      {/* <WebView 
-     source={{html:htmlContent}}
-   /> */}
+      <WebView
+        source={{ html: htmlContent }}
+      />
       <Modal
         animationType='slide'
         transparent={true}
@@ -135,89 +295,98 @@ export function GeneralInfo(props) {
 }
 
 const htmlStyles = `
-*{
-  border: 0;
-  box-sizing: content-box;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  font-style: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
-  vertical-align: top;
+.App {
+  text-align: center;
+  width: 100%
+}
+.headerTable{
+  font-size:20px;
+  font-weight: bold;padding: 10px;
+}
+* table, th ,td{
+  position: relative;
+  border:1px solid black; 
+}
+// .headerSpans th:nth-child(n+4) {
+//   -ms-writing-mode: tb-lr;
+//   -webkit-writing-mode: vertical-lr;
+//   writing-mode: vertical-lr;
+//   // transform: rotate(-180deg);
+//   white-space: nowrap;
+// }
+.headerSpans  th span  {
+      -ms-writing-mode: tb-rl;
+      -webkit-writing-mode: vertical-rl;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+}
+.headerSpans th span{
+  font-size: 16px;
+}
+.dayInfo {
+  width: 90px;
+}
+.fullDate{
+  width: 55px;
+}
+.data{
+  width: 120px;
+}
+.splite{
+  width: 35px;
+  height: 30px;
+}
+.splite span{
+  font-size: 14px;
 }
 
-h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }
-
-/* table */
-
-table { font-size: 75%; table-layout: fixed; width: 100%; }
-table { border-collapse: separate; border-spacing: 2px; }
-th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
-th, td { border-radius: 0.25em; border-style: solid; }
-th { background: #EEE; border-color: #BBB; }
-td { border-color: #DDD; }
-
-/* page */
-
-html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; }
-html { background: #999; cursor: default; }
-
-body { box-sizing: border-box;margin: 0 auto; overflow: hidden; padding: 0.25in; }
-body { background: #FFF; border-radius: 1px; box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); }
-
-/* header */
-
-header { margin: 0 0 3em; }
-header:after { clear: both; content: ""; display: table; }
-
-header h1 { background: #000; border-radius: 0.25em; color: #FFF; margin: 0 0 1em; padding: 0.5em 0; }
-header address { float: left; font-size: 75%; font-style: normal; line-height: 1.25; margin: 0 1em 1em 0; }
-header address p { margin: 0 0 0.25em; }
-header span, header img { display: block; float: right; }
-header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; position: relative; }
-header img { max-height: 100%; max-width: 100%; }
-
-/* article */
-
-article, article address, table.meta, table.inventory { margin: 0 0 3em; }
-article:after { clear: both; content: ""; display: table; }
-article h1 { clip: rect(0 0 0 0); position: absolute; }
-
-article address { float: left; font-size: 125%; font-weight: bold; }
-
-/* table meta & balance */
-
-table.meta, table.balance { float: right; width: 36%; }
-table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
-
-/* table meta */
-
-table.meta th { width: 40%; }
-table.meta td { width: 60%; }
-
-/* table items */
-
-table.inventory { clear: both; width: 100%; }
-table.inventory th { font-weight: bold; text-align: center; }
-
-table.inventory td:nth-child(1) { width: 26%; }
-table.inventory td:nth-child(2) { width: 38%; }
-table.inventory td:nth-child(3) { text-align: right; width: 12%; }
-table.inventory td:nth-child(4) { text-align: right; width: 12%; }
-table.inventory td:nth-child(5) { text-align: right; width: 12%; }
-
-/* table balance */
-
-table.balance th, table.balance td { width: 50%; }
-table.balance td { text-align: right; }
-
-/* aside */
-
-aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
-aside h1 { border-color: #999; border-bottom-style: solid; }
+.splite::after{
+  content: "";
+  display: block;
+  position: absolute;
+  border: 1px solid black;
+  transform: rotate(133deg);
+  width: 38px;
+  top: 13px;
+  left: -7px;
+  border-radius:20px
+}
+.top-left{
+  position: absolute;
+  top: -1px;
+  left: 1;
+}
+.bottom-right{
+  position: absolute;
+  right:1;
+  bottom: -3px;
+}
+.todays{
+  // padding: 5px;
+}
+.todays span{ 
+  text-align: center;
+  line-height: 1px;
+}
+.week{
+  // width: 150px;
+  // padding: 5px;
+}
+.week span{ 
+  text-align: center;
+}
+.typeOfDay{
+  // width:150px;
+  // padding-left: 5px;
+  // padding-right:5px
+}
+.typeOfDay span{ 
+  text-align: center; 
+}
+.type{
+  font-size: 11px; 
+  text-align: center;
+  line-height: 1px;  
+}
 `;

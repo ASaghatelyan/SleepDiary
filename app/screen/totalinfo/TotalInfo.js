@@ -114,6 +114,7 @@ export function TotalInfo(props) {
     //   setEffectiveSleep(0)
     //   setCount(0)
     // }
+    console.log(infoDay);
     infoDay !== null && infoDay.map((item, index) => {
       const starCount = []
       const sleepTime = []

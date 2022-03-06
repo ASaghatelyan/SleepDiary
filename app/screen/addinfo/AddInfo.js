@@ -29,7 +29,7 @@ let Width = Dimensions.get('window').width
 
 export function AddInfo(props) {
 
-    const [activeIndex, setActiveIndex] = useState((Number(moment().format('d')) - 1))
+    const [activeIndex, setActiveIndex] = useState((Number(moment().format('d')) === 0 ? 6 : (Number(moment().format('d')) - 1)))
     const [activColor, setActiveColor] = useState(false)
     const [dayInfo, setDayInfo] = useState()
     const [date, setDate] = useState('00:00')
@@ -129,7 +129,7 @@ export function AddInfo(props) {
             naps: Number(0),
             awakenings: Number(0),
             fallaSleepTime: Number(0),
-            data:''
+            data: ''
         }
     ])
     const listRef = useRef()
@@ -188,7 +188,7 @@ export function AddInfo(props) {
         return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m)
     }
 
- 
+
     let dayData = {
         fullDate: weekDay[activeIndex].data.fullDate,
         dayInfo,
@@ -216,7 +216,7 @@ export function AddInfo(props) {
         setAlcoDrinks({
             x: '00:00',
             y: Number(0),
-            info:'A'
+            info: 'A'
         })
         setDate('')
         setDayInfo('')
@@ -314,7 +314,6 @@ export function AddInfo(props) {
         }
     }
 
-
     //---------------------Get Acync Storege data------------------------
 
     const getStartDate = async () => {
@@ -350,14 +349,15 @@ export function AddInfo(props) {
             // error reading value
         }
     }
-
-    let getInfo = async () => {
+    
+     let getInfo = async () => {
 
         let startDate = await getStartDate()
         let lastDay = await getLastDay()
         let infoDay = await getData()
         let weekData = await getWeekData()
         dayDataSave.current = infoDay
+
         // if (weekData === null) {
         //     reasetData()
         //     await weekDataStore(weekCount)
@@ -381,6 +381,15 @@ export function AddInfo(props) {
             let mon = 1
             let today = moment().isoWeekday()
             let diff = (moment(lastDay.date).diff(moment().format("YYYY-MM-DD"), 'days'))
+
+          
+            const d = new Date();
+            d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
+            let nextMon = moment(d).format('YYYY MMM DD') 
+            if(moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length-1)][0].data.fullDate=== 'undefined' ){
+                alert('It is Mon')
+            } 
+             
             // console.log(moment().startOf('isoweek').isBefore(moment(lastDay.date)), 'fffffff');
             // if (Math.ceil(diff / 7) > 1) {
             //     setWeekCount([...weekCount, ...Array(Math.ceil(diff / 7)).fill(weekDay)])
@@ -625,7 +634,7 @@ export function AddInfo(props) {
         weekCount.map((data, index) => {
             data.map(item => {
                 if (moment().format('dddd, MMM DD, YYYY') === item.data.fullDate) {
-                   
+
                     setWeekIndex(index)
                 }
             })
@@ -638,7 +647,7 @@ export function AddInfo(props) {
     }, [weekCount])
 
     useEffect(() => {
-      
+
         let arr = weekCount[weekIndex]
         if (activeIndex >= 0) {
             arr.map((data, index) => {
@@ -786,8 +795,11 @@ export function AddInfo(props) {
                                         reasetData()
                                         weekCount[weekIndex][activeIndex].data.fullDate < moment().format('dddd, MMM DD, YYYY')
                                             ? (setActiveColor(!activColor),
-                                                setActiveIndex(index)) : moment().format('d') > index ? (setActiveColor(!activColor),
-                                                    setActiveIndex(index)) : null
+                                                setActiveIndex(index)) :
+                                            moment().format('d') > index ? (setActiveColor(!activColor),
+                                                setActiveIndex(index)) :
+                                                moment().format('d') == 0 && (setActiveColor(!activColor),
+                                                    setActiveIndex(index))
                                     }}
                                         style={
                                             [styles.weeKDaysForm,
@@ -996,7 +1008,7 @@ export function AddInfo(props) {
                                     setAlcoDrinks({
                                         x: moment(time).format('hh:mm A'),
                                         y: new Date(time).getTime(),
-                                        info:"A"
+                                        info: "A"
                                     })
                                 }}
                                 onCancel={() => {
@@ -1023,7 +1035,7 @@ export function AddInfo(props) {
                                             setExerciseFrom({
                                                 x: moment(time).format('hh:mm A'),
                                                 y: new Date(time).getTime(),
-                                                info:'E'
+                                                info: 'E'
                                             })
                                         }}
                                         onCancel={() => {
@@ -1047,7 +1059,7 @@ export function AddInfo(props) {
                                     setExerciseTo({
                                         x: moment(time).format('hh:mm A'),
                                         y: new Date(time).getTime(),
-                                        info:"E"
+                                        info: "E"
                                     })
                                 }}
                                 onCancel={() => {
@@ -1074,7 +1086,7 @@ export function AddInfo(props) {
                                             setNapFrom({
                                                 x: moment(time).format('hh:mm A'),
                                                 y: new Date(time).getTime(),
-                                                info:"N"
+                                                info: "N"
                                             })
                                         }}
                                         onCancel={() => {
@@ -1113,7 +1125,7 @@ export function AddInfo(props) {
                             <DatePicker
                                 is24hourSource={'device'}
                                 // textColor='#FFF'
-                                
+
                                 modal
                                 mode={'datetime'}
                                 open={openIntoBed}
@@ -1123,7 +1135,7 @@ export function AddInfo(props) {
                                     setIntoBed({
                                         x: moment(time).format('hh:mm A'),
                                         y: new Date(time).getTime(),
-                                        info:"T"
+                                        info: "T"
                                     })
                                 }}
                                 onCancel={() => {
@@ -1172,18 +1184,18 @@ export function AddInfo(props) {
                                 <View style={styles.centeredView}>
                                     <View style={styles.modalViewTime}>
                                         <View style={styles.infoTextInput}>
-                                            <TextInput   keyboardType='number-pad' style={styles.dataPicker} onChangeText={(e) => {
+                                            <TextInput keyboardType='number-pad' style={styles.dataPicker} onChangeText={(e) => {
                                                 setFallAsleep({
                                                     x: Number(e),
                                                     y: Number(e),
                                                     info: "S"
                                                 })
                                             }} />
-                                            <Text style={ { marginLeft: 15,color:'#00405E' } }>min</Text>
+                                            <Text style={{ marginLeft: 15, color: '#00405E' }}>min</Text>
                                         </View>
                                         <View style={styles.btnModal}>
                                             <View style={{ marginRight: 40 }}>
-                                                <TouchableOpacity   onPress={() => setOpenFallAsleep(!openFallAsleep)}>
+                                                <TouchableOpacity onPress={() => setOpenFallAsleep(!openFallAsleep)}>
                                                     <Text style={styles.btnModalTetx}>CANCEL</Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -1271,12 +1283,12 @@ export function AddInfo(props) {
                                         wakeUpDataFrom: {
                                             x: 'from 00:00',
                                             y: Number(0),
-                                            info:'W'
+                                            info: 'W'
                                         },
                                         wakeUpDataTo: {
                                             x: 'to 00:00',
                                             y: Number(0),
-                                            info:'W'
+                                            info: 'W'
                                         },
                                     }
                                     setAddWakeUp([...addWakeUp, obj])
@@ -1326,7 +1338,7 @@ export function AddInfo(props) {
                                     setOutOfBed({
                                         x: moment(time).format('hh:mm A'),
                                         y: new Date(time).getTime(),
-                                        info:"U"
+                                        info: "U"
                                     })
                                 }}
                                 onCancel={() => {
