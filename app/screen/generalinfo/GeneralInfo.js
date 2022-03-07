@@ -10,11 +10,10 @@ import moment from 'moment';
 
 export function GeneralInfo(props) {
   // const weekState = useRef([])
-  const [weekState,setSeekState]=useState([])
+  const [weekState, setSeekState] = useState([])
   const [modalVisible, setModalVisible] = useState(false);
-console.log(  moment(new Date(1646533560000)).format('hh:mm')
-);
-console.log(new Date('Tue Mar 01 2022 00:00:00 ').getTime());
+
+
 
   let getInfo = async () => {
     let weekInfo = await getWeekData()
@@ -30,17 +29,17 @@ console.log(new Date('Tue Mar 01 2022 00:00:00 ').getTime());
   }
   useEffect(() => {
     getInfo()
-   
+
   }, [])
- 
+
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
-      getInfo()  
+      getInfo()
     });
     return unsubscribe;
-  }, [props.navigation ]);
+  }, [props.navigation]);
 
- 
+
 
   //  weekState.current.map((item,index)=>{
   //   // 
@@ -56,6 +55,8 @@ console.log(new Date('Tue Mar 01 2022 00:00:00 ').getTime());
 
   //   })
   // })
+
+
   const htmlContent = `
   <html>
     <head>
@@ -107,113 +108,134 @@ console.log(new Date('Tue Mar 01 2022 00:00:00 ').getTime());
       </tr>
     </thead>
     ${weekState.map((item, index) => {
+    let arr = []
+
     return item.map((data) => {
-      if ( Object.keys(data.data).length>1 ) 
-      {   return (
-       `<tbody>
+      let alco = Object.keys(data.data).length > 1 && data.data.alcoDrinks.info
+      let exerciseFrom = Object.keys(data.data).length > 1 && data.data.exerciseFrom.info
+      let exerciseTo = Object.keys(data.data).length > 1 && data.data.exerciseTo.info
+      let goToBed = Object.keys(data.data).length > 1 && data.data.intoBed.info
+      let outOfBed = Object.keys(data.data).length > 1 && data.data.outOfBed.info
+
+      Object.keys(data.data).length > 1 && console.log(data.data);
+      // let all = [alco , exerciseFrom , exerciseTo , goToBed, outOfBed]
+      let all = alco
+      let allTime = (Object.keys(data.data).length > 1 && (data.data.alcoDrinks.x || data.data.exerciseTo.x || data.data.exerciseFrom.x || data.data.intoBed.x || data.data.outOfBed.x))
+
+      Object.keys(data.data).length > 1 &&  arr.push([
+        Object.keys(data.data).length > 1 && data.data.alcoDrinks,
+        Object.keys(data.data).length > 1 && data.data.exerciseTo,
+        Object.keys(data.data).length > 1 && data.data.exerciseFrom,
+        Object.keys(data.data).length > 1 && data.data.intoBed,
+        Object.keys(data.data).length > 1 && data.data.outOfBed
+      ])
+      console.log(arr, 'ssssss');
+      if (Object.keys(data.data).length > 1) {
+        return (
+          `<tbody>
             <tr>
               <th><p class='data'>${moment(data.data.fullDate).format('D/MMM/YYYY')}</p></th>
               <th><p class='fullDate'>${moment(data.data.fullDate).format('ddd')}</p></th>
               <th ><p class='dayInfo'>${data.data.dayInfo}</p></th>
-              <th class='splite'>
-                <span class='top-left'></span>
-                <span class='bottom-right'>T</span>
+               <th class='splite'>
+                <span class='top-left'>${('06:00' <= allTime && allTime <= "06:30") ? all : ''}</span> 
+                <span class='bottom-right'>${('00:31' <= allTime && allTime < "01:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('01:00' <= allTime && allTime <= "01:30") ? all : ''}</span>
+                <span class='bottom-right'>${('01:31' <= allTime && allTime < "02:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('02:00' <= allTime && allTime <= "02:30") ? all : ''}</span>
+                <span class='bottom-right'>${('02:31' <= allTime && allTime < "03:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('03:00' <= allTime && allTime <= "03:30") ? all : ''}</span>
+                <span class='bottom-right'>${('03:31' <= allTime && allTime < "04:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('04:00' <= allTime && allTime <= "04:30") ? all : ''}</span>
+                <span class='bottom-right'>${('04:31' <= allTime && allTime < "05:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('05:00' <= allTime && allTime <= "05:30") ? all : ''}</span>
+                <span class='bottom-right'>${('05:31' <= allTime && allTime < "06:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('06:00' <= allTime && allTime <= "06:30") ? all : ''}</span>
+                <span class='bottom-right'>${('06:31' <= allTime && allTime < "07:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('07:00' <= allTime && allTime <= "07:30") ? all : ''}</span>
+                <span class='bottom-right'>${('07:31' <= allTime && allTime < "08:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('08:00' <= allTime && allTime <= "08:30") ? all : ''}</span>
+                <span class='bottom-right'>${('08:31' <= allTime && allTime < "09:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('09:00' <= allTime && allTime <= "09:30") ? all : ''}</span>
+                <span class='bottom-right'>${('09:31' <= allTime && allTime < "10:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('10:00' <= allTime && allTime <= "10:30") ? all : ''}</span>
+                <span class='bottom-right'>${('10:31' <= allTime && allTime < "11:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('11:00' <= allTime && allTime <= "11:30") ? all : ''}</span>
+                <span class='bottom-right'>${('11:31' <= allTime && allTime < "12:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('12:00' <= allTime && allTime <= "12:30") ? all : ''}</span>
+                <span class='bottom-right'>${('12:31' <= allTime && allTime < "13:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('13:00' <= allTime && allTime <= "13:30") ? all : ''}</span>
+                <span class='bottom-right'>${('13:31' <= allTime && allTime < "14:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('14:00' <= allTime && allTime <= "14:30") ? all : ''}</span>
+                <span class='bottom-right'>${('14:31' <= allTime && allTime < "15:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('15:00' <= allTime && allTime <= "15:30") ? all : ''}</span>
+                <span class='bottom-right'>${('15:31' <= allTime && allTime < "16:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('16:00' <= allTime && allTime <= "16:30") ? all : ''}</span>
+                <span class='bottom-right'>${('16:31' <= allTime && allTime < "17:00") ? all : ''}</span>
+              <th class='splite'>
+                <span class='top-left'>${('17:00' <= allTime && allTime <= "17:30") ? all : ''}</span>
+                <span class='bottom-right'>${('17:31' <= allTime && allTime < "18:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('18:00' <= allTime && allTime <= "18:30") ? all : ''}</span>
+                <span class='bottom-right'>${('18:31' <= allTime && allTime < "19:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('19:00' <= allTime && allTime <= "19:30") ? all : ''}</span>
+                <span class='bottom-right'>${('19:31' <= allTime && allTime < "20:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('20:00' <= allTime && allTime <= "20:30") ? all : ''}</span>
+                <span class='bottom-right'>${('20:31' <= allTime && allTime < "21:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('21:00' <= allTime && allTime <= "21:30") ? all : ''}</span>
+                <span class='bottom-right'>${('22:31' <= allTime && allTime < "23:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('22:00' <= allTime && allTime <= "22:30") ? all : ''}</span>
+                <span class='bottom-right'>${('22:31' <= allTime && allTime < "23:00") ? all : ''}</span>
               </th>
               <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
-              </th>
-              <th class='splite'>
-                <span class='top-left'>L</span>
-                <span class='bottom-right'>T</span>
+                <span class='top-left'>${('23:00' <= allTime && allTime <= "23:30") ? all : ''}</span>
+                <span class='bottom-right'>${('23:31' <= allTime && allTime < "00:00") ? all : ''}</span>
               </th>
             </tr>
           </tbody>`
-      )}
+        )
+      }
     })
   })
     }
@@ -222,10 +244,10 @@ console.log(new Date('Tue Mar 01 2022 00:00:00 ').getTime());
     </body >
   </html >
     `;
- 
-           
 
-   
+
+
+
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />

@@ -34,7 +34,9 @@ export function AddInfo(props) {
     const [dayInfo, setDayInfo] = useState()
     const [date, setDate] = useState('00:00')
     const [openAlco, setOpenAlco] = useState(false)
+    const [openCoffee, setOpenCoffee] = useState(false)
     const [openExFrom, setOpenExFrom] = useState(false)
+    const [openMedication, setOpenMedication] = useState(false)
     const [openExTo, setOpenExTo] = useState(false)
     const [openNapFrom, setOpenNapFrom] = useState(false)
     const [openNapTo, setOpenNapTo] = useState(false)
@@ -48,6 +50,16 @@ export function AddInfo(props) {
     const [openWakeUpTime, setOpenWakeUpTime] = useState(false)
     const [openOutOfBed, setOpenOutOfBed] = useState(false)
     const [alcoDrinks, setAlcoDrinks] = useState({
+        x: '00:00',
+        y: Number(0),
+        info: "A"
+    })
+    const [medication, setMadication] = useState({
+        x: '00:00',
+        y: Number(0),
+        info: "M"
+    })
+    const [coffee, setCoffee] = useState({
         x: '00:00',
         y: Number(0),
         info: "A"
@@ -102,7 +114,7 @@ export function AddInfo(props) {
         x: "to 00:00",
         y: Number(0)
     })
-    const [medInput, setMedInput] = useState('')
+   
     const [textAreaInput, setTextAreaInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [weekCountIndex, setWeekCountIndex] = useState(0)
@@ -203,17 +215,28 @@ export function AddInfo(props) {
         outOfBed,
         fallAsleep,
         wakeUpFrom,
-        wakeUpTo,
-        medInput,
+        wakeUpTo, 
         textAreaInput,
         loading,
         addWakeUp,
         results,
-        starCount
+        starCount,
+        medication,
+        coffee
     }
     const reasetData = () => {
         setTextAreaInput('')
         setAlcoDrinks({
+            x: '00:00',
+            y: Number(0),
+            info: 'A'
+        })
+        setMadication({
+            x: '00:00',
+            y: Number(0),
+            info: 'A'
+        })
+        setCoffee({
             x: '00:00',
             y: Number(0),
             info: 'A'
@@ -240,7 +263,7 @@ export function AddInfo(props) {
             x: '00:00',
             y: Number(0)
         })
-        setMedInput('')
+        
         setNapFrom({
             x: "from 00:00",
             y: Number(0)
@@ -349,8 +372,8 @@ export function AddInfo(props) {
             // error reading value
         }
     }
-    
-     let getInfo = async () => {
+
+    let getInfo = async () => {
 
         let startDate = await getStartDate()
         let lastDay = await getLastDay()
@@ -382,14 +405,15 @@ export function AddInfo(props) {
             let today = moment().isoWeekday()
             let diff = (moment(lastDay.date).diff(moment().format("YYYY-MM-DD"), 'days'))
 
-          
+
             const d = new Date();
             d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
-            let nextMon = moment(d).format('YYYY MMM DD') 
-            if(moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length-1)][0].data.fullDate=== 'undefined' ){
+            let nextMon = moment(d).format('YYYY MMM DD')
+
+            if (moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length - 1)][0].data.fullDate === 'undefined') {
                 alert('It is Mon')
-            } 
-             
+            }
+
             // console.log(moment().startOf('isoweek').isBefore(moment(lastDay.date)), 'fffffff');
             // if (Math.ceil(diff / 7) > 1) {
             //     setWeekCount([...weekCount, ...Array(Math.ceil(diff / 7)).fill(weekDay)])
@@ -401,8 +425,8 @@ export function AddInfo(props) {
     }
 
 
-    //------------------------- useEffect ---------------------------------
 
+    //------------------------- useEffect ---------------------------------
 
     //console.log(weekData.current.scrollToIndex());
     useEffect(() => {
@@ -829,6 +853,13 @@ export function AddInfo(props) {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
+                            <Text style={styles.globalText}>What time did you last have coffee,cola or tea?</Text>
+                            <TouchableOpacity style={styles.dataPicker}>
+                                <Text
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.coffee.x}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
@@ -917,24 +948,20 @@ export function AddInfo(props) {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
+                            <Text style={styles.globalText}>Sleep madications</Text>
+                            <TouchableOpacity style={styles.dataPicker}>
+                                <Text
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.medication.x}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you get out of bed?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.outOfBed.x}</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Sleep medications</Text>
-                            <View style={{ position: 'relative', width: 166, height: 35 }}>
-                                <TextInput
-                                    style={styles.inputStyle}
-                                    editable={false}
-                                    numberOfLines={1}
-                                    value={weekCount[weekIndex][activeIndex].data.medInput}
-                                    onChangeText={(e) => setMedInput(e)}
-                                />
-                            </View>
-                        </View>
+                      
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
                             <TextInput
@@ -989,6 +1016,31 @@ export function AddInfo(props) {
                                 }}
                                 renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
                                     style={styles.iconStyle} />}
+                            />
+                        </View>
+                        <View style={styles.chooseType}>
+                            <Text style={styles.globalText}>What time did you last have  coffee,cola or tea?</Text>
+                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenCoffee(true)}>
+                                <Text style={styles.selectText}>{coffee.x}</Text>
+                            </TouchableOpacity>
+                            <DatePicker
+                                is24hourSource={'device'}
+                                // textColor='#FFF'`
+                                modal
+                                mode={'datetime'}
+                                open={openCoffee}
+                                date={new Date()}
+                                onConfirm={(time) => {
+                                    setOpenCoffee(false)
+                                    setCoffee({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime(),
+                                        info: "C"
+                                    })
+                                }}
+                                onCancel={() => {
+                                    setOpenCoffee(false)
+                                }}
                             />
                         </View>
                         <View style={styles.chooseType}>
@@ -1348,15 +1400,30 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
-                            <View style={{ position: 'relative', width: 166, height: 35 }}>
-                                <TextInput
-                                    style={styles.inputStyle}
-                                    numberOfLines={1}
-                                    value={medInput}
-                                    onChangeText={(e) => setMedInput(e)}
-                                />
-                            </View>
+                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenMedication(true)}>
+                                <Text style={styles.selectText}>{medication.x}</Text>
+                            </TouchableOpacity>
+                            <DatePicker
+                                is24hourSource={'device'}
+                                // textColor='#FFF'
+                                modal
+                                mode={'datetime'}
+                                open={openMedication}
+                                date={new Date()}
+                                onConfirm={(time) => {
+                                    setOpenMedication(false)
+                                    setMadication({
+                                        x: moment(time).format('hh:mm A'),
+                                        y: new Date(time).getTime(),
+                                        info: "M"
+                                    })
+                                }}
+                                onCancel={() => {
+                                    setOpenMedication(false)
+                                }}
+                            />
                         </View>
+                      
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
                             <TextInput
