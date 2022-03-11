@@ -14,11 +14,11 @@ import {
     Dimensions,
     Animated
 } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import styles from './style';
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment';
-import { GlobalButton, AcceptButton, DataPickerGlobal } from '../../component';
+import {GlobalButton, AcceptButton, DataPickerGlobal} from '../../component';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StarRating from 'react-native-star-rating';
@@ -114,7 +114,7 @@ export function AddInfo(props) {
         x: "to 00:00",
         y: Number(0)
     })
-   
+
     const [textAreaInput, setTextAreaInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [weekCountIndex, setWeekCountIndex] = useState(0)
@@ -215,7 +215,7 @@ export function AddInfo(props) {
         outOfBed,
         fallAsleep,
         wakeUpFrom,
-        wakeUpTo, 
+        wakeUpTo,
         textAreaInput,
         loading,
         addWakeUp,
@@ -263,7 +263,7 @@ export function AddInfo(props) {
             x: '00:00',
             y: Number(0)
         })
-        
+
         setNapFrom({
             x: "from 00:00",
             y: Number(0)
@@ -409,7 +409,6 @@ export function AddInfo(props) {
             const d = new Date();
             d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
             let nextMon = moment(d).format('YYYY MMM DD')
-
             if (moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length - 1)][0].data.fullDate === 'undefined') {
                 alert('It is Mon')
             }
@@ -425,12 +424,11 @@ export function AddInfo(props) {
     }
 
 
-
     //------------------------- useEffect ---------------------------------
 
     //console.log(weekData.current.scrollToIndex());
     useEffect(() => {
-        scrollX.addListener(({ value }) => {
+        scrollX.addListener(({value}) => {
             setWeekIndex(Math.round(value / Width))
         })
         return (() => {
@@ -470,208 +468,250 @@ export function AddInfo(props) {
     // }, [props.navigation]);
 
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     let arr = Array(Math.ceil(1)).fill([
-    //         {
-    //             week: "Mon",
-    //             data: {
-    //                 fullDate: 'Monday, Feb 21, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //         {
-    //             week: "Tue",
-    //             data: {
-    //                 fullDate: 'Tuesday, Feb 22, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //         {
-    //             week: "Wed",
-    //             data: {
-    //                 fullDate: 'Wednesday, Feb 23, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //         {
-    //             week: "Thu",
-    //             data: {
-    //                 fullDate: 'Thursday, Feb 24, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //         {
-    //             week: "Fri",
-    //             data: {
-    //                 fullDate: 'Friday, Feb 25, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //         {
-    //             week: "Sat",
-    //             data: {
-    //                 fullDate: 'Saturday, Feb 26, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //         {
-    //             week: "San",
-    //             data: {
-    //                 fullDate: 'Sunday, Feb 27, 2022',
-    //                 dayInfo,
-    //                 alcoDrinks,
-    //                 exerciseFrom,
-    //                 exerciseTo,
-    //                 napFrom,
-    //                 napTo,
-    //                 intoBed,
-    //                 goSleep,
-    //                 wakeUpTime,
-    //                 outOfBed,
-    //                 fallAsleep,
-    //                 wakeUpFrom,
-    //                 wakeUpTo,
-    //                 medInput,
-    //                 textAreaInput,
-    //                 loading,
-    //                 addWakeUp,
-    //                 results,
-    //                 starCount
-    //             }
-    //         },
-    //     ])
-    //     moment().format('d') === "5" ? setWeekCount([...arr, ...weekCount]) : null
+        let example = [
+            {
+                week: "Mon",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+            {
+                week: "Tue",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+            {
+                week: "Wed",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+            {
+                week: "Thu",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+            {
+                week: "Fri",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+            {
+                week: "Sat",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+            {
+                week: "San",
+                data: {
+                    fullDate: '',
+                    dayInfo,
+                    alcoDrinks,
+                    exerciseFrom,
+                    exerciseTo,
+                    napFrom,
+                    napTo,
+                    intoBed,
+                    goSleep,
+                    wakeUpTime,
+                    outOfBed,
+                    fallAsleep,
+                    wakeUpFrom,
+                    wakeUpTo,
+                    textAreaInput,
+                    loading,
+                    addWakeUp,
+                    results,
+                    starCount
+                }
+            },
+        ]
 
-    // }, []) 
+        //let dayNumberAll = moment(new Date()).daysInYear();
+
+        // let weekNumber = moment(new Date(), "MM-DD-YYYY").week();
+        // let weekNumberAll = moment(new Date()).weeksInYear();
+        // let stayWeek = weekNumberAll - weekNumber
+        let arr = []
+        let arrDates = []
+        let arrDatesWeek = []
+        for (let i = 0; i < 365; i++) {
+            if (arr.length) {
+              //  arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
+                /* arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
+                 let weekDay = moment(arr[arr.length - 1]).format('dddd')
+                 if(weekDay === 'Sunday' && arrDatesWeek.length){
+
+                 }else{
+                     let ex = example
+                     for(let j = 0; j < new Array(i); j++){
+                         ex[j].data.fullDate = arr[j]
+                     }
+                     arrDatesWeek.push(ex)
+                 }*/
+            } else {
+                let ex = example
+                arr.push(moment().format('dddd, MMM DD, YYYY'))
+                // let weekDay = moment(arr[0]).format('ddd')
+                const dow = moment(arr[0]).day();
+                let difference = 7 - dow
+                for (let j = 0; j <= difference; j++) {
+                    let newDay = arr[0]
+                    let weekDay = moment(arr[0]).format('ddd')
+                    if (j !== 0) {
+                        newDay = moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(j, 'days').format('dddd, MMM DD, YYYY')
+                        weekDay = moment(newDay).format('ddd')
+
+                    }
+                    if (weekDay === 'Sun') {
+                        ex[6].data.fullDate = newDay
+                        arrDatesWeek.push(ex)
+                    } else {
+                        for (let k = 0; k < 7; k++) {
+                            if (ex[k].week === weekDay) {
+                                ex[k].data.fullDate = newDay
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        console.log(arrDatesWeek, arr);
+
+    }, [])
 
 
     useEffect(() => {
         weekCount.map((data, index) => {
             data.map(item => {
                 if (moment().format('dddd, MMM DD, YYYY') === item.data.fullDate) {
-
                     setWeekIndex(index)
                 }
             })
-
         })
         weekData.current.scrollToOffset({
             offset: (weekIndex + 1) * Width
         })
-
     }, [weekCount])
 
     useEffect(() => {
-
         let arr = weekCount[weekIndex]
         if (activeIndex >= 0) {
             arr.map((data, index) => {
@@ -690,10 +730,6 @@ export function AddInfo(props) {
         });
         return unsubscribe;
     }, [props.navigation]);
-
-
-
-
 
 
     function convertMtoH(n) {
@@ -757,13 +793,13 @@ export function AddInfo(props) {
                     <View>
                         <TouchableOpacity onPress={handleBackward}>
                             <Image source={require('../../assets/img/leftpassive.png')}
-                                style={{ width: 10, height: 15 }} />
+                                   style={{width: 10, height: 15}}/>
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.week}>Week {item.index + 1}</Text>
                     <View>
                         <TouchableOpacity onPress={handleForward}>
-                            <Image source={require('../../assets/img/right.png')} style={{ width: 10, height: 15 }} />
+                            <Image source={require('../../assets/img/right.png')} style={{width: 10, height: 15}}/>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -774,11 +810,11 @@ export function AddInfo(props) {
     return (
         loading ?
             <View style={styles.activLoad}>
-                <ActivityIndicator size="small" color="#0000ff" />
+                <ActivityIndicator size="small" color="#0000ff"/>
             </View>
             :
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
+                <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content'/>
                 <View style={styles.topSide}>
                     <View style={styles.weekSide}>
                         {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -788,7 +824,7 @@ export function AddInfo(props) {
                                 </View>
                             })}
                         </ScrollView> */}
-                        <View style={{ width: Width }}>
+                        <View style={{width: Width}}>
                             <Animated.FlatList
                                 data={weekCount}
                                 ref={weekData}
@@ -801,10 +837,10 @@ export function AddInfo(props) {
                                 onScroll={Animated.event(
                                     [{
                                         nativeEvent: {
-                                            contentOffset: { x: scrollX }
+                                            contentOffset: {x: scrollX}
                                         }
                                     }],
-                                    { useNativeDriver: false }
+                                    {useNativeDriver: false}
                                 )}
                             />
                         </View>
@@ -821,22 +857,22 @@ export function AddInfo(props) {
                                             ? (setActiveColor(!activColor),
                                                 setActiveIndex(index)) :
                                             moment().format('d') > index ? (setActiveColor(!activColor),
-                                                setActiveIndex(index)) :
+                                                    setActiveIndex(index)) :
                                                 moment().format('d') == 0 && (setActiveColor(!activColor),
                                                     setActiveIndex(index))
                                     }}
-                                        style={
-                                            [styles.weeKDaysForm,
-                                            {
-                                                borderTopLeftRadius: index === 0 ? 10 : 0,
-                                                borderBottomLeftRadius: index === 0 ? 10 : 0,
-                                                borderTopRightRadius: index === 6 ? 10 : 0,
-                                                borderBottomEndRadius: index === 6 ? 10 : 0,
-                                                backgroundColor: activeIndex === index ? '#FFC430' : null
-                                            },
-                                            ]}>
+                                                      style={
+                                                          [styles.weeKDaysForm,
+                                                              {
+                                                                  borderTopLeftRadius: index === 0 ? 10 : 0,
+                                                                  borderBottomLeftRadius: index === 0 ? 10 : 0,
+                                                                  borderTopRightRadius: index === 6 ? 10 : 0,
+                                                                  borderBottomEndRadius: index === 6 ? 10 : 0,
+                                                                  backgroundColor: activeIndex === index ? '#FFC430' : null
+                                                              },
+                                                          ]}>
                                         <Text
-                                            style={[styles.weeKDaysText, { color: activeIndex === index ? '#FFF' : '#2B91BF' }]}>{item.week}</Text>
+                                            style={[styles.weeKDaysText, {color: activeIndex === index ? '#FFF' : '#2B91BF'}]}>{item.week}</Text>
                                     </TouchableOpacity>
                                 </View>
                             )
@@ -856,7 +892,8 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>What time did you last have coffee,cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.coffee.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.coffee.x}
+                                </Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
@@ -868,7 +905,7 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker}>
                                         <Text
@@ -883,7 +920,7 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last take a nap?</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker}>
                                         <Text
@@ -921,9 +958,9 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
                             {weekCount[weekIndex][activeIndex].data.addWakeUp.map((item, index) => {
                                 return (
-                                    <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                         <View>
-                                            <TouchableOpacity style={[styles.dataPicker, { marginBottom: 15 }]}>
+                                            <TouchableOpacity style={[styles.dataPicker, {marginBottom: 15}]}>
                                                 <Text style={styles.selectText}>{item.wakeUpDataFrom.x}
                                                 </Text>
                                             </TouchableOpacity>
@@ -936,7 +973,7 @@ export function AddInfo(props) {
 
                             <View style={styles.addForm}>
                                 <TouchableOpacity>
-                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
+                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg}/>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -961,7 +998,7 @@ export function AddInfo(props) {
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.outOfBed.x}</Text>
                             </TouchableOpacity>
                         </View>
-                      
+
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
                             <TextInput
@@ -980,7 +1017,7 @@ export function AddInfo(props) {
                                 return (<AcceptButton key={index} handleCount={() => {
                                     // alert(`${item.week}`)
                                     // setModalVisible(!modalVisible);
-                                }} />)
+                                }}/>)
                             }
                         })}
                     </View>
@@ -1015,11 +1052,11 @@ export function AddInfo(props) {
                                     return item
                                 }}
                                 renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
-                                    style={styles.iconStyle} />}
+                                                                 style={styles.iconStyle}/>}
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last have  coffee,cola or tea?</Text>
+                            <Text style={styles.globalText}>What time did you last have coffee,cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenCoffee(true)}>
                                 <Text style={styles.selectText}>{coffee.x}</Text>
                             </TouchableOpacity>
@@ -1029,7 +1066,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openCoffee}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenCoffee(false)
                                     setCoffee({
@@ -1054,7 +1091,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openAlco}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenAlco(false)
                                     setAlcoDrinks({
@@ -1070,7 +1107,7 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExFrom(true)}>
                                         <Text style={styles.selectText}>{exerciseFrom.x}</Text>
@@ -1081,7 +1118,7 @@ export function AddInfo(props) {
                                         modal
                                         mode={'datetime'}
                                         open={openExFrom}
-                                        date={new Date()}
+                                        date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                         onConfirm={(time) => {
                                             setOpenExFrom(false)
                                             setExerciseFrom({
@@ -1105,7 +1142,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openExTo}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenExTo(false)
                                     setExerciseTo({
@@ -1121,7 +1158,7 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last take a nap?</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapFrom(true)}>
                                         <Text style={styles.selectText}>{napFrom.x}</Text>
@@ -1132,7 +1169,7 @@ export function AddInfo(props) {
                                         modal
                                         mode={'datetime'}
                                         open={openNapFrom}
-                                        date={new Date()}
+                                        date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                         onConfirm={(time) => {
                                             setOpenNapFrom(false)
                                             setNapFrom({
@@ -1156,7 +1193,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openNapTo}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenNapTo(false)
                                     setNapTo({
@@ -1181,7 +1218,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openIntoBed}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenIntoBed(false)
                                     setIntoBed({
@@ -1206,7 +1243,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openGoSleep}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenGoSleep(false)
                                     setGoSleep({
@@ -1224,87 +1261,13 @@ export function AddInfo(props) {
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenFallAsleep(true)}>
                                 <Text style={styles.selectText}>{fallAsleep.x}</Text>
                             </TouchableOpacity>
-
-                            <Modal
-                                animationType='slide'
-                                transparent={true}
-                                visible={openFallAsleep}
-                                onRequestClose={() => {
-                                    Alert.alert("Modal has been closed.");
-                                    setOpenFallAsleep(!openFallAsleep);
-                                }} >
-                                <View style={styles.centeredView}>
-                                    <View style={styles.modalViewTime}>
-                                        <View style={styles.infoTextInput}>
-                                            <TextInput keyboardType='number-pad' style={styles.dataPicker} onChangeText={(e) => {
-                                                setFallAsleep({
-                                                    x: Number(e),
-                                                    y: Number(e),
-                                                    info: "S"
-                                                })
-                                            }} />
-                                            <Text style={{ marginLeft: 15, color: '#00405E' }}>min</Text>
-                                        </View>
-                                        <View style={styles.btnModal}>
-                                            <View style={{ marginRight: 40 }}>
-                                                <TouchableOpacity onPress={() => setOpenFallAsleep(!openFallAsleep)}>
-                                                    <Text style={styles.btnModalTetx}>CANCEL</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                            <View>
-                                                <TouchableOpacity onPress={() => setOpenFallAsleep(!openFallAsleep)}>
-                                                    <Text style={styles.btnModalTetx}>CONFIRM</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-
-                            </Modal>
-
-
-                            {/* {     openFallAsleep && (
-                                    <DateTimePicker
-                                      testID="dateTimePicker"
-                                      value={new Date('Feb 01 2022 00:00:00')}
-                                      mode={'time'}
-                                      is24Hour={true}
-                                      display="default"
-                                      onChange={(time) => {
-                                        setOpenFallAsleep(false)
-                                        setFallAsleep({
-                                            x: moment(time).format('HH:mm'),
-                                            y: new Date(time).getTime()
-                                        })
-                                    }}
-                                    />
-                                  )} */}
-                            {/* <DatePicker
-                                is24Hour={'true'}
-                                is24hourSource={'locale'}
-                                // textColor='#FFF'
-                                modal
-                                mode={'time'}
-                                open={openFallAsleep}
-                                date={new Date('Feb 01 2022 00:00:00')}
-                                onConfirm={(time) => {
-                                    setOpenFallAsleep(false)
-                                    setFallAsleep({
-                                        x: moment(time).format('HH:mm'),
-                                        y: new Date(time).getTime()
-                                    })
-                                }}
-                                onCancel={() => {
-                                    setOpenFallAsleep(false)
-                                }}
-                            /> */}
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
                             {addWakeUp.map((item, index) => {
                                 return (
-                                    <View key={index} style={{ marginVertical: 10 }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View key={index} style={{marginVertical: 10}}>
+                                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                                             <View>
                                                 <TouchableOpacity style={styles.dataPicker} onPress={() => {
                                                     setOpenDataTime({
@@ -1345,7 +1308,7 @@ export function AddInfo(props) {
                                     }
                                     setAddWakeUp([...addWakeUp, obj])
                                 }}>
-                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
+                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg}/>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -1360,7 +1323,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openWakeUpTime}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenWakeUpTime(false)
                                     setWakeUpTime({
@@ -1384,7 +1347,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openOutOfBed}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenOutOfBed(false)
                                     setOutOfBed({
@@ -1409,7 +1372,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openMedication}
-                                date={new Date()}
+                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                                 onConfirm={(time) => {
                                     setOpenMedication(false)
                                     setMadication({
@@ -1423,7 +1386,7 @@ export function AddInfo(props) {
                                 }}
                             />
                         </View>
-                      
+
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep medications</Text>
                             <TextInput
@@ -1457,12 +1420,13 @@ export function AddInfo(props) {
                                 data: moment(weekDay[activeIndex].data.fullDate).format('YYYY-MMM-D')
                             }])
                             setModalVisible(!modalVisible)
-                        }} />
+                        }}/>
                     </View>
                 }
                 <DataPickerGlobal
                     showHide={showHide}
                     open={openWakeUpFrom}
+                    date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
                     confirm={(time) => {
                         setShowHide(false)
                         let data = addWakeUp;
@@ -1499,7 +1463,7 @@ export function AddInfo(props) {
                                 fullStar={require('../../assets/img/fullStar.png')}
                                 halfStar={require('../../assets/img/halfStar.png')}
                                 starSize={28}
-                                starStyle={{ marginTop: 16 }}
+                                starStyle={{marginTop: 16}}
                             />
                             <View style={styles.modalBtnView}>
                                 <View>
@@ -1521,6 +1485,42 @@ export function AddInfo(props) {
                             </View>
                         </View>
                     </View>
+                </Modal>
+                <Modal
+                    animationType='slide'
+                    transparent={true}
+                    visible={openFallAsleep}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setOpenFallAsleep(!openFallAsleep);
+                    }}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalViewTime}>
+                            <View style={styles.infoTextInput}>
+                                <TextInput keyboardType='number-pad' style={styles.dataPicker} onChangeText={(e) => {
+                                    setFallAsleep({
+                                        x: Number(e),
+                                        y: Number(e),
+                                        info: "S"
+                                    })
+                                }}/>
+                                <Text style={{marginLeft: 15, color: '#00405E'}}>min</Text>
+                            </View>
+                            <View style={styles.btnModal}>
+                                <View style={{marginRight: 40}}>
+                                    <TouchableOpacity onPress={() => setOpenFallAsleep(!openFallAsleep)}>
+                                        <Text style={styles.btnModalTetx}>CANCEL</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View>
+                                    <TouchableOpacity onPress={() => setOpenFallAsleep(!openFallAsleep)}>
+                                        <Text style={styles.btnModalTetx}>CONFIRM</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+
                 </Modal>
             </ScrollView>
     );

@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop:70
     },
     vectorImg: {
         width: 20,
@@ -102,7 +103,23 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginLeft: 12,
         color: '#00405E'
-    }
+    },
+    selectStyle: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#AFC7D1',
+        width: 166,
+        height: 40,
+        paddingHorizontal: 20,
+      },
+      selectText: {
+        color: '#2B91BF',
+        fontFamily: "Quicksand-Regular",
+      },
+      dowlandPdf:{
+          flexDirection:'row'
+      }
 })
 
 export default styles 
