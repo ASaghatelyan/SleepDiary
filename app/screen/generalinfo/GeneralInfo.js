@@ -25,22 +25,8 @@ export function GeneralInfo(props) {
       
       
       return item.map((data) => { 
-         
-        let x = {
-        slotInterval: 30,
-        openTime:Object.keys(data.data).length > 1 && new Date(data.data.exerciseFrom.y),
-        closeTime:Object.keys(data.data).length > 1 && new Date(data.data.exerciseTo.y)
-      }; 
-      let startTime = moment(x.openTime, "HH:mm"); 
-      let endTime = moment(x.closeTime, "HH:mm") ; 
-      let allTimes = []; 
-      let time=[]
-      while (startTime < endTime) {  
+       console.log(data.data);
       
-       time.push(startTime.format("HH:mm"))
-        allTimes.push(new Date(`${moment(data.data.fullDate).format('D/MMM/YYYY')} ${startTime.format("HH:mm")}`).getTime());  
-        startTime.add(x.slotInterval, 'minutes');
-      }
         Object.keys(data.data).length > 1 && weekData.push([...[data.data], [{
           a: Object.keys(data.data).length > 1 && data.data.alcoDrinks,
           b: Object.keys(data.data).length > 1 && data.data.exerciseTo,
@@ -49,8 +35,8 @@ export function GeneralInfo(props) {
           e: Object.keys(data.data).length > 1 && data.data.outOfBed,
           f: Object.keys(data.data).length > 1 && data.data.coffee,
           g: Object.keys(data.data).length > 1 && data.data.medication,
-          h: Object.keys(data.data).length > 1 && allTimes,
-          k: Object.keys(data.data).length > 1 && time
+          h: Object.keys(data.data).length > 1 && data.data.napTo,
+          i: Object.keys(data.data).length > 1 && data.data.napFrom,
         }
         ]]); 
       })
@@ -149,7 +135,6 @@ let [indexG, setIndexG] = useState(0)
     </thead>
     ${weekState && weekState.map((data, index) => {
       return data[1].map((val) => {  
-       console.log(val);
          return (
           `<tbody>
              <tr>
@@ -157,34 +142,34 @@ let [indexG, setIndexG] = useState(0)
                <th><p class='fullDate'>${moment(data[0].fullDate).format('ddd')}</p></th>
                <th ><p class='dayInfo'>${data[0].dayInfo}</p></th>
                 <th class='splite'>
-                ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+                ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+                ( (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) || (val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()))  ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
-                ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.f.y && val.f.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:30`).getTime() < val.g.y && val.g.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.g.info}</span>` :
+                ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
+      ( (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) || (val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.f.y && val.f.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:31`).getTime() < val.g.y && val.g.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime()) ? `<span class='bottom-right'>${val.g.info}</span>` :
                    ''}
                 </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+      ( (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ||( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) || (val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -192,28 +177,28 @@ let [indexG, setIndexG] = useState(0)
                  (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 13:30`).getTime() < val.g.y && val.g.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime()) ? `<span class='bottom-right'>${val.g.info}</span>` : ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) || (val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) )? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
+
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() <= val.b.y) && (val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) || ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <=val.b.y) && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
                (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.f.y && val.f.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.f.info}</span>` :
                  (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() < val.g.y && val.g.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ? `<span class='bottom-right'>${val.g.info}</span>` :
-                
-                 (val.h.map((item )=>  (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() <=item &&  item <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime()) ))
-                   ? `<span class='bottom-right'>Y</span>` : '' } 
+                  // ( val.h.map((gg)=>{ return ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 14:30`).getTime() <=gg) && (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <=gg))})  )  
+           '' } 
                </th>
                <th class='splite'>
                ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
+      ( (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) || (val.b.y  >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime())) ? `<span class='top-left '>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
@@ -221,7 +206,7 @@ let [indexG, setIndexG] = useState(0)
                  (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 15:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -230,16 +215,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 16:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -248,16 +233,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 17:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -266,16 +251,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 18:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -284,16 +269,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime()) ||  ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 19:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -302,16 +287,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 20:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -320,16 +305,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 21:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -338,16 +323,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 22:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -356,16 +341,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 23:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -374,16 +359,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 00:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -392,16 +377,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 01:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -410,16 +395,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 02:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -428,16 +413,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 03:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -446,16 +431,16 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -463,16 +448,16 @@ let [indexG, setIndexG] = useState(0)
                  (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 04:30`).getTime() < val.g.y && val.g.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime()) ? `<span class='bottom-right'>${val.g.info}</span>` :
                    ''}
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''} 
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 05:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -481,17 +466,17 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
              
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 06:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -500,17 +485,17 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
               
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 07:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -519,17 +504,17 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) && ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
              
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 08:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -538,17 +523,17 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
                
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 09:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -557,17 +542,17 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
               
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime()) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime()) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime()) && ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime()) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime()) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 10:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime()) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -576,17 +561,17 @@ let [indexG, setIndexG] = useState(0)
                    ''}
                </th>
                <th class='splite'>
-               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.b.info}</span>` :
-         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
-           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
-             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
-               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
-                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:00`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
+               ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.a.y && val.a.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.a.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.b.y && val.b.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime())) ? `<span class='top-left'>${val.b.info}</span>` :
+         (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.c.y && val.c.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.c.info}</span>` :
+           (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.d.y && val.d.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.d.info}</span>` :
+             (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.e.y && val.e.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.e.info}</span>` :
+               (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.f.y && val.f.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.f.info}</span>` :
+                 (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:01`).getTime() <= val.g.y && val.g.y <= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime()) ? `<span class='top-left'>${val.g.info}</span>` :
                    ''}
                
                 ${(new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() < val.a.y && val.a.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`)) ? `<span class='bottom-right'>${val.a.info}</span>` :
-       (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`)) ? `<span class='bottom-right'>${val.b.info}</span>` :
+       ((new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() < val.b.y && val.b.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`)) || ( val.b.y >= new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime() && val.c.y <  new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`).getTime())) ? `<span class='bottom-right'>${val.b.info}</span>` :
          (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() < val.c.y && val.c.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`)) ? `<span class='bottom-right'>${val.c.info}</span>` :
            (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() < val.d.y && val.d.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`)) ? `<span class='bottom-right'>${val.d.info}</span>` :
              (new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 11:30`).getTime() < val.e.y && val.e.y < new Date(`${moment(data[0].fullDate).format('D/MMM/YYYY')} 12:00`)) ? `<span class='bottom-right'>${val.e.info}</span>` :
@@ -750,13 +735,38 @@ const htmlStyles = `
 .splite span{
   font-size: 14px;
 }
-
+.bottom-right-color{ 
+  width: 35px;
+  height: 30px;
+}
+.bottom-right-color::after{
+  content: ''; 
+  position: absolute;  
+  left:0;
+  top:0.8 ;
+  border: 13.8px solid transparent;
+  border-right: 13.8px solid black;
+  border-bottom: 13.8px solid black;
+}
+.top-left-color{
+  width: 35px;
+  height: 30px;
+}
+.top-left-color::after{
+  content: ''; 
+  position: absolute;  
+  border:  13.8px solid transparent;
+   border-left:  13.8px solid black;
+    border-top:  13.8px solid black;
+    right:-0.5;
+    bottom:0.5;
+}
 .splite::after{
   content: "";
-  display: block;
+  display: block; 
   position: absolute;
   border: 1px solid black;
-  transform: rotate(133deg);
+  transform: rotate(134deg);
   width: 38px;
   top: 13px;
   left: -7px;
