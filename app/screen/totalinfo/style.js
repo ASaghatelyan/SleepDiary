@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     itemInfo: {
-        width: 180,
-        height: 180,
+        width: 170,
+        height: 170,
         borderWidth: 1,
         borderColor: '#AFC7D1',
         borderRadius: 6,

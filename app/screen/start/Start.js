@@ -39,7 +39,7 @@ export function Start(props) {
                     style={styles.calendarImg}
                 />
                 <TextInput placeholder='Choose day' placeholderTextColor={'#232326'} editable={false} style={{ flex: 1, color: '#232326', marginLeft: 15 }} value={input} />
-                <TouchableOpacity style={{ padding: 5 }} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity style={{ padding: 7}} onPress={() => setModalVisible(true)}>
                     <Image source={require('../../assets/img/open.png')} style={styles.openImg} />
                 </TouchableOpacity>
             </View>
@@ -54,35 +54,24 @@ export function Start(props) {
                     animationType="slide"
                     transparent={true}
                     visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        setModalVisible(!modalVisible);
-                      
+                    onRequestClose={() => { 
+                        setModalVisible(!modalVisible); 
                     }}> 
                     <Calendar
                        hideArrows={true}
                        disableMonthChange={true}
                        enableSwipeMonths={true}
                         minDate={`${(moment(new Date()).format('DD MMM YYYY'))}`}
-                        renderHeader={(date) => {
-                            console.log(date);
+                        renderHeader={(date) => { 
                             return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
                         }}
                         maxDate={`${moment(new Date()).format('DD MMM YYYY')}`}
-                        renderHeader={(date) => {
-                            console.log(date);
+                        renderHeader={(date) => { 
                             return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
-                        }}
-                        onDayLongPress={(e) => {
-                            console.log(`e`, e)
-                        }}
-                        onMonthChange={(e) => {
-                            console.log(`e`, e)
                         }}
                         onPressArrowLeft={(goBack) => {
                             goBack()
-                        }}
-                        
+                        }} 
                         enableSwipeMonths
                         onPressArrowRight={(goFuture) => {
                             goFuture()
@@ -90,8 +79,7 @@ export function Start(props) {
                         onDayPress={(e) => {
                             setInput(moment(e.dateString).format('DD MMM YYYY'))
                             setDayInfo(moment(e.dateString).format('DD MMM YYYY'))
-                            setModalVisible(!modalVisible)
-                           
+                            setModalVisible(!modalVisible) 
                         }}
                         firstDay={1}
                         style={{ height: "100%",marginTop: Platform.OS === 'ios' ? 35 : 1 }}

@@ -1013,14 +1013,14 @@ const ExportPdf = (props) => {
     </thead>
     ${weekState.length > 0 && weekState.map((data, index) => {
     return data[1].map((val) => {
-
-      return (
+      console.log(data[0].dayInfo === '','data[0].dayInfo')
+     return (
         ` 
         <tbody>
              <tr>
                <th><p class='data'>${moment(data[0].fullDate).format('D/MMM/YYYY')}</p></th>
                <th><p class='fullDate'>${moment(data[0].fullDate).format('ddd')}</p></th>
-               <th ><p class='dayInfo'>${data[0].dayInfo}</p></th>
+               <th ><p class='dayInfo'>${data[0].dayInfo === '' ? '-' : (data[0].dayInfo)}</p></th>
                 <th class='splite'>
                 ${(new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:00`).getTime() <= val.alco.y && val.alco.y <= new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.alco.info}s</span>` :
           (new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:00`).getTime() <= val.coffee.y && val.coffee.y <= new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:30`).getTime()) ? `<span class='top-left'>${val.coffee.info}d</span>` :
@@ -1869,8 +1869,7 @@ const ExportPdf = (props) => {
            `)
     })
   })
-    }
-  
+    } 
     </table>
     <table class='tableAvg'> 
         <thead class='ddd'>
@@ -1886,10 +1885,10 @@ const ExportPdf = (props) => {
         </thead>
         <tbody>
               <tr>
-              <th><p class='data'>${convertMtoH(Math.floor(firstWakeUp/count))}</p></th>
-              <th><p class='data'>${convertMtoH(Math.floor(avergeFallASleepTime/count))}</p></th>
-              <th><p class='data'>${convertMtoH(Math.floor(avergeAwakeningsTime/count))}</p></th>
-              <th><p class='data'>${convertMtoH(Math.floor(avergeNapTime/count))}</p></th>
+              <th><p class='data'>${convertMtoH(Math.floor(firstWakeUp / count))}</p></th>
+              <th><p class='data'>${convertMtoH(Math.floor(avergeFallASleepTime / count))}</p></th>
+              <th><p class='data'>${convertMtoH(Math.floor(avergeAwakeningsTime / count))}</p></th>
+              <th><p class='data'>${convertMtoH(Math.floor(avergeNapTime / count))}</p></th>
               <th><p class='data'>${convertMtoH(Math.floor(avergeTimInBed / count))}</p></th>
               <th><p class='data'>${Math.floor(effectiveSleep / count)}%</p></th>
               <th><p class='data'>${convertMtoH(Math.floor(sleepTime / count))}</p></th>
@@ -1973,7 +1972,7 @@ const ExportPdf = (props) => {
       setAvergeStarsCount(starCount.reduce(
         (previousValue, currentValue) => previousValue + currentValue,
         0));
- 
+
       Object.keys(data.data).length > 1 && effectiveSleepTime.push(data.data.results[0].effective)
       setEffectiveSleep(effectiveSleepTime.reduce(
         (previousValue, currentValue) => previousValue + currentValue,
@@ -2004,7 +2003,7 @@ const ExportPdf = (props) => {
         0))
 
     })
-   
+
 
     weekInfo && setWeekState(weekData)
   }
@@ -2013,7 +2012,8 @@ const ExportPdf = (props) => {
     getInfo()
   }, [props.data])
 
-console.log(weekState);
+  console.log(weekState);
+
   const askPermission = () => {
     async function requestExternalWritePermission() {
       try {
@@ -2082,12 +2082,19 @@ console.log(weekState);
       <View style={styles.chooseType}>
       </View>
       <View>
-        <TouchableOpacity onPress={askPermission} >
-          <Image
-            source={require('../../assets/img/pdf.png')}
-            style={styles.ImageStyle}
-          />
-        </TouchableOpacity>
+        {weekState.length > 0 ?
+          <TouchableOpacity onPress={askPermission} >
+            <Image
+              source={require('../../assets/img/dwnld.png')}
+              style={styles.ImageStyle}
+            />
+          </TouchableOpacity> :
+          <TouchableOpacity   >
+            <Image
+              source={require('../../assets/img/dwnld.png')}
+              style={styles.ImageStyle}
+            />
+          </TouchableOpacity>}
       </View>
     </View>
   )
@@ -2107,8 +2114,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   ImageStyle: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     resizeMode: 'center',
   },
   selectStyle: {

@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
         height: 15,
     },
     openImg:{
-        width:11,
-        height:7,
+        width:12,
+        height:8,
         alignSelf:'center'
     }
 
