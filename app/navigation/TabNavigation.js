@@ -1,10 +1,9 @@
 
 
 import * as React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet ,Platform} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AddInfo, TotalInfo } from '../screen';
-import { GeneralInfo } from '../screen/generalinfo';
+import { AddInfo, TotalInfo,GeneralInfo, Loading} from '../screen'; 
 
 
 
@@ -16,11 +15,12 @@ export default function TabNavigation() {
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarActiveTintColor: '#fff',
-                tabBarInactiveTintColor: 'red',
                 tabBarActiveBackgroundColor: '#2B91BF',
                 tabBarInactiveBackgroundColor: '#2B91BF',
                 tabBarStyle: {
-                    height: 75
+                    backgroundColor: '#2B91BF',
+                    paddingTop:12,
+                   height:Platform.OS === 'android' ? 75 : 70
                 }
             })}
         >
@@ -58,6 +58,7 @@ export default function TabNavigation() {
             />
             <Tab.Screen name="GeneralInfo" component={GeneralInfo}
                 options={{
+                    
                     headerShown: false,
                     title: "",
                     tabBarIcon: ({ focused }) => (
@@ -72,8 +73,24 @@ export default function TabNavigation() {
                 }
                 }
             />
+            {/* <Tab.Screen name="Loading" component={Loading}
+                options={{
+                    
+                    headerShown: false,
+                    title: "",
+                    tabBarIcon: ({ focused }) => (
+                        <View style={style.content}>
+                            {focused ?
+                                <View style={style.tabIconBg}>
+                                    <Image style={[style.tabIcon, { tintColor: focused ? '#FFC430' : null }]} source={require("../assets/img/Info.png")} />
+                                </View> :
+                                <Image style={[style.tabIcon, { tintColor: focused ? '#FFC430' : null }]} source={require("../assets/img/Info.png")} />}
+                        </View>
+                    )
+                }
+                }
+            /> */}
         </Tab.Navigator>
-
     );
 }
 let style = StyleSheet.create({
@@ -87,7 +104,8 @@ let style = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+       
     },
     tabIcon: {
         width: 20,

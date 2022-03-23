@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     paginationForm: {
         width: 38,
@@ -23,8 +23,7 @@ const styles = StyleSheet.create({
         borderColor: '#AFC7D1',
         borderWidth: 1,
         alignItems: 'center',
-        justifyContent: 'center',
-
+        justifyContent: 'center', 
     },
     paginationText: {
         color: '#2B91BF',

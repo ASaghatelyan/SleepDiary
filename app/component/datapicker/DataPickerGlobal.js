@@ -5,6 +5,7 @@ import styles from './style';
 export function DataPickerGlobal(props) {
     return (
         <DatePicker
+        minuteInterval={5}
             is24hourSource={'device'}
             // textColor='#FFF'
             modal

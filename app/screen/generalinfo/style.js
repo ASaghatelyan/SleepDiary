@@ -38,10 +38,9 @@ const styles = StyleSheet.create({
         color: '#000000'
     },
     btnView: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 49
+        width: '100%',
+        justifyContent: 'space-around',
+        marginTop: 49,
     },
     btn: {
         width: 160,
@@ -52,7 +51,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop:70
+        marginTop: 70,
+        marginBottom: 45
     },
     vectorImg: {
         width: 20,
@@ -68,39 +68,51 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '30%',
         backgroundColor: '#EFEFEF',
-        paddingVertical:30,
-        paddingHorizontal:20,
-        borderRadius:10,
-        alignItems:'center',
-        justifyContent:'space-between'
+        paddingVertical: 30,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     centeredView: {
-        flex:1,
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center' 
+        justifyContent: 'center'
     },
-    modalBtnView:{
-        width:'100%',
-        flexDirection:'row',
-        justifyContent:'space-between',
-        paddingHorizontal:40
+    modalBtnView: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 40
     },
-    button:{
-        alignItems:'center',
-        justifyContent:'center', 
-        width:50,
-        height:30,
+    button: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 50,
+        height: 30,
     },
-    modalText:{
+    modalText: {
         fontFamily: "Quicksand-Bold",
         fontSize: 16,
         lineHeight: 22,
         color: '#00405E',
-        
+
     },
-    textStyle:{
+    textStyle: {
         fontFamily: "Quicksand-Medium",
         fontSize: 14,
+        marginLeft: 12,
+        color: '#00405E'
+    },
+    chooseView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+         
+    },
+    chooseStyle: {
+        marginRight: 10,
+        fontFamily: "Quicksand-Medium",
+        fontSize: 16,
         marginLeft: 12,
         color: '#00405E'
     },
@@ -109,17 +121,21 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#AFC7D1',
-        width: 166,
-        height: 40,
-        paddingHorizontal: 20,
-      },
-      selectText: {
+        width: 70,
+        height: 35,
+    },
+    selectText: {
         color: '#2B91BF',
         fontFamily: "Quicksand-Regular",
-      },
-      dowlandPdf:{
-          flexDirection:'row'
-      }
+    },
+    dowlandPdf: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    iconStyle: {
+        width: 12,
+        height: 7
+    }
 })
 
 export default styles 

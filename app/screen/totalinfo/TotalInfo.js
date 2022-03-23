@@ -5,9 +5,10 @@ import StarRating from 'react-native-star-rating';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PureChart from 'react-native-pure-chart';
 import moment from "moment";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function TotalInfo(props) {
-  const [results,setResults]=useState([{}])
+  const [results, setResults] = useState([{}])
   const [starCount, setStarCount] = useState(0)
   const [allData, setAllData] = useState([])
   const [sleepTime, setSleepTime] = useState(0)
@@ -18,7 +19,8 @@ export function TotalInfo(props) {
   const [avergeNapTime, setAvergeNapTime] = useState()
   const [avergeFallASleepTime, setAvergeFallASleepTime] = useState()
   const [count, setCount] = useState(0)
-  const [show,setShow]=useState(false)
+  const [show, setShow] = useState(false)
+  const [firstWakeUp, setFirstWakeUp] = useState()
   const weekDays = ["1", "2", "3", "4", "5", "6", "7", '8', 'All']
   const data = [
     {
@@ -40,29 +42,28 @@ export function TotalInfo(props) {
       title: 'Averge sleep quality',
     },
   ]
- 
-  let first=results.map((item)=>  ( { x: `2022-03-04`, y: item.sleepTime }) ) 
-  let second = results.map((item)=>  ( { x: `2022-03-04`, y: item.awakenings }) ) 
-  let third = results.map((item)=>  ( { x: `2022-03-04`, y: item.fallaSleepTime }) ) 
- 
-  let sampleData = [
-    {
-      seriesName: 'series1',
-      data: first,
-      color: '#297AB1'
-    },
-    {
-      seriesName: 'series2',
-      data: second,
-      color: 'yellow'
-    },
-    {
-      seriesName: 'series3',
-      data: third,
-      color: '#AF7AB1'
-    },
-  ]
 
+  // let first = results.map((item) => ({ x: `2022-03-04`, y: item.sleepTime }))
+  // let second = results.map((item) => ({ x: `2022-03-04`, y: item.awakenings }))
+  // let third = results.map((item) => ({ x: `2022-03-04`, y: item.fallaSleepTime }))
+
+  // let sampleData = [
+  //   {
+  //     seriesName: 'series1',
+  //     data: first,
+  //     color: '#297AB1'
+  //   },
+  //   {
+  //     seriesName: 'series2',
+  //     data: second,
+  //     color: 'yellow'
+  //   },
+  //   {
+  //     seriesName: 'series3',
+  //     data: third,
+  //     color: '#AF7AB1'
+  //   },
+  // ]
 
 
   function convertMtoH(n) {
@@ -96,7 +97,6 @@ export function TotalInfo(props) {
     }
   }
 
-
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
       getInfo()
@@ -114,8 +114,9 @@ export function TotalInfo(props) {
     //   setEffectiveSleep(0)
     //   setCount(0)
     // }
-    console.log(infoDay);
+
     infoDay !== null && infoDay.map((item, index) => {
+
       const starCount = []
       const sleepTime = []
       const effectiveSleepTime = []
@@ -123,14 +124,16 @@ export function TotalInfo(props) {
       const awakeningsTime = []
       const napsTime = []
       const fallaSleep = []
+      const wakeAfterSleep = []
       // const  first awaking time - statr of sleep / days count  
       let x = 0
       let res = []
       setResults(res)
+      
       return item.map((item, index) => {
-        Object.keys(item.data).length > 1 && res.push( item.data.results[0]);
+        Object.keys(item.data).length > 1 && res.push(item.data.results[0]);
         Object.keys(item.data).length > 1 && setCount(++x)
- 
+
         Object.keys(item.data).length > 1 && sleepTime.push(item.data.results[0].sleepTime)
         setSleepTime(sleepTime.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
@@ -169,16 +172,21 @@ export function TotalInfo(props) {
           (previousValue, currentValue) => previousValue + currentValue,
           0));
 
+        Object.keys(item.data).length > 1 && wakeAfterSleep.push(item.data.results[0].wakeAfterSleep)
+        setFirstWakeUp(wakeAfterSleep.reduce((previousValue, currentValue) => previousValue + currentValue,
+        0))
+
       })
+      
     })
     setAllData(infoDay)
-  
- 
+    
   }
- 
 
+ 
 
   return (
+
     <ScrollView contentContainerStyle={styles.scrollView}>
       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
 
@@ -247,23 +255,24 @@ export function TotalInfo(props) {
               </View>
             )
           })}
-        
+
         </View>
-        {show &&( <View style={{paddingHorizontal:2}}>
+        {/* {show &&( <View style={{paddingHorizontal:2}}>
           <PureChart  data={sampleData} type='bar'   
      width={'100%'}
      height={200}
           
     />
-         </View>)}
-        <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn} onPress={()=>setShow(!show)} >
-            <Image source={require('../../assets/img/vector.png')} style={styles.vectorImg} />
-            <Text style={styles.btnText}>Development</Text>
-          </TouchableOpacity>
-        </View>
+         </View>)} */}
+        {/* <View style={styles.btnView}>
+            <TouchableOpacity style={styles.btn} onPress={() => setShow(!show)} >
+              <Image source={require('../../assets/img/vector.png')} style={styles.vectorImg} />
+              <Text style={styles.btnText}>Development</Text>
+            </TouchableOpacity>
+          </View> */}
       </View>
 
     </ScrollView>
+
   );
 }

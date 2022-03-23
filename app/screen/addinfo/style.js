@@ -79,7 +79,29 @@ const styles = StyleSheet.create({
         width: 166,
         height: 40,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+    },
+    madicationName: {
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#AFC7D1',
+        width: 166,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingLeft:15,
+        paddingVertical:5
+    },
+    madicationDosage: {
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#AFC7D1',
+        width: 120,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingLeft:15,
+        paddingVertical:5
     },
     globalText: {
         fontFamily: "Quicksand-Regular",

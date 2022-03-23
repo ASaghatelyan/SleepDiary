@@ -14,15 +14,16 @@ import {
     Dimensions,
     Animated
 } from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './style';
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment';
-import {GlobalButton, AcceptButton, DataPickerGlobal} from '../../component';
+import { GlobalButton, AcceptButton, DataPickerGlobal } from '../../component';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StarRating from 'react-native-star-rating';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 let Width = Dimensions.get('window').width
@@ -36,7 +37,6 @@ export function AddInfo(props) {
     const [openAlco, setOpenAlco] = useState(false)
     const [openCoffee, setOpenCoffee] = useState(false)
     const [openExFrom, setOpenExFrom] = useState(false)
-    const [openMedication, setOpenMedication] = useState(false)
     const [openExTo, setOpenExTo] = useState(false)
     const [openNapFrom, setOpenNapFrom] = useState(false)
     const [openNapTo, setOpenNapTo] = useState(false)
@@ -54,11 +54,8 @@ export function AddInfo(props) {
         y: Number(0),
         info: "A"
     })
-    const [medication, setMadication] = useState({
-        x: '00:00',
-        y: Number(0),
-        info: "M"
-    })
+    const [medicationName, setMadicationName] = useState('')
+    const [medicationDos, setMadicationDos] = useState('')
     const [coffee, setCoffee] = useState({
         x: '00:00',
         y: Number(0),
@@ -91,6 +88,7 @@ export function AddInfo(props) {
     const [goSleep, setGoSleep] = useState({
         x: '00:00',
         y: Number(0),
+        info: 'L'
     })
     const [wakeUpTime, setWakeUpTime] = useState({
         x: '00:00',
@@ -102,7 +100,7 @@ export function AddInfo(props) {
         info: 'U'
     })
     const [fallAsleep, setFallAsleep] = useState({
-        x: '00:00',
+        x: '0',
         y: Number(0),
         info: 'F'
     })
@@ -141,6 +139,7 @@ export function AddInfo(props) {
             naps: Number(0),
             awakenings: Number(0),
             fallaSleepTime: Number(0),
+            wakeAfterSleep: Number(0),
             data: ''
         }
     ])
@@ -171,7 +170,7 @@ export function AddInfo(props) {
             data: {}
         },
         {
-            week: "San",
+            week: "Sun",
             data: {}
         },
     ])
@@ -221,8 +220,9 @@ export function AddInfo(props) {
         addWakeUp,
         results,
         starCount,
-        medication,
-        coffee
+        medicationName,
+        medicationDos,
+        coffee,
     }
     const reasetData = () => {
         setTextAreaInput('')
@@ -231,11 +231,8 @@ export function AddInfo(props) {
             y: Number(0),
             info: 'A'
         })
-        setMadication({
-            x: '00:00',
-            y: Number(0),
-            info: 'A'
-        })
+        setMadicationName('')
+        setMadicationDos('')
         setCoffee({
             x: '00:00',
             y: Number(0),
@@ -252,12 +249,13 @@ export function AddInfo(props) {
             y: Number(0)
         })
         setFallAsleep({
-            x: '00:00',
+            x: '0',
             y: Number(0)
         })
         setGoSleep({
             x: '00:00',
-            y: Number(0)
+            y: Number(0),
+            info: 'L'
         })
         setIntoBed({
             x: '00:00',
@@ -374,7 +372,6 @@ export function AddInfo(props) {
     }
 
     let getInfo = async () => {
-
         let startDate = await getStartDate()
         let lastDay = await getLastDay()
         let infoDay = await getData()
@@ -384,7 +381,7 @@ export function AddInfo(props) {
         // if (weekData === null) {
         //     reasetData()
         //     await weekDataStore(weekCount)
-        //     getData()
+        //     // getData()
         // }
         if (infoDay === null) {
             reasetData()
@@ -400,27 +397,27 @@ export function AddInfo(props) {
             })
         })
         setWeekDay([...arr])
-        if (lastDay !== 'null') {
-            let mon = 1
-            let today = moment().isoWeekday()
-            let diff = (moment(lastDay.date).diff(moment().format("YYYY-MM-DD"), 'days'))
+        // if (lastDay !== 'null') {
+        //     let mon = 1
+        //     let today = moment().isoWeekday()
+        //     let diff = (moment(lastDay.date).diff(moment().format("YYYY-MM-DD"), 'days'))
 
 
-            const d = new Date();
-            d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
-            let nextMon = moment(d).format('YYYY MMM DD')
-            if (moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length - 1)][0].data.fullDate === 'undefined') {
-                alert('It is Mon')
-            }
+        //     const d = new Date();
+        //     d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
+        //     let nextMon = moment(d).format('YYYY MMM DD')
+        //     if (moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length - 1)][0].data.fullDate === 'undefined') {
+        //         alert('It is Mon')
+        //     }
 
-            // console.log(moment().startOf('isoweek').isBefore(moment(lastDay.date)), 'fffffff');
-            // if (Math.ceil(diff / 7) > 1) {
-            //     setWeekCount([...weekCount, ...Array(Math.ceil(diff / 7)).fill(weekDay)])
-            // }
-            // if (moment().startOf('isoweek').isBefore(moment(lastDay.date)) || moment().startOf('isoweek')) {
-            //     setWeekCount([...weekCount, weekDay])
-            // }
-        }
+        //     // console.log(moment().startOf('isoweek').isBefore(moment(lastDay.date)), 'fffffff');
+        //     // if (Math.ceil(diff / 7) > 1) {
+        //     //     setWeekCount([...weekCount, ...Array(Math.ceil(diff / 7)).fill(weekDay)])
+        //     // }
+        //     // if (moment().startOf('isoweek').isBefore(moment(lastDay.date)) || moment().startOf('isoweek')) {
+        //     //     setWeekCount([...weekCount, weekDay])
+        //     // }
+        // }
     }
 
 
@@ -428,7 +425,7 @@ export function AddInfo(props) {
 
     //console.log(weekData.current.scrollToIndex());
     useEffect(() => {
-        scrollX.addListener(({value}) => {
+        scrollX.addListener(({ value }) => {
             setWeekIndex(Math.round(value / Width))
         })
         return (() => {
@@ -458,7 +455,6 @@ export function AddInfo(props) {
 
     useEffect(() => {
         getInfo()
-
     }, []);
 
     // useEffect(() => {
@@ -492,7 +488,10 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
             {
@@ -516,7 +515,10 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
             {
@@ -540,7 +542,10 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
             {
@@ -564,7 +569,10 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
             {
@@ -588,7 +596,10 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
             {
@@ -612,11 +623,14 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
             {
-                week: "San",
+                week: "Sun",
                 data: {
                     fullDate: '',
                     dayInfo,
@@ -636,7 +650,10 @@ export function AddInfo(props) {
                     loading,
                     addWakeUp,
                     results,
-                    starCount
+                    starCount,
+                    medicationName,
+                    medicationDos,
+                    coffee
                 }
             },
         ]
@@ -651,7 +668,7 @@ export function AddInfo(props) {
         let arrDatesWeek = []
         for (let i = 0; i < 365; i++) {
             if (arr.length) {
-              //  arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
+                //  arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
                 /* arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
                  let weekDay = moment(arr[arr.length - 1]).format('dddd')
                  if(weekDay === 'Sunday' && arrDatesWeek.length){
@@ -693,7 +710,7 @@ export function AddInfo(props) {
 
             }
         }
-        console.log(arrDatesWeek, arr);
+        // console.log(arrDatesWeek, arr);
 
     }, [])
 
@@ -777,7 +794,7 @@ export function AddInfo(props) {
         })
     }
 
-
+   
     let weekDataRender = ((item, i) => {
 
         return (
@@ -793,38 +810,39 @@ export function AddInfo(props) {
                     <View>
                         <TouchableOpacity onPress={handleBackward}>
                             <Image source={require('../../assets/img/leftpassive.png')}
-                                   style={{width: 10, height: 15}}/>
+                                style={{ width: 10, height: 15 }} />
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.week}>Week {item.index + 1}</Text>
                     <View>
                         <TouchableOpacity onPress={handleForward}>
-                            <Image source={require('../../assets/img/right.png')} style={{width: 10, height: 15}}/>
+                            <Image source={require('../../assets/img/right.png')} style={{ width: 10, height: 15 }} />
                         </TouchableOpacity>
                     </View>
                 </View>
             </Animated.View>
         )
-    })
+    }) 
 
+    
     return (
         loading ?
             <View style={styles.activLoad}>
-                <ActivityIndicator size="small" color="#0000ff"/>
+                <ActivityIndicator size="small" color="#0000ff" />
             </View>
             :
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content'/>
+                <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
                 <View style={styles.topSide}>
                     <View style={styles.weekSide}>
                         {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            {weekCount.map((item, index) => {
-                                return <View key={index} style={{ width: Width }}>
-                                    <Text style={styles.week}>Week {index + 1}</Text>
-                                </View>
-                            })}
-                        </ScrollView> */}
-                        <View style={{width: Width}}>
+                       {weekCount.map((item, index) => {
+                           return <View key={index} style={{ width: Width }}>
+                               <Text style={styles.week}>Week {index + 1}</Text>
+                           </View>
+                       })}
+                   </ScrollView> */}
+                        <View style={{ width: Width }}>
                             <Animated.FlatList
                                 data={weekCount}
                                 ref={weekData}
@@ -837,15 +855,13 @@ export function AddInfo(props) {
                                 onScroll={Animated.event(
                                     [{
                                         nativeEvent: {
-                                            contentOffset: {x: scrollX}
+                                            contentOffset: { x: scrollX }
                                         }
                                     }],
-                                    {useNativeDriver: false}
+                                    { useNativeDriver: false }
                                 )}
                             />
                         </View>
-
-
                     </View>
                     <View style={styles.weekDayName}>
                         {weekCount[weekIndex].map((item, index) => {
@@ -857,22 +873,22 @@ export function AddInfo(props) {
                                             ? (setActiveColor(!activColor),
                                                 setActiveIndex(index)) :
                                             moment().format('d') > index ? (setActiveColor(!activColor),
-                                                    setActiveIndex(index)) :
+                                                setActiveIndex(index)) :
                                                 moment().format('d') == 0 && (setActiveColor(!activColor),
                                                     setActiveIndex(index))
                                     }}
-                                                      style={
-                                                          [styles.weeKDaysForm,
-                                                              {
-                                                                  borderTopLeftRadius: index === 0 ? 10 : 0,
-                                                                  borderBottomLeftRadius: index === 0 ? 10 : 0,
-                                                                  borderTopRightRadius: index === 6 ? 10 : 0,
-                                                                  borderBottomEndRadius: index === 6 ? 10 : 0,
-                                                                  backgroundColor: activeIndex === index ? '#FFC430' : null
-                                                              },
-                                                          ]}>
+                                        style={
+                                            [styles.weeKDaysForm,
+                                            {
+                                                borderTopLeftRadius: index === 0 ? 10 : 0,
+                                                borderBottomLeftRadius: index === 0 ? 10 : 0,
+                                                borderTopRightRadius: index === 6 ? 10 : 0,
+                                                borderBottomEndRadius: index === 6 ? 10 : 0,
+                                                backgroundColor: activeIndex === index ? '#FFC430' : null
+                                            },
+                                            ]}>
                                         <Text
-                                            style={[styles.weeKDaysText, {color: activeIndex === index ? '#FFF' : '#2B91BF'}]}>{item.week}</Text>
+                                            style={[styles.weeKDaysText, { color: activeIndex === index ? '#FFF' : '#2B91BF' }]}>{item.week}</Text>
                                     </TouchableOpacity>
                                 </View>
                             )
@@ -880,10 +896,10 @@ export function AddInfo(props) {
                     </View>
                 </View>
                 {Object.keys(weekCount[weekIndex][activeIndex].data).length > 1 ?
-                    <View style={styles.content}>
+                    (<View style={styles.content}>
                         <Text style={styles.title}>{weekCount[weekIndex][activeIndex].data.fullDate}</Text>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Is this a Work/ School/ Day off/ Vacation?</Text>
+                            <Text style={styles.globalText}>What type of day?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.dayInfo}</Text>
                             </TouchableOpacity>
@@ -892,7 +908,7 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>What time did you last have coffee,cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.coffee.x}
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.coffee.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.coffee.x}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -900,36 +916,37 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.alcoDrinks.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.alcoDrinks.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.alcoDrinks.x}</Text>
                             </TouchableOpacity>
                         </View>
+
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker}>
                                         <Text
-                                            style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.exerciseFrom.x}</Text>
+                                            style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.exerciseFrom.x === 'from 00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.exerciseFrom.x} </Text>
                                     </TouchableOpacity>
                                 </View>
                                 <TouchableOpacity style={styles.dataPicker}>
                                     <Text
-                                        style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.exerciseTo.x}</Text>
+                                        style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.exerciseTo.x === 'to 00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.exerciseTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last take a nap?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker}>
                                         <Text
-                                            style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.napFrom.x}</Text>
+                                            style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.napFrom.x === 'from 00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.napFrom.x}</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <TouchableOpacity style={styles.dataPicker}>
                                     <Text
-                                        style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.napTo.x}</Text>
+                                        style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.napTo.x === 'to 00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.napTo.x}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -937,43 +954,43 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>What time did you get into bed?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.intoBed.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.intoBed.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.intoBed.x}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you turn off the lights to go sleep?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.goSleep.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.goSleep.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.goSleep.x}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>How long did it take you to fall asleep?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.fallAsleep.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.fallAsleep.x === '0' ? 'N/A' : weekCount[weekIndex][activeIndex].data.fallAsleep.x}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
                             {weekCount[weekIndex][activeIndex].data.addWakeUp.map((item, index) => {
                                 return (
-                                    <View key={index} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                                    <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <View>
-                                            <TouchableOpacity style={[styles.dataPicker, {marginBottom: 15}]}>
-                                                <Text style={styles.selectText}>{item.wakeUpDataFrom.x}
+                                            <TouchableOpacity style={[styles.dataPicker, { marginBottom: 15 }]}>
+                                                <Text style={styles.selectText}>{item.wakeUpDataFrom.x === 'from 00:00' ? 'N/A' : item.wakeUpDataFrom.x}
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
                                         <TouchableOpacity style={styles.dataPicker}>
-                                            <Text style={styles.selectText}>{item.wakeUpDataTo.x}</Text>
+                                            <Text style={styles.selectText}>{item.wakeUpDataTo.x === 'to 00:00' ? 'N/A' : item.wakeUpDataTo.x}</Text>
                                         </TouchableOpacity>
                                     </View>)
                             })}
 
                             <View style={styles.addForm}>
                                 <TouchableOpacity>
-                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg}/>
+                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -981,51 +998,54 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>What was your final wake up time?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.wakeUpTime.x}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Sleep madications</Text>
-                            <TouchableOpacity style={styles.dataPicker}>
-                                <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.medication.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.wakeUpTime.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.wakeUpTime.x}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you get out of bed?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
-                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.outOfBed.x}</Text>
+                                    style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.outOfBed.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.outOfBed.x}</Text>
                             </TouchableOpacity>
                         </View>
-
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Sleep medications</Text>
+                            <Text style={styles.globalText}>Madications</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <TextInput
+                                    editable={false}
+                                    value={weekCount[weekIndex][activeIndex].data.medicationName}
+                                    style={styles.madicationName}
+                                />
+                                <TextInput
+                                    editable={false}
+                                    value={weekCount[weekIndex][activeIndex].data.medicationDos}
+                                    style={styles.madicationDosage}
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.chooseType}>
+                            <Text style={styles.globalText}>Comments</Text>
                             <TextInput
-                                placeholderTextColor={'#2B91BF'}
                                 editable={false}
                                 style={styles.textArea}
-                                numberOfLines={6}
                                 multiline={true}
                                 value={weekCount[weekIndex][activeIndex].data.textAreaInput}
-                                onChangeText={(e) => setTextAreaInput(e)}
                             />
                         </View>
-
                         {weekCount[weekIndex].map((item, index) => {
                             if (index === activeIndex) {
                                 return (<AcceptButton key={index} handleCount={() => {
                                     // alert(`${item.week}`)
                                     // setModalVisible(!modalVisible);
-                                }}/>)
+                                }} />)
                             }
                         })}
-                    </View>
+                    </View>)
                     :
                     <View style={styles.content}>
                         <Text style={styles.title}>{weekDay[activeIndex].data.fullDate}</Text>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Is this a Work/ School/ Day off/ Vacation?</Text>
+                            <Text style={styles.globalText}>What type of day?</Text>
                             <SelectDropdown
                                 data={countries}
                                 buttonStyle={styles.selectStyle}
@@ -1052,7 +1072,7 @@ export function AddInfo(props) {
                                     return item
                                 }}
                                 renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
-                                                                 style={styles.iconStyle}/>}
+                                    style={styles.iconStyle} />}
                             />
                         </View>
                         <View style={styles.chooseType}>
@@ -1061,8 +1081,8 @@ export function AddInfo(props) {
                                 <Text style={styles.selectText}>{coffee.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'`
                                 modal
                                 mode={'datetime'}
                                 open={openCoffee}
@@ -1086,8 +1106,8 @@ export function AddInfo(props) {
                                 <Text style={styles.selectText}>{alcoDrinks.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'`
                                 modal
                                 mode={'datetime'}
                                 open={openAlco}
@@ -1107,14 +1127,15 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExFrom(true)}>
                                         <Text style={styles.selectText}>{exerciseFrom.x}</Text>
                                     </TouchableOpacity>
                                     <DatePicker
+                                        minuteInterval={5}
                                         is24hourSource={'device'}
-                                        // textColor='#FFF'
+
                                         modal
                                         mode={'datetime'}
                                         open={openExFrom}
@@ -1137,8 +1158,8 @@ export function AddInfo(props) {
                                 </TouchableOpacity>
                             </View>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'
                                 modal
                                 mode={'datetime'}
                                 open={openExTo}
@@ -1158,14 +1179,15 @@ export function AddInfo(props) {
                         </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last take a nap?</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapFrom(true)}>
                                         <Text style={styles.selectText}>{napFrom.x}</Text>
                                     </TouchableOpacity>
                                     <DatePicker
+                                        minuteInterval={5}
                                         is24hourSource={'device'}
-                                        // textColor='#FFF'
+
                                         modal
                                         mode={'datetime'}
                                         open={openNapFrom}
@@ -1188,8 +1210,8 @@ export function AddInfo(props) {
                                 </TouchableOpacity>
                             </View>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'
                                 modal
                                 mode={'datetime'}
                                 open={openNapTo}
@@ -1212,9 +1234,8 @@ export function AddInfo(props) {
                                 <Text style={styles.selectText}>{intoBed.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'
-
                                 modal
                                 mode={'datetime'}
                                 open={openIntoBed}
@@ -1238,8 +1259,8 @@ export function AddInfo(props) {
                                 <Text style={styles.selectText}>{goSleep.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'
                                 modal
                                 mode={'datetime'}
                                 open={openGoSleep}
@@ -1248,7 +1269,8 @@ export function AddInfo(props) {
                                     setOpenGoSleep(false)
                                     setGoSleep({
                                         x: moment(time).format('hh:mm A'),
-                                        y: new Date(time).getTime()
+                                        y: new Date(time).getTime(),
+                                        info: 'L'
                                     })
                                 }}
                                 onCancel={() => {
@@ -1266,8 +1288,8 @@ export function AddInfo(props) {
                             <Text style={styles.globalText}>During the sleep, what timings did you wake up?</Text>
                             {addWakeUp.map((item, index) => {
                                 return (
-                                    <View key={index} style={{marginVertical: 10}}>
-                                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                                    <View key={index} style={{ marginVertical: 10 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <View>
                                                 <TouchableOpacity style={styles.dataPicker} onPress={() => {
                                                     setOpenDataTime({
@@ -1308,7 +1330,7 @@ export function AddInfo(props) {
                                     }
                                     setAddWakeUp([...addWakeUp, obj])
                                 }}>
-                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg}/>
+                                    <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -1318,8 +1340,8 @@ export function AddInfo(props) {
                                 <Text style={styles.selectText}>{wakeUpTime.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'
                                 modal
                                 mode={'datetime'}
                                 open={openWakeUpTime}
@@ -1342,8 +1364,8 @@ export function AddInfo(props) {
                                 <Text style={styles.selectText}>{outOfBed.x}</Text>
                             </TouchableOpacity>
                             <DatePicker
+                                minuteInterval={5}
                                 is24hourSource={'device'}
-                                // textColor='#FFF'
                                 modal
                                 mode={'datetime'}
                                 open={openOutOfBed}
@@ -1362,33 +1384,25 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Sleep medications</Text>
-                            <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenMedication(true)}>
-                                <Text style={styles.selectText}>{medication.x}</Text>
-                            </TouchableOpacity>
-                            <DatePicker
-                                is24hourSource={'device'}
-                                // textColor='#FFF'
-                                modal
-                                mode={'datetime'}
-                                open={openMedication}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
-                                onConfirm={(time) => {
-                                    setOpenMedication(false)
-                                    setMadication({
-                                        x: moment(time).format('hh:mm A'),
-                                        y: new Date(time).getTime(),
-                                        info: "M"
-                                    })
-                                }}
-                                onCancel={() => {
-                                    setOpenMedication(false)
-                                }}
-                            />
+                            <Text style={styles.globalText}>Medications</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <TextInput
+                                    style={styles.madicationName}
+                                    placeholder="Name"
+                                    placeholderTextColor={'#e1e1e1'}
+                                    onChangeText={(e) => setMadicationName(e)}
+                                />
+                                <TextInput
+                                    style={styles.madicationDosage}
+                                    placeholder="Dosage"
+                                    placeholderTextColor={'#e1e1e1'}
+                                    onChangeText={(e) => setMadicationDos(e)}
+                                />
+                            </View>
                         </View>
 
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>Sleep medications</Text>
+                            <Text style={styles.globalText}>Comments</Text>
                             <TextInput
                                 placeholder='Record any other factors that may affect your sleep:'
                                 placeholderTextColor={'#2B91BF'}
@@ -1410,6 +1424,8 @@ export function AddInfo(props) {
                                 0)
                             let naps = convertHtoM(convertMS(napTo.y - napFrom.y))
                             let fallaSleepTime = fallAsleep.y
+                            let wakeAfterSleep = convertHtoM(convertMS((addWakeUp[0].wakeUpDataFrom.y > 0) && (addWakeUp[0].wakeUpDataFrom.y - ((fallAsleep.y * 60000) + intoBed.y))))
+
                             setResults([{
                                 sleepTime,
                                 timeInBed,
@@ -1417,10 +1433,11 @@ export function AddInfo(props) {
                                 awakenings,
                                 naps,
                                 fallaSleepTime,
+                                wakeAfterSleep,
                                 data: moment(weekDay[activeIndex].data.fullDate).format('YYYY-MMM-D')
                             }])
                             setModalVisible(!modalVisible)
-                        }}/>
+                        }} />
                     </View>
                 }
                 <DataPickerGlobal
@@ -1463,7 +1480,7 @@ export function AddInfo(props) {
                                 fullStar={require('../../assets/img/fullStar.png')}
                                 halfStar={require('../../assets/img/halfStar.png')}
                                 starSize={28}
-                                starStyle={{marginTop: 16}}
+                                starStyle={{ marginTop: 16 }}
                             />
                             <View style={styles.modalBtnView}>
                                 <View>
@@ -1503,11 +1520,11 @@ export function AddInfo(props) {
                                         y: Number(e),
                                         info: "S"
                                     })
-                                }}/>
-                                <Text style={{marginLeft: 15, color: '#00405E'}}>min</Text>
+                                }} />
+                                <Text style={{ marginLeft: 15, color: '#00405E' }}>min</Text>
                             </View>
                             <View style={styles.btnModal}>
-                                <View style={{marginRight: 40}}>
+                                <View style={{ marginRight: 40 }}>
                                     <TouchableOpacity onPress={() => setOpenFallAsleep(!openFallAsleep)}>
                                         <Text style={styles.btnModalTetx}>CANCEL</Text>
                                     </TouchableOpacity>

@@ -1,11 +1,12 @@
 import { View, ScrollView, StatusBar, Image, Text, TextInput, Modal } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState,Fragment } from 'react';
 import styles from './style'
 import { GlobalButton, Logo } from '../../component';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import moment from 'moment';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+
 
 export function Start(props) {
     const [dayInfo, setDayInfo] = useState()
@@ -21,6 +22,7 @@ export function Start(props) {
         }
     }
     return (
+        
         <ScrollView contentContainerStyle={styles.scrollView}>
             <StatusBar backgroundColor={'#FFFFFF'} barStyle='dark-content' />
             <Logo />
@@ -42,10 +44,11 @@ export function Start(props) {
                 </TouchableOpacity>
             </View>
             <View>
-                <GlobalButton text={'Continue'} handlePress={() => {
+               {dayInfo ? <GlobalButton text={'Continue'} handlePress={() => {
                     startDate(dayInfo)
                     props.navigation.replace('TabNavigation')
-                }} />
+                     
+                }} />: <GlobalButton text={'Continue'}   /> }
                 <Modal
                     style={{ width: 500, height: 500 }}
                     animationType="slide"
@@ -54,8 +57,8 @@ export function Start(props) {
                     onRequestClose={() => {
                         Alert.alert("Modal has been closed.");
                         setModalVisible(!modalVisible);
-                    }}>
-
+                      
+                    }}> 
                     <Calendar
                        hideArrows={true}
                        disableMonthChange={true}
@@ -88,9 +91,10 @@ export function Start(props) {
                             setInput(moment(e.dateString).format('DD MMM YYYY'))
                             setDayInfo(moment(e.dateString).format('DD MMM YYYY'))
                             setModalVisible(!modalVisible)
+                           
                         }}
                         firstDay={1}
-                        style={{ height: "100%" }}
+                        style={{ height: "100%",marginTop: Platform.OS === 'ios' ? 35 : 1 }}
                     />
                 </Modal>
             </View>
