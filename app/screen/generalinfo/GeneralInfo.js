@@ -1023,8 +1023,7 @@ export function GeneralInfo(props) {
   }, [totalData])
 
  
-
-
+ 
 return (
     <ScrollView contentContainerStyle={styles.scrollView}>
       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
@@ -1067,7 +1066,7 @@ return (
             style={styles.iconStyle} />}
           />
        </View>
-           <ExportPdf data={totalData[indexG]}/>
+           <ExportPdf data={totalData[indexG]} weekNumber={indexG+1}/>
          </View> 
         </View>  
       </View>

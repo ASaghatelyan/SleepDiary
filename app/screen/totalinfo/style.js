@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    headerText: {
+        fontFamily: "Quicksand-Bold",
+        fontSize: 24,
+        lineHeight: 30,
+        color: '#00405E'
+    },
     paginationForm: {
         width: 38,
         height: 37,
@@ -45,7 +51,7 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     itemInfo: {
-        width: 170,
+        // width: 170,
         height: 170,
         borderWidth: 1,
         borderColor: '#AFC7D1',

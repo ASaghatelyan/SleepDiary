@@ -106,7 +106,7 @@ export function TotalInfo(props) {
   }, [props.navigation]);
 
   let getInfo = async () => {
-    let infoDay = await getWeekData() 
+    let infoDay = await getWeekData()
     // if (infoDay === null) {
     //   setSleepTime(0)
     //   setAvergeStarsCount(0)
@@ -129,7 +129,7 @@ export function TotalInfo(props) {
       let x = 0
       let res = []
       setResults(res)
-      
+
       return item.map((item, index) => {
         Object.keys(item.data).length > 1 && res.push(item.data.results[0]);
         Object.keys(item.data).length > 1 && setCount(++x)
@@ -174,16 +174,16 @@ export function TotalInfo(props) {
 
         Object.keys(item.data).length > 1 && wakeAfterSleep.push(item.data.results[0].wakeAfterSleep)
         setFirstWakeUp(wakeAfterSleep.reduce((previousValue, currentValue) => previousValue + currentValue,
-        0))
+          0))
 
       })
-      
+
     })
     setAllData(infoDay)
-    
+
   }
 
- 
+
 
   return (
 
@@ -192,8 +192,8 @@ export function TotalInfo(props) {
 
       <View style={styles.topSide}>
         <View style={styles.paginationView}>
-
-          {weekDays.map((item, index) => {
+          <Text style={styles.headerText}>Sleep Data Overview</Text>
+          {/* {weekDays.map((item, index) => {
             return (
               index === 0 ?
                 <View key={index}>
@@ -226,14 +226,14 @@ export function TotalInfo(props) {
                     </TouchableOpacity>
                   </View>
             )
-          })}
+          })} */}
         </View>
       </View>
       <View style={styles.bottomSide}>
         <View style={styles.itemInfoConteiner}>
           {data.map((item, index) => {
             return (
-              <View style={styles.itemInfo} key={index}>
+              <View style={[styles.itemInfo, Platform.OS === 'ios' ? { width: 170, height: 170 } : { width: 180, height: 180 }]} key={index}>
                 {item.img ? <Image source={item.img} style={styles.itemImg} /> : null}
                 <Text style={styles.infoTitle}>{item.title}</Text>
                 {

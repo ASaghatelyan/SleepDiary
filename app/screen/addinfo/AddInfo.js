@@ -1,35 +1,34 @@
 import {
-    View,
+    ActivityIndicator,
+    Alert,
+    Animated,
+    AppState,
+    Dimensions,
+    Image,
+    Modal,
     ScrollView,
     StatusBar,
-    Image,
     Text,
     TextInput,
     TouchableOpacity,
-    ActivityIndicator,
-    Alert,
-    AppState,
-    Modal,
-    FlatList,
-    Dimensions,
-    Animated
+    View,
+    KeyboardAvoidingView
 } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './style';
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment';
-import { GlobalButton, AcceptButton, DataPickerGlobal } from '../../component';
+import { AcceptButton, DataPickerGlobal, GlobalButton } from '../../component';
 import SelectDropdown from 'react-native-select-dropdown'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StarRating from 'react-native-star-rating';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 
 
 let Width = Dimensions.get('window').width
 
 export function AddInfo(props) {
-
     const [activeIndex, setActiveIndex] = useState((Number(moment().format('d')) === 0 ? 6 : (Number(moment().format('d')) - 1)))
     const [activColor, setActiveColor] = useState(false)
     const [dayInfo, setDayInfo] = useState()
@@ -49,6 +48,7 @@ export function AddInfo(props) {
     const [openWakeUpTo, setOpenWakeUpTo] = useState(false)
     const [openWakeUpTime, setOpenWakeUpTime] = useState(false)
     const [openOutOfBed, setOpenOutOfBed] = useState(false)
+    const [isMon, setIsMon] = useState(true)
     const [alcoDrinks, setAlcoDrinks] = useState({
         x: '00:00',
         y: Number(0),
@@ -112,7 +112,6 @@ export function AddInfo(props) {
         x: "to 00:00",
         y: Number(0)
     })
-
     const [textAreaInput, setTextAreaInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [weekCountIndex, setWeekCountIndex] = useState(0)
@@ -175,7 +174,7 @@ export function AddInfo(props) {
         },
     ])
     const [weekCount, setWeekCount] = useState([weekDay])
-    const [generalWeekData, setGeneralWeekData] = useState()
+    const [generalWeekData, setGeneralWeekData] = useState([])
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
     const [modalVisible, setModalVisible] = useState(false);
@@ -183,24 +182,7 @@ export function AddInfo(props) {
     const weekData = useRef(null)
     const [weekIndex, setWeekIndex] = useState(0)
     let scrollX = useRef(new Animated.Value(0)).current
-
-
-    function convertMS(ms) {
-        var d, h, m, s;
-        s = Math.floor(ms / 1000);
-        m = Math.floor(s / 60);
-        s = s % 60;
-        h = Math.floor(m / 60);
-        m = m % 60;
-        d = Math.floor(h / 24);
-        h = h % 24;
-        h += d * 24;
-        // return (  h +':' +   m)
-        return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m)
-    }
-
-
-    let dayData = {
+    const dayData = {
         fullDate: weekDay[activeIndex].data.fullDate,
         dayInfo,
         alcoDrinks,
@@ -224,6 +206,525 @@ export function AddInfo(props) {
         medicationDos,
         coffee,
     }
+
+
+    //---------------------Set Acync Storege data------------------------;
+
+    const storeData = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('days', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
+
+    const weekDataStore = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('weekData', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
+
+    const lastActiveDay = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('lastDay', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
+
+    const dailyData = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('dailyData', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
+    const setGlobalWeek = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('globalWeek', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
+
+
+    //---------------------Get Acync Storege data------------------------
+
+    const getStartDate = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('start')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    const getWeekData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('weekData')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    const getLastDay = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('lastDay')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    const getData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('days')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    const getGlobalWeek = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('globalWeek')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+
+    let getInfo = async () => {
+        let startDate = await getStartDate()
+        let lastDay = await getLastDay()
+        let infoDay = await getData()
+        let weekData = await getWeekData()
+        let globalWeekData = await getGlobalWeek()
+        dayDataSave.current = infoDay
+       
+        if (globalWeekData === null) {
+            reasetData()
+            setGlobalWeek(weekCount)
+        }
+        if (weekData === null) {
+            reasetData()
+            await weekDataStore(weekCount)
+            // getData()
+        }
+        if (infoDay === null) {
+            reasetData()
+            await storeData([])
+        }
+
+        // console.log(weekData[weekData.length - 1][0].data.fullDate, 'last');
+        // console.log(weekDay[0].data.fullDate, 'current')
+        // console.log(new Date(moment(weekData[weekData.length - 1][0].data.fullDate._d)) > new Date(moment(weekDay[0].data.fullDate)._d));
+        // console.log(weekCount, 'weekCount');
+
+
+     
+        let arr = weekCount[weekIndex]
+        infoDay !== null && infoDay.map((data, index) => {
+            weekCount[weekIndex].map((item, i) => {
+                if (moment(data.fullDate).format('ddd') === item.week) {
+                    arr[i].data = data
+                }
+            })
+        })
+        setWeekDay([...arr]) 
+          if (
+            weekData !== null &&
+            isMon &&
+            new Date(moment(weekData[weekData.length - 1][0].data.fullDate._d)) > new Date(moment(weekDay[0].data.fullDate)._d)) {
+            setGlobalWeek([...weekData, [...arr]])
+            setIsMon(false)
+            console.log('katarvav');
+        }
+
+     
+        setGeneralWeekData(globalWeekData)
+    } 
+
+        console.log(generalWeekData); 
+    //------------------------- useEffect ---------------------------------
+
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            getInfo()
+            reasetData()
+        });
+        return unsubscribe;
+    }, [props.navigation]);
+
+
+    useEffect(() => {
+        scrollX.addListener(({ value }) => {
+            setWeekIndex(Math.round(value / Width))
+        })
+        return (() => {
+            scrollX.removeAllListeners()
+        })
+    }, [])
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener("change", async (nextAppState) => {
+            if (
+                appState.current.match(/inactive|background/) &&
+                nextAppState === "active"
+            ) {
+                // console.log("App has come to the foreground!");
+            }
+            appState.current = nextAppState;
+            setAppStateVisible(appState.current);
+            appState.current === "background" && await lastActiveDay({
+                date: moment(new Date()).format('YYYY-MM-DD'),
+                day: moment(new Date()).format('d')
+            })
+        });
+        return () => {
+            subscription.remove();
+        };
+    }, []);
+
+    useEffect(() => {
+        reasetData()
+        getInfo()
+    }, []);
+
+    useEffect(() => {
+        // if (weekData == null) {
+        //     let example = [
+        //         {
+        //             week: "Mon",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //         {
+        //             week: "Tue",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //         {
+        //             week: "Wed",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //         {
+        //             week: "Thu",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //         {
+        //             week: "Fri",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //         {
+        //             week: "Sat",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //         {
+        //             week: "Sun",
+        //             data: {
+        //                 fullDate: '',
+        //                 dayInfo,
+        //                 alcoDrinks,
+        //                 exerciseFrom,
+        //                 exerciseTo,
+        //                 napFrom,
+        //                 napTo,
+        //                 intoBed,
+        //                 goSleep,
+        //                 wakeUpTime,
+        //                 outOfBed,
+        //                 fallAsleep,
+        //                 wakeUpFrom,
+        //                 wakeUpTo,
+        //                 textAreaInput,
+        //                 loading,
+        //                 addWakeUp,
+        //                 results,
+        //                 starCount,
+        //                 medicationName,
+        //                 medicationDos,
+        //                 coffee
+        //             }
+        //         },
+        //     ]
+
+        //     //let dayNumberAll = moment(new Date()).daysInYear();
+        //     // let weekNumber = moment(new Date(), "MM-DD-YYYY").week();
+        //     // let weekNumberAll = moment(new Date()).weeksInYear();
+        //     // let stayWeek = weekNumberAll - weekNumber
+        //     let arr = []
+        //     let arrDates = []
+        //     let arrDatesWeek = []
+        //     let weekNumber = moment(new Date(), "MM-DD-YYYY").week();
+        //     let week = 52 - weekNumber
+        //     for (let i = 0; i < week; i++) {
+        //         if (arrDatesWeek.length) {
+        //             let ex = example
+        //             for (let j = 0; j <= 6; j++) {
+        //                 let dateSun = arrDatesWeek[arrDatesWeek.length - 1][6].data.fullDate
+        //                 ex[j].data.fullDate = moment(dateSun, 'dddd, MMM DD, YYYY').add(j + 1, 'days').format('dddd, MMM DD, YYYY')
+        //             }
+        //             console.log(ex);
+        //             arrDatesWeek.push(ex)
+        //         } else {
+        //             let ex = example
+        //             arr.push(moment().format('dddd, MMM DD, YYYY'))
+        //             // let weekDay = moment(arr[0]).format('ddd')
+        //             const dow = moment(arr[0]).day();
+        //             let difference = 7 - dow
+        //             for (let j = 0; j <= difference; j++) {
+        //                 let newDay = arr[0]
+        //                 let weekDay = moment(arr[0]).format('ddd')
+        //                 if (j !== 0) {
+        //                     newDay = moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(j, 'days').format('dddd, MMM DD, YYYY')
+        //                     weekDay = moment(newDay).format('ddd')
+        //                 }
+        //                 if (weekDay === 'Sun') {
+        //                     ex[6].data.fullDate = newDay
+        //                     arrDatesWeek.push(ex)
+        //                 } else {
+        //                     for (let k = 0; k < 7; k++) {
+        //                         if (ex[k].week === weekDay) {
+        //                             ex[k].data.fullDate = newDay
+        //                         }
+        //                     }
+
+        //                 }
+
+        //             }
+
+        //         }
+        //     }
+        //     console.log(arrDatesWeek,   'ewrfgyireh');
+        //     reasetData()
+        //     await weekDataStore(arrDatesWeek)
+        // }
+    }, []);
+
+
+    useEffect(() => {
+
+        weekData.current.scrollToOffset({
+            offset: (weekIndex + 1) * Width
+        })
+    }, [weekCount])
+
+
+    useEffect(() => {
+        // let week = new Array();
+        // (function dates(current) {
+        //     current.setDate((current.getDate() - current.getDay() + 1));
+        //     for (var i = 0; i < 7; i++) {
+        //         week.push(
+        //             new Date(current)
+        //         );
+        //         current.setDate(current.getDate() + 1);
+        //     }
+        //     return week;
+        // })(new Date()) 
+         
+         
+        // let arr = weekCount[weekIndex]
+        // week.map(val=>  {arr.map((data, index) => { 
+        //                  data.data.fullDate =   moment(val).format('dddd, MMM DD, YYYY')    
+        //         })})
+   
+ 
+        
+        let arr = weekCount[weekIndex]
+        if (activeIndex >= 0) {
+            arr.map((data, index) => {
+                if (!Object.keys(data.data).length && activeIndex >= index) { 
+                    let minus = activeIndex - index
+                    data.data.fullDate = moment().subtract(minus, 'days').format('dddd, MMM DD, YYYY')
+                }
+            })
+        }
+
+    }, [weekIndex, activeIndex])
+console.log(weekCount);
+    //------------------------------------------------------------------------------
+ 
+    //------------------------ Converters--------------------------------
+
+    function convertMtoH(n) {
+        let num = n;
+        let hours = (num / 60);
+        let rhours = Math.floor(hours);
+        let minutes = (hours - rhours) * 60;
+        let rminutes = Math.round(minutes);
+        return num = (rhours < 10 ? '0' + rhours : rhours) + " : " + (rminutes < 10 ? "0" + rminutes : rminutes);
+    }
+
+    function convertHtoM(timeInHour) {
+        let timeParts = timeInHour.split(":");
+        return Number(timeParts[0]) * 60 + Number(timeParts[1]);
+    }
+
+    function convertMS(ms) {
+        let d, h, m, s;
+        s = Math.floor(ms / 1000);
+        m = Math.floor(s / 60);
+        s = s % 60;
+        h = Math.floor(m / 60);
+        m = m % 60;
+        d = Math.floor(h / 24);
+        h = h % 24;
+        h += d * 24;
+        // return (  h +':' +   m)
+        return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m)
+    }
+
+    //-------------------------------------------------------------------
+
+
+    //------------------------------functions-------------------------------
+
     const reasetData = () => {
         setTextAreaInput('')
         setAlcoDrinks({
@@ -299,476 +800,11 @@ export function AddInfo(props) {
         setStarCount(0)
     }
 
-    //---------------------Set Acync Storege data------------------------;
-    const storeData = async (value) => {
-        try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('days', JSON.stringify(value))
-        } catch (e) {
-            // saving error
-        }
-    }
-    const weekDataStore = async (value) => {
-        try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('weekData', JSON.stringify(value))
-        } catch (e) {
-            // saving error
-        }
-    }
-
-    const lastActiveDay = async (value) => {
-        try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('lastDay', JSON.stringify(value))
-        } catch (e) {
-            // saving error
-        }
-    }
-
-    const dailyData = async (value) => {
-        try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('dailyData', JSON.stringify(value))
-        } catch (e) {
-            // saving error
-        }
-    }
-
-    //---------------------Get Acync Storege data------------------------
-
-    const getStartDate = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('start')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-            // error reading value
-        }
-    }
-    const getWeekData = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('weekData')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-            // error reading value
-        }
-    }
-    const getLastDay = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('lastDay')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-            // error reading value
-        }
-    }
-
-    const getData = async () => {
-        try {
-            const jsonValue = await AsyncStorage.getItem('days')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-            // error reading value
-        }
-    }
-
-    let getInfo = async () => {
-        let startDate = await getStartDate()
-        let lastDay = await getLastDay()
-        let infoDay = await getData()
-        let weekData = await getWeekData()
-        dayDataSave.current = infoDay
-
-        // if (weekData === null) {
-        //     reasetData()
-        //     await weekDataStore(weekCount)
-        //     // getData()
-        // }
-        if (infoDay === null) {
-            reasetData()
-            await storeData([])
-        }
-        weekData !== undefined && setGeneralWeekData(weekData)
-        let arr = weekCount[weekIndex]
-        infoDay !== null && infoDay.map((data, index) => {
-            weekCount[weekIndex].map((item, i) => {
-                if (moment(data.fullDate).format('ddd') === item.week) {
-                    arr[i].data = data
-                }
-            })
-        })
-        setWeekDay([...arr])
-        // if (lastDay !== 'null') {
-        //     let mon = 1
-        //     let today = moment().isoWeekday()
-        //     let diff = (moment(lastDay.date).diff(moment().format("YYYY-MM-DD"), 'days'))
-
-
-        //     const d = new Date();
-        //     d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7);
-        //     let nextMon = moment(d).format('YYYY MMM DD')
-        //     if (moment().format('YYYY MMM DD') === nextMon && weekCount[(weekCount.length - 1)][0].data.fullDate === 'undefined') {
-        //         alert('It is Mon')
-        //     }
-
-        //     // console.log(moment().startOf('isoweek').isBefore(moment(lastDay.date)), 'fffffff');
-        //     // if (Math.ceil(diff / 7) > 1) {
-        //     //     setWeekCount([...weekCount, ...Array(Math.ceil(diff / 7)).fill(weekDay)])
-        //     // }
-        //     // if (moment().startOf('isoweek').isBefore(moment(lastDay.date)) || moment().startOf('isoweek')) {
-        //     //     setWeekCount([...weekCount, weekDay])
-        //     // }
-        // }
-    }
-
-
-    //------------------------- useEffect ---------------------------------
-
-    //console.log(weekData.current.scrollToIndex());
-    useEffect(() => {
-        scrollX.addListener(({ value }) => {
-            setWeekIndex(Math.round(value / Width))
-        })
-        return (() => {
-            scrollX.removeAllListeners()
-        })
-    }, [])
-
-    useEffect(() => {
-        const subscription = AppState.addEventListener("change", async (nextAppState) => {
-            if (
-                appState.current.match(/inactive|background/) &&
-                nextAppState === "active"
-            ) {
-                // console.log("App has come to the foreground!");
-            }
-            appState.current = nextAppState;
-            setAppStateVisible(appState.current);
-            appState.current === "background" && await lastActiveDay({
-                date: moment(new Date()).format('YYYY-MM-DD'),
-                day: moment(new Date()).format('d')
-            })
-        });
-        return () => {
-            subscription.remove();
-        };
-    }, []);
-
-    useEffect(() => {
-        getInfo()
-    }, []);
-
-    // useEffect(() => {
-    //     const unsubscribe = props.navigation.addListener('focus', () => {
-    //     });
-    //     return unsubscribe;
-    // }, [props.navigation]);
-
-
-    useEffect(() => {
-
-        let example = [
-            {
-                week: "Mon",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-            {
-                week: "Tue",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-            {
-                week: "Wed",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-            {
-                week: "Thu",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-            {
-                week: "Fri",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-            {
-                week: "Sat",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-            {
-                week: "Sun",
-                data: {
-                    fullDate: '',
-                    dayInfo,
-                    alcoDrinks,
-                    exerciseFrom,
-                    exerciseTo,
-                    napFrom,
-                    napTo,
-                    intoBed,
-                    goSleep,
-                    wakeUpTime,
-                    outOfBed,
-                    fallAsleep,
-                    wakeUpFrom,
-                    wakeUpTo,
-                    textAreaInput,
-                    loading,
-                    addWakeUp,
-                    results,
-                    starCount,
-                    medicationName,
-                    medicationDos,
-                    coffee
-                }
-            },
-        ]
-
-        //let dayNumberAll = moment(new Date()).daysInYear();
-
-        // let weekNumber = moment(new Date(), "MM-DD-YYYY").week();
-        // let weekNumberAll = moment(new Date()).weeksInYear();
-        // let stayWeek = weekNumberAll - weekNumber
-        let arr = []
-        let arrDates = []
-        let arrDatesWeek = []
-        for (let i = 0; i < 365; i++) {
-            if (arr.length) {
-                //  arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
-                /* arr.push(moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(1, 'days').format('dddd, MMM DD, YYYY'))
-                 let weekDay = moment(arr[arr.length - 1]).format('dddd')
-                 if(weekDay === 'Sunday' && arrDatesWeek.length){
-
-                 }else{
-                     let ex = example
-                     for(let j = 0; j < new Array(i); j++){
-                         ex[j].data.fullDate = arr[j]
-                     }
-                     arrDatesWeek.push(ex)
-                 }*/
-            } else {
-                let ex = example
-                arr.push(moment().format('dddd, MMM DD, YYYY'))
-                // let weekDay = moment(arr[0]).format('ddd')
-                const dow = moment(arr[0]).day();
-                let difference = 7 - dow
-                for (let j = 0; j <= difference; j++) {
-                    let newDay = arr[0]
-                    let weekDay = moment(arr[0]).format('ddd')
-                    if (j !== 0) {
-                        newDay = moment(arr[arr.length - 1], 'dddd, MMM DD, YYYY').add(j, 'days').format('dddd, MMM DD, YYYY')
-                        weekDay = moment(newDay).format('ddd')
-
-                    }
-                    if (weekDay === 'Sun') {
-                        ex[6].data.fullDate = newDay
-                        arrDatesWeek.push(ex)
-                    } else {
-                        for (let k = 0; k < 7; k++) {
-                            if (ex[k].week === weekDay) {
-                                ex[k].data.fullDate = newDay
-                            }
-                        }
-
-                    }
-
-                }
-
-            }
-        }
-        // console.log(arrDatesWeek, arr);
-
-    }, [])
-
-
-    useEffect(() => {
-        weekCount.map((data, index) => {
-            data.map(item => {
-                if (moment().format('dddd, MMM DD, YYYY') === item.data.fullDate) {
-                    setWeekIndex(index)
-                }
-            })
-        })
-        weekData.current.scrollToOffset({
-            offset: (weekIndex + 1) * Width
-        })
-    }, [weekCount])
-
-    useEffect(() => {
-        let arr = weekCount[weekIndex]
-        if (activeIndex >= 0) {
-            arr.map((data, index) => {
-                if (!Object.keys(data.data).length && activeIndex >= index) {
-                    let minus = activeIndex - index
-                    data.data.fullDate = moment().subtract(minus, 'days').format('dddd, MMM DD, YYYY')
-                }
-            })
-        }
-    }, [weekIndex, activeIndex])
-
-
-    useEffect(() => {
-        const unsubscribe = props.navigation.addListener('focus', () => {
-            getInfo()
-        });
-        return unsubscribe;
-    }, [props.navigation]);
-
-
-    function convertMtoH(n) {
-        var num = n;
-        var hours = (num / 60);
-        var rhours = Math.floor(hours);
-        var minutes = (hours - rhours) * 60;
-        var rminutes = Math.round(minutes);
-        return num = (rhours < 10 ? '0' + rhours : rhours) + " : " + (rminutes < 10 ? "0" + rminutes : rminutes);
-    }
-
-    function convertHtoM(timeInHour) {
-        var timeParts = timeInHour.split(":");
-        return Number(timeParts[0]) * 60 + Number(timeParts[1]);
-    }
-
-    let handleAdddata = async () => {
+    const handleAdddata = async () => {
         setLoading(true)
         let infoDay = await getData()
         setAllData(infoDay)
         dayDataSave.current = [...infoDay, dayData]
-
         await storeData([...infoDay, dayData])
         let time = setTimeout(() => {
             setLoading(false)
@@ -782,21 +818,37 @@ export function AddInfo(props) {
         setModalVisible(!modalVisible)
     }
 
-    let handleForward = () => {
+    const handleForward = () => {
         weekData.current.scrollToOffset({
             offset: (weekIndex + 1) * Width
         })
     }
 
-    let handleBackward = () => {
+    const handleBackward = () => {
         weekData.current.scrollToOffset({
             offset: (weekIndex - 1) * Width
-        })
+        }) 
     }
 
-   
-    let weekDataRender = ((item, i) => {
+    // function dates(current) {
+    //     let week= new Array();  
+    //     current.setDate((current.getDate() - current.getDay() +1));
+    //     for (var i = 0; i < 7; i++) {
+    //         week.push(
+    //             new Date(current)
+    //         ); 
+    //         current.setDate(current.getDate() +1);
+    //     }
+    //     return week; 
+    // }
 
+
+    //----------------------------------------------------------------------
+
+
+    //-------------------------------- FlatList randers --------------------------------------------------
+
+    let weekDataRender = ((item, i) => {
         return (
             <Animated.View key={item.index} style={{
                 width: Width,
@@ -822,9 +874,11 @@ export function AddInfo(props) {
                 </View>
             </Animated.View>
         )
-    }) 
+    })
 
-    
+    //----------------------------------------------------------------------------------------------------
+
+
     return (
         loading ?
             <View style={styles.activLoad}>
@@ -864,18 +918,18 @@ export function AddInfo(props) {
                         </View>
                     </View>
                     <View style={styles.weekDayName}>
-                        {weekCount[weekIndex].map((item, index) => {
+                        {weekCount[weekIndex].map((item, index) => { 
                             return (
                                 <View key={index}>
                                     <TouchableOpacity onPress={() => {
                                         reasetData()
                                         weekCount[weekIndex][activeIndex].data.fullDate < moment().format('dddd, MMM DD, YYYY')
                                             ? (setActiveColor(!activColor),
-                                                setActiveIndex(index)) :
+                                                setActiveIndex(index), reasetData()) :
                                             moment().format('d') > index ? (setActiveColor(!activColor),
-                                                setActiveIndex(index)) :
+                                                setActiveIndex(index), reasetData()) :
                                                 moment().format('d') == 0 && (setActiveColor(!activColor),
-                                                    setActiveIndex(index))
+                                                    setActiveIndex(index), reasetData())
                                     }}
                                         style={
                                             [styles.weeKDaysForm,
@@ -919,7 +973,6 @@ export function AddInfo(props) {
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.alcoDrinks.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.alcoDrinks.x}</Text>
                             </TouchableOpacity>
                         </View>
-
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>What time did you last exercise?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -951,14 +1004,14 @@ export function AddInfo(props) {
                             </View>
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you get into bed?</Text>
+                            <Text style={styles.globalText}>What time did you get to bed?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.intoBed.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.intoBed.x}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you turn off the lights to go sleep?</Text>
+                            <Text style={styles.globalText}>What time did you turn off the lights to go to sleep?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.goSleep.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.goSleep.x}</Text>
@@ -978,16 +1031,17 @@ export function AddInfo(props) {
                                     <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <View>
                                             <TouchableOpacity style={[styles.dataPicker, { marginBottom: 15 }]}>
-                                                <Text style={styles.selectText}>{item.wakeUpDataFrom.x === 'from 00:00' ? 'N/A' : item.wakeUpDataFrom.x}
+                                                <Text
+                                                    style={styles.selectText}>{item.wakeUpDataFrom.x === 'from 00:00' ? 'N/A' : item.wakeUpDataFrom.x}
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
                                         <TouchableOpacity style={styles.dataPicker}>
-                                            <Text style={styles.selectText}>{item.wakeUpDataTo.x === 'to 00:00' ? 'N/A' : item.wakeUpDataTo.x}</Text>
+                                            <Text
+                                                style={styles.selectText}>{item.wakeUpDataTo.x === 'to 00:00' ? 'N/A' : item.wakeUpDataTo.x}</Text>
                                         </TouchableOpacity>
                                     </View>)
                             })}
-
                             <View style={styles.addForm}>
                                 <TouchableOpacity>
                                     <Image source={require('../../assets/img/add.png')} style={styles.addFormImg} />
@@ -1076,7 +1130,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last have coffee,cola or tea?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you have coffee,cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenCoffee(true)}>
                                 <Text style={styles.selectText}>{coffee.x}</Text>
                             </TouchableOpacity>
@@ -1101,7 +1155,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you have alcoholic drinks?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenAlco(true)}>
                                 <Text style={styles.selectText}>{alcoDrinks.x}</Text>
                             </TouchableOpacity>
@@ -1126,7 +1180,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last exercise?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you exercise?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenExFrom(true)}>
@@ -1178,7 +1232,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last take a nap?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you take a nap?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenNapFrom(true)}>
@@ -1187,7 +1241,6 @@ export function AddInfo(props) {
                                     <DatePicker
                                         minuteInterval={5}
                                         is24hourSource={'device'}
-
                                         modal
                                         mode={'datetime'}
                                         open={openNapFrom}
@@ -1229,7 +1282,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you get into bed?</Text>
+                            <Text style={styles.globalText}>What time did you get to bed?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenIntoBed(true)}>
                                 <Text style={styles.selectText}>{intoBed.x}</Text>
                             </TouchableOpacity>
@@ -1254,7 +1307,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you turn off the lights to go sleep?</Text>
+                            <Text style={styles.globalText}>What time did you turn off the lights to go to sleep?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenGoSleep(true)}>
                                 <Text style={styles.selectText}>{goSleep.x}</Text>
                             </TouchableOpacity>
@@ -1400,7 +1453,6 @@ export function AddInfo(props) {
                                 />
                             </View>
                         </View>
-
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Comments</Text>
                             <TextInput
@@ -1425,7 +1477,6 @@ export function AddInfo(props) {
                             let naps = convertHtoM(convertMS(napTo.y - napFrom.y))
                             let fallaSleepTime = fallAsleep.y
                             let wakeAfterSleep = convertHtoM(convertMS((addWakeUp[0].wakeUpDataFrom.y > 0) && (addWakeUp[0].wakeUpDataFrom.y - ((fallAsleep.y * 60000) + intoBed.y))))
-
                             setResults([{
                                 sleepTime,
                                 timeInBed,
@@ -1451,7 +1502,6 @@ export function AddInfo(props) {
                             x: moment(time).format('hh:mm A'),
                             y: new Date(time).getTime()
                         }
-
                         setAddWakeUp([...data]);
                     }}
                     cancel={() => {
@@ -1537,7 +1587,6 @@ export function AddInfo(props) {
                             </View>
                         </View>
                     </View>
-
                 </Modal>
             </ScrollView>
     );

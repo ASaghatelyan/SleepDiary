@@ -960,6 +960,7 @@ const ExportPdf = (props) => {
     },
   }
 
+
   const htmlContent = `
   <html>
     <head>
@@ -973,7 +974,7 @@ const ExportPdf = (props) => {
     <body>
     <div class="App">
    
-    <header className='headerTable'>SLEEP DIARY </header>
+    <header className='headerTable'>Sleep Diary Chart Week ${props.weekNumber}</header>
     <table >
     <thead>
       <tr class='headerSpans'>
@@ -1013,8 +1014,7 @@ const ExportPdf = (props) => {
     </thead>
     ${weekState.length > 0 && weekState.map((data, index) => {
     return data[1].map((val) => {
-      console.log(data[0].dayInfo === '','data[0].dayInfo')
-     return (
+      return (
         ` 
         <tbody>
              <tr>
@@ -1917,12 +1917,38 @@ const ExportPdf = (props) => {
             </tbody>`)
 
     })}
-   
-    </table>
+  </table>  
+    <table class='tableAvg'> 
+    <header> Sleep Diary Week ${props.weekNumber} </header> 
+        <thead> 
+     <tr class=''>
+          <th ><span>Today's Data</span></th> 
+          <th ><span>Type of Day</span></th> 
+            <th><span>What time did you go to bed?</span></th>
+            <th><span>What time did you turn off the lights to go to sleep? </span></th>
+            <th><span> How long did it take you to fall asleep? </span></th>
+            <th><span>What was your final wake up time? </span></th>
+            <th><span>What time did you get out of bed? </span></th>
+        
+        </tr>  
+      </thead>  ${weekState.length > 0 && weekState.map((data) => {
+        return  `<tbody>
+              <tr> 
+     <th><p>${moment(data[0].fullDate).format('D/MM/YYYY')}</p></th>
+     <th><p>${data[0].dayInfo}</p></th>
+     <th><p>${data[0].intoBed.x}</p></th>
+       <th><p>${data[0].goSleep.x}</p></th>
+          <th><p>${data[0].fallAsleep.x} min</p></th>
+           <th><p>${data[0].wakeUpTime.x}</p></th>  
+              <th><p>${data[0].outOfBed.x}</p></th>  
+              </tr>
+          </tbody>` })}
+            </table>   
     </div>
     </body >
   </html >
     `;
+
 
   let getInfo = () => {
     let weekInfo = props.data
@@ -1938,7 +1964,6 @@ const ExportPdf = (props) => {
     let x = 0
     let res = []
     setResults(res)
-
     weekInfo && weekInfo.map((data, index) => {
       Object.keys(data.data).length > 1 && weekData.push([...[data.data], [{
         alco: Object.keys(data.data).length > 1 && data.data.alcoDrinks,
@@ -2001,10 +2026,7 @@ const ExportPdf = (props) => {
       Object.keys(data.data).length > 1 && wakeAfterSleep.push(data.data.results[0].wakeAfterSleep)
       setFirstWakeUp(wakeAfterSleep.reduce((previousValue, currentValue) => previousValue + currentValue,
         0))
-
     })
-
-
     weekInfo && setWeekState(weekData)
   }
 
@@ -2012,7 +2034,6 @@ const ExportPdf = (props) => {
     getInfo()
   }, [props.data])
 
-  console.log(weekState);
 
   const askPermission = () => {
     async function requestExternalWritePermission() {
@@ -2048,7 +2069,7 @@ const ExportPdf = (props) => {
       //Content to print
       html: htmlContent,
       //File Name
-      fileName: 'Sleep Diary',
+      fileName: `Sleep Diary Data Week ${props.weekNumber}`,
       //File directory
       directory: 'Download',
       base64: true,
@@ -2056,7 +2077,7 @@ const ExportPdf = (props) => {
 
     let file = await RNHTMLtoPDF.convert(options)
     // console.log(file.filePath);
-    Alert.alert('Successfully Exported', 'Path:' + file.filePath, [
+    Alert.alert('Successfully Exported',   "", [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Open', onPress: () => openFile(file.filePath) }
     ], { cancelable: true });
@@ -2064,6 +2085,7 @@ const ExportPdf = (props) => {
 
   const openFile = (filepath) => {
     const path = filepath;// absolute-path-to-my-local-file.
+    console.log(path,'pathhhh');
     FileViewer.open(path)
       .then(() => {
         // success
@@ -2142,6 +2164,11 @@ const htmlStyles = `
 .headerTable{
   font-size:20px;
   font-weight: bold;padding: 10px;
+}
+.headerTableDay{
+  font-size:20px;
+  font-weight: bold;padding: 10px;m
+  margin-top:20px
 }
 * table, th ,td{
   position: relative;
@@ -2283,7 +2310,7 @@ const htmlStyles = `
   line-height: 1px;  
 }
 .tableAvg{
-  margin-top:40px
+  margin-top:10px
 }
 `;
 

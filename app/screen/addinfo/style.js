@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet ,Platform} from "react-native";
 
 const styles = StyleSheet.create({
     scrollView: {
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         justifyContent: 'center',
+        color:'#000'
     },
     madicationName: {
         borderRadius: 10,
@@ -90,7 +91,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingLeft:15,
-        paddingVertical:5
+        paddingVertical:5,
+        color:'#000'
     },
     madicationDosage: {
         borderRadius: 10,
@@ -101,7 +103,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingLeft:15,
-        paddingVertical:5
+        paddingVertical:5,
+        color:'#000'
     },
     globalText: {
         fontFamily: "Quicksand-Regular",
@@ -136,7 +139,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 91,
         textAlignVertical: 'top',
-        paddingLeft: 16,
+        paddingLeft: Platform.OS === 'ios' ? 10 : 16,
         marginVertical: 6,
         fontSize: 14,
         color: '#000'
