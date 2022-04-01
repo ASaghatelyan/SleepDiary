@@ -253,6 +253,14 @@ export function AddInfo(props) {
             // saving error
         }
     }
+    const setFlag = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('flag', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
 
 
     //---------------------Get Acync Storege data------------------------
@@ -301,36 +309,36 @@ export function AddInfo(props) {
             // error reading value
         }
     }
+    const getFlag = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('flag')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
 
     let getInfo = async () => {
         let startDate = await getStartDate()
         let lastDay = await getLastDay()
         let infoDay = await getData()
         let weekData = await getWeekData()
-        let globalWeekData = await getGlobalWeek()
+        // let globalWeekData = await getGlobalWeek()
+        let flag = await getFlag()
         dayDataSave.current = infoDay
-       
-        if (globalWeekData === null) {
-            reasetData()
-            setGlobalWeek(weekCount)
+        if (flag === null) {
+            flag = 0
         }
-        if (weekData === null) {
-            reasetData()
-            await weekDataStore(weekCount)
-            // getData()
-        }
+        // if (globalWeekData === null) {
+        //     reasetData()
+        //     setGlobalWeek(weekCount)
+        // }
+
         if (infoDay === null) {
             reasetData()
             await storeData([])
         }
 
-        // console.log(weekData[weekData.length - 1][0].data.fullDate, 'last');
-        // console.log(weekDay[0].data.fullDate, 'current')
-        // console.log(new Date(moment(weekData[weekData.length - 1][0].data.fullDate._d)) > new Date(moment(weekDay[0].data.fullDate)._d));
-        // console.log(weekCount, 'weekCount');
-
-
-     
         let arr = weekCount[weekIndex]
         infoDay !== null && infoDay.map((data, index) => {
             weekCount[weekIndex].map((item, i) => {
@@ -339,21 +347,46 @@ export function AddInfo(props) {
                 }
             })
         })
-        setWeekDay([...arr]) 
-          if (
-            weekData !== null &&
-            isMon &&
-            new Date(moment(weekData[weekData.length - 1][0].data.fullDate._d)) > new Date(moment(weekDay[0].data.fullDate)._d)) {
-            setGlobalWeek([...weekData, [...arr]])
-            setIsMon(false)
-            console.log('katarvav');
+        console.log(flag, 'flag');
+        console.log(arr, 'arr');
+        console.log(weekData, 'weekData');
+        setWeekDay([...arr])
+
+
+        if (weekData === null) {
+            reasetData()
+            let weekNumber = moment(new Date(), "MM-DD-YYYY").week();
+            await weekDataStore(weekCount)
+            return setFlag(weekNumber)
+            // getData()
         }
+        console.log('stop');
+        let weekNumber = 0
+        if (weekData === null) {
+            weekNumber = moment(new Date(), "MM-DD-YYYY").week();
+        } else {
+            weekNumber = moment(moment(weekData[weekData.length - 1][0].data.fullDate), "MM-DD-YYYY").week();
+        }
+        console.log(+flag < +weekNumber, ' flag <  weekNumber', weekData !== null);
+        if (weekData !== null && +flag < +weekNumber) {
 
-     
-        setGeneralWeekData(globalWeekData)
-    } 
+            let arrWeek = [...weekData, [...arr]]
+            setWeekCount([...weekData, [...arr]])
+            weekDataStore(arrWeek)
+            setFlag(weekNumber)
+        };
 
-        console.log(generalWeekData); 
+        // if (
+        //     weekData !== null &&
+        //     flag &&
+        //      moment(weekDay[0].data.fullDate).isAfter(moment(weekData[weekData.length - 1][6].data.fullDate)) ) {
+        //     setGlobalWeek([...weekData, [...arr]])
+        //     setFlag(false)
+        //     console.log('katarvav');
+        // } 
+    }
+
+    console.log(generalWeekData);
     //------------------------- useEffect ---------------------------------
 
     useEffect(() => {
@@ -656,40 +689,41 @@ export function AddInfo(props) {
 
 
     useEffect(() => {
-        // let week = new Array();
-        // (function dates(current) {
-        //     current.setDate((current.getDate() - current.getDay() + 1));
-        //     for (var i = 0; i < 7; i++) {
-        //         week.push(
-        //             new Date(current)
-        //         );
-        //         current.setDate(current.getDate() + 1);
-        //     }
-        //     return week;
-        // })(new Date()) 
-         
-         
-        // let arr = weekCount[weekIndex]
-        // week.map(val=>  {arr.map((data, index) => { 
-        //                  data.data.fullDate =   moment(val).format('dddd, MMM DD, YYYY')    
-        //         })})
-   
- 
-        
+        let week = new Array();
+        (function dates(current) {
+            current.setDate((current.getDate() - current.getDay() + 1));
+            for (var i = 0; i < 7; i++) {
+                week.push(
+                    new Date(current)
+                );
+                current.setDate(current.getDate() + 1);
+            }
+            return week;
+        })(new Date())
+
+
         let arr = weekCount[weekIndex]
-        if (activeIndex >= 0) {
+        week.map(val => {
             arr.map((data, index) => {
-                if (!Object.keys(data.data).length && activeIndex >= index) { 
-                    let minus = activeIndex - index
-                    data.data.fullDate = moment().subtract(minus, 'days').format('dddd, MMM DD, YYYY')
+                if (data.week === moment(val).format('ddd')) {
+                    data.data.fullDate = moment(val).format('dddd, MMM DD, YYYY')
                 }
             })
-        }
+        })
 
+        // let arr = weekCount[weekIndex]
+        // if (activeIndex >= 0) {
+        //     arr.map((data, index) => {
+        //         if (!Object.keys(data.data).length && activeIndex >= index) {
+        //             let minus = activeIndex - index
+        //             data.data.fullDate = moment().subtract(minus, 'days').format('dddd, MMM DD, YYYY')
+        //         }
+        //     })
+        // }
     }, [weekIndex, activeIndex])
-console.log(weekCount);
+
     //------------------------------------------------------------------------------
- 
+
     //------------------------ Converters--------------------------------
 
     function convertMtoH(n) {
@@ -721,7 +755,7 @@ console.log(weekCount);
     }
 
     //-------------------------------------------------------------------
-
+    console.log(weekCount, 'ddddddd');
 
     //------------------------------functions-------------------------------
 
@@ -827,7 +861,7 @@ console.log(weekCount);
     const handleBackward = () => {
         weekData.current.scrollToOffset({
             offset: (weekIndex - 1) * Width
-        }) 
+        })
     }
 
     // function dates(current) {
@@ -889,13 +923,6 @@ console.log(weekCount);
                 <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
                 <View style={styles.topSide}>
                     <View style={styles.weekSide}>
-                        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                       {weekCount.map((item, index) => {
-                           return <View key={index} style={{ width: Width }}>
-                               <Text style={styles.week}>Week {index + 1}</Text>
-                           </View>
-                       })}
-                   </ScrollView> */}
                         <View style={{ width: Width }}>
                             <Animated.FlatList
                                 data={weekCount}
@@ -918,16 +945,18 @@ console.log(weekCount);
                         </View>
                     </View>
                     <View style={styles.weekDayName}>
-                        {weekCount[weekIndex].map((item, index) => { 
+                        {weekCount[weekIndex].map((item, index) => {
                             return (
                                 <View key={index}>
                                     <TouchableOpacity onPress={() => {
                                         reasetData()
-                                        weekCount[weekIndex][activeIndex].data.fullDate < moment().format('dddd, MMM DD, YYYY')
+                                        item.data.fullDate < moment().format('dddd, MMM DD, YYYY')
                                             ? (setActiveColor(!activColor),
-                                                setActiveIndex(index), reasetData()) :
+                                                setActiveIndex(index), reasetData())
+                                            :
                                             moment().format('d') > index ? (setActiveColor(!activColor),
-                                                setActiveIndex(index), reasetData()) :
+                                                setActiveIndex(index), reasetData())
+                                                :
                                                 moment().format('d') == 0 && (setActiveColor(!activColor),
                                                     setActiveIndex(index), reasetData())
                                     }}
