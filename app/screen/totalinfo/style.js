@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
     infoText: {
         color: '#00405E',
-        fontSize: 18,
+        fontSize: 15,
         lineHeight: 22,
         fontFamily: "Quicksand-Regular",
         textAlign: 'center',

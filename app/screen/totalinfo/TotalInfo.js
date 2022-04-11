@@ -12,12 +12,16 @@ export function TotalInfo(props) {
   const [starCount, setStarCount] = useState(0)
   const [allData, setAllData] = useState([])
   const [sleepTime, setSleepTime] = useState(0)
+  const [sleepTimeCount, setSleepTimeCount] = useState(0)
   const [effectiveSleep, setEffectiveSleep] = useState()
+  const [effectiveSleepCount, setEffectiveSleepCount] = useState()
   const [avergeStarsCount, setAvergeStarsCount] = useState()
   const [avergeTimInBed, setAvergeTimeInBed] = useState()
+  const [avergeTimInBedCount, setAvergeTimeInBedCount] = useState()
   const [avergeAwakeningsTime, setAvergeAwakeningsTime] = useState()
   const [avergeNapTime, setAvergeNapTime] = useState()
-  const [avergeFallASleepTime, setAvergeFallASleepTime] = useState()
+   const [avergeFallASleepTime, setAverageFallASleepTime] = useState()
+  const [avergeFallASleepTimeCount, setAverageFallASleepTimeCount] = useState()
   const [count, setCount] = useState(0)
   const [show, setShow] = useState(false)
   const [firstWakeUp, setFirstWakeUp] = useState()
@@ -25,21 +29,23 @@ export function TotalInfo(props) {
   const data = [
     {
       img: require('../../assets/img/alarm.png'),
-      title: 'Averge amount of sleep',
-      time: sleepTime ? convertMtoH(Math.floor(sleepTime / count)) : '00:00'
+      title: 'Average time to fall asleep',
+      time:`${ avergeFallASleepTime &&   avergeFallASleepTimeCount ? convertMtoH(Math.floor(avergeFallASleepTime / avergeFallASleepTimeCount)): '00hr 00min'}`
+    },
+    {
+      img: require('../../assets/img/alarm.png'),
+      title: 'Average amount of sleep',
+      time:`${sleepTime && sleepTimeCount ?convertMtoH(Math.floor(sleepTime / sleepTimeCount)):'00hr 00min'}`
     },
     {
       img: require('../../assets/img/bed.png'),
-      title: 'Averge amount in bed',
-      time: avergeTimInBed ? convertMtoH(Math.floor(avergeTimInBed / count)) : '00:00'
+      title: 'Average amount in bed',
+      time:`${avergeTimInBed && avergeTimInBedCount ?   convertMtoH(Math.floor(avergeTimInBed / avergeTimInBedCount)): '00hr 00min'}`
     },
     {
       img: require('../../assets/img/moon.png'),
-      title: 'Averge sleep efficiency',
-      time: effectiveSleep ? `${Math.floor(effectiveSleep / count)} %` : '0 %'
-    },
-    {
-      title: 'Averge sleep quality',
+      title: 'Average sleep efficiency',
+      time:` ${effectiveSleep && effectiveSleepCount ? (  Math.floor(effectiveSleep / effectiveSleepCount)) :'0'}%`
     },
   ]
 
@@ -64,7 +70,19 @@ export function TotalInfo(props) {
   //     color: '#AF7AB1'
   //   },
   // ]
-
+  function convertMS(ms) {
+    let d, h, m, s;
+    s = Math.floor(ms / 1000);
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
+    h += d * 24;
+    // return (  h +':' +   m)
+    return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m)
+}
 
   function convertMtoH(n) {
     var num = n;
@@ -72,7 +90,7 @@ export function TotalInfo(props) {
     var rhours = Math.floor(hours);
     var minutes = (hours - rhours) * 60;
     var rminutes = Math.round(minutes);
-    return num = (rhours < 10 ? '0' + rhours : rhours) + " : " + (rminutes < 10 ? "0" + rminutes : rminutes);
+    return num = (rhours < 10 ? '0' + rhours : rhours) + "hr  " + (rminutes < 10 ? "0" + rminutes : rminutes) + "min ";
   }
 
   function convertHtoM(timeInHour) {
@@ -113,26 +131,21 @@ export function TotalInfo(props) {
     //   setAvergeTimeInBed(0)
     //   setEffectiveSleep(0)
     //   setCount(0)
-    // }
+    // } 
 
-    infoDay !== null && infoDay.map((item, index) => {
-
+    infoDay !== null && infoDay.map((item, index) => { 
       const starCount = []
       const sleepTime = []
       const effectiveSleepTime = []
       const timeInTheBed = []
-      const awakeningsTime = []
-      const napsTime = []
+      const awakeningsTime = [] 
       const fallaSleep = []
-      const wakeAfterSleep = []
-      // const  first awaking time - statr of sleep / days count  
-      let x = 0
+      const wakeAfterSleep = []  
       let res = []
       setResults(res)
 
-      return item.map((item, index) => {
-        Object.keys(item.data).length > 1 && res.push(item.data.results[0]);
-        Object.keys(item.data).length > 1 && setCount(++x)
+       item.map((item, index) => {
+        Object.keys(item.data).length > 1 && res.push(item.data.results[0]); 
 
         Object.keys(item.data).length > 1 && sleepTime.push(item.data.results[0].sleepTime)
         setSleepTime(sleepTime.reduce(
@@ -163,27 +176,74 @@ export function TotalInfo(props) {
           0));
 
         Object.keys(item.data).length > 1 && fallaSleep.push(item.data.results[0].fallaSleepTime)
-        setAvergeFallASleepTime(fallaSleep.reduce(
+        setAverageFallASleepTime(fallaSleep.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
           0));
 
-        Object.keys(item.data).length > 1 && napsTime.push(item.data.results[0].naps)
-        setAvergeNapTime(napsTime.reduce(
-          (previousValue, currentValue) => previousValue + currentValue,
-          0));
+       
 
         Object.keys(item.data).length > 1 && wakeAfterSleep.push(item.data.results[0].wakeAfterSleep)
         setFirstWakeUp(wakeAfterSleep.reduce((previousValue, currentValue) => previousValue + currentValue,
-          0))
-
+          0)) 
       })
+      let effectiveS=[]
+      let bedT=[]
+      let avgLig=[]
+      let wakeUpS=[]
+      let outOfB=[]
+      let timeInTheB=[]
+      let fallaS=[]
+      let sleepT=[]
+      wakeAfterSleep.filter((item)=>{   
+        if(item >=1   ){
+          wakeUpS.push(item)   
+        } 
+      })
+      // avgLighte.filter((item)=>{  
+      //   if(item >=1   ){
+      //     avgLig.push(item)   
+      //   } 
+      // })
+      // bedTime.filter((item)=>{   
+      //   if(item >=1   ){
+      //     bedT.push(item)   
+      //   } 
+      // })
+      effectiveSleepTime.filter((item)=>{   
+        if(item >=1   ){
+          effectiveS.push(item)   
+        } 
+      }) 
+      // outOfBedT.filter((item)=>{   
+      //   if(item >=1  ){
+      //     outOfB.push(item)   
+      //   } 
+      // }) 
+      timeInTheBed.filter((item)=>{  
+        if(item >=1  ){
+          timeInTheB.push(item)   
+        } 
+      }) 
+      fallaSleep.filter((item)=>{  
+        if(item >=1  ){
+          fallaS.push(item)   
+        } 
+      }) 
+      sleepTime.filter((item)=>{   
+        if(item >= 1    ){
+          sleepT.push(item)    
+        }  
+      })  
+       setEffectiveSleepCount(effectiveS.length)  
+      setAvergeTimeInBedCount(timeInTheB.length) 
+      setSleepTimeCount(sleepT.length) 
+      setAverageFallASleepTimeCount(fallaS.length)
 
     })
     setAllData(infoDay)
 
-  }
-
-
+  } 
+  
 
   return (
 

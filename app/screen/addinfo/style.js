@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         color:'#000'
     },
-    madicationName: {
+    medicationName: {
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#AFC7D1',
@@ -94,11 +94,11 @@ const styles = StyleSheet.create({
         paddingVertical:5,
         color:'#000'
     },
-    madicationDosage: {
+    medicationDosage: {
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#AFC7D1',
-        width: 120,
+        width: 130,
         height: 40,
         alignItems: 'center',
         justifyContent: 'center',
