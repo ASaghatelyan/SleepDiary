@@ -32,6 +32,7 @@ export function AddInfo(props) {
     const [activeIndex, setActiveIndex] = useState((Number(moment().format('d')) === 0 ? 6 : (Number(moment().format('d')) - 1)))
     const [activColor, setActiveColor] = useState(false)
     const [dayInfo, setDayInfo] = useState()
+    const [prevDayInfo, setPrevDayInfo] = useState()
     const [date, setDate] = useState('00:00')
     const [openAlco, setOpenAlco] = useState(false)
     const [openCoffee, setOpenCoffee] = useState(false)
@@ -192,7 +193,9 @@ export function AddInfo(props) {
     let scrollX = useRef(new Animated.Value(0)).current
     const dayData = {
         fullDate: weekDay[activeIndex].data.fullDate,
+        prevDate: moment(new Date(`${moment(weekDay[activeIndex].data.fullDate).format('D MMM YYYY')}`).getTime()).subtract(1, 'days').format('D MMM YYYY'),
         dayInfo,
+        prevDayInfo,
         alcoDrinks,
         exerciseFrom,
         exerciseTo,
@@ -316,7 +319,7 @@ export function AddInfo(props) {
         let lastDay = await getLastDay()
         let infoDay = await getData()
         let weekData = await getWeekData()
-        console.log(weekData, 'dddddddaataaa');
+        // console.log(weekData, 'dddddddaataaa');
         let flag = await getFlag()
         dayDataSave.current = infoDay
         if (flag === null) {
@@ -348,12 +351,12 @@ export function AddInfo(props) {
         } else {
             weekNumber = moment(moment(weekData[weekData.length - 1][0].data.fullDate), "MM-DD-YYYY").week();
         }
-        console.log(weekData, 'ffff');
+        // console.log(weekData, 'ffff');
 
-        console.log(weekCount[0][0].data.fullDate);
-        console.log(+flag, '+flag', +weekNumber, '+weekNumber'
-        );
-        console.log(weekData !== null && +flag < +weekNumber);
+        // console.log(weekCount[0][0].data.fullDate);
+        // console.log(+flag, '+flag', +weekNumber, '+weekNumber'
+        // );
+        // console.log(weekData !== null && +flag < +weekNumber);
         if (weekData !== null && +flag < +weekNumber) {
             let arrWeek = [...weekData, [...arr]]
             setWeekCount([...weekData, [...arr]])
@@ -413,7 +416,6 @@ export function AddInfo(props) {
 
 
     useEffect(() => {
-
         weekData.current.scrollToOffset({
             offset: (weekIndex + 1) * Width
         })
@@ -454,7 +456,6 @@ export function AddInfo(props) {
         // }
     }, [weekIndex, activeIndex])
 
-    console.log(weekCount);
     //------------------------------------------------------------------------------
 
     //------------------------ Converters-------------------------------- 
@@ -507,6 +508,7 @@ export function AddInfo(props) {
         })
         setDate('')
         setDayInfo('')
+        setPrevDayInfo('')
         setExerciseFrom({
             x: "from 00:00",
             y: Number(0)
@@ -717,9 +719,9 @@ export function AddInfo(props) {
                 {Object.keys(weekCount[weekIndex][activeIndex].data).length > 1 ?
                     (<View style={styles.content}>
                         <Text style={styles.title}>{weekCount[weekIndex][activeIndex].data.fullDate}</Text>
-
+                       
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last have coffee, cola or tea?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you have coffee, cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.coffee.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.coffee.x}
@@ -727,14 +729,14 @@ export function AddInfo(props) {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last have alcoholic drinks?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you have alcoholic drinks?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
                                 <Text
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.alcoDrinks.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.alcoDrinks.x}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last exercise?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you exercise?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker}>
@@ -749,7 +751,7 @@ export function AddInfo(props) {
                             </View>
                         </View>
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What time did you last take a nap?</Text>
+                            <Text style={styles.globalText}>Before your last bedtime,what time did you take a nap?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <TouchableOpacity style={styles.dataPicker}>
@@ -822,12 +824,13 @@ export function AddInfo(props) {
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.outOfBed.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.outOfBed.x}</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What type of day is {weekCount[weekIndex][activeIndex].data.fullDate}?</Text>
-                            <TouchableOpacity style={styles.dataPicker}>
-                                <Text style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.dayInfo}</Text>
-                            </TouchableOpacity>
-                        </View>
+                        
+                         <View style={styles.chooseType}>
+                         <Text style={styles.globalText}>What type of day is {weekCount[weekIndex][activeIndex].data.fullDate}?</Text>
+                         <TouchableOpacity style={styles.dataPicker}>
+                             <Text style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.dayInfo}</Text>
+                         </TouchableOpacity>
+                     </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep Medications</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -864,7 +867,6 @@ export function AddInfo(props) {
                     :
                     <View style={styles.content}>
                         <Text style={styles.title}>{weekDay[activeIndex].data.fullDate}</Text>
-
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Before your last bedtime,what time did you have coffee, cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenCoffee(true)}>
@@ -1176,8 +1178,9 @@ export function AddInfo(props) {
                                 }}
                             />
                         </View>
+
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What type of day is {weekCount[weekIndex][activeIndex].data.fullDate}?</Text>
+                            <Text style={styles.globalText}>What type of day is {`${moment(weekDay[activeIndex].data.fullDate).format('D MMM YYYY')}`}?</Text>
                             <SelectDropdown
                                 data={countries}
                                 buttonStyle={styles.selectStyle}
@@ -1237,7 +1240,7 @@ export function AddInfo(props) {
                             />
                         </View>
                         <GlobalButton text={'Save'} handlePress={() => {
-                            let sleepTime = convertHtoM(convertMS(wakeUpTime.y - (fallAsleep.y * 60000 +goSleep.y))) - addWakeUp.map((item) => convertHtoM(convertMS(item.wakeUpDataTo.y - item.wakeUpDataFrom.y))).reduce(
+                            let sleepTime = convertHtoM(convertMS(wakeUpTime.y - (fallAsleep.y * 60000 + goSleep.y))) - addWakeUp.map((item) => convertHtoM(convertMS(item.wakeUpDataTo.y - item.wakeUpDataFrom.y))).reduce(
                                 (previousValue, currentValue) => previousValue + currentValue,
                                 0)
                             let timeInBed = convertHtoM(convertMS(outOfBed.y - intoBed.y))
