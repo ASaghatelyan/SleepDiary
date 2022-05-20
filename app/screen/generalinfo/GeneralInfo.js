@@ -2,15 +2,15 @@ import { View, ScrollView, StatusBar, Image, Text, Modal, TouchableOpacity } fro
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ExportPdf from './ExportPdf'; 
-import SelectDropdown from 'react-native-select-dropdown'; 
+import ExportPdf from './ExportPdf';
+import SelectDropdown from 'react-native-select-dropdown';
 
-export function GeneralInfo(props) {  
-  const [modalVisible, setModalVisible] = useState(false); 
+export function GeneralInfo(props) {
+  const [modalVisible, setModalVisible] = useState(false);
   const [totalData, setTotalData] = useState([])
   const [chgideminc, setChgideminc] = useState([])
   const [indexG, setIndexG] = useState(0)
- 
+
 
   const getWeekData = async () => {
     try {
@@ -22,35 +22,36 @@ export function GeneralInfo(props) {
 
 
   let getInfo = async () => {
-    let weekInfo = await getWeekData() 
+    let weekInfo = await getWeekData()
     weekInfo!==null &&  setTotalData(weekInfo)
   }
 
   useEffect(() => {
-    getInfo() 
+    getInfo()
   }, [])
- 
+
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
       getInfo()
     });
     return unsubscribe;
-  }, [props.navigation]); 
+  }, [props.navigation]);
 
 
   useEffect(() => {
-    if( totalData.length){ 
+    if( totalData.length){
       let arr = []
-      totalData.map((item, index)=>{
-        arr.push(index+1) 
+        console.log(totalData, 'totalData');
+        totalData.map((item, index)=>{
+        arr.push(index+1)
       })
-      setChgideminc([...arr])
+        setChgideminc([...arr])
     }
   }, [totalData])
 
- 
- 
+
+
 return (
     <ScrollView contentContainerStyle={styles.scrollView}>
       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
@@ -62,12 +63,12 @@ return (
         <Text style={styles.text}>This app stores information locally on your phone. </Text>
         <Text style={styles.text}>This means that the information you put in will be erased if you delete the app. </Text>
         <Text style={styles.text}>It also means that only the operator of the app will have access to user information.</Text>
-        <View style={styles.btnView}>  
+        <View style={styles.btnView}>
          <View style={styles.dowlandPdf}>
        <View style={styles.chooseView}>
        <Text style={styles.chooseStyle} >Choose Week</Text>
           <SelectDropdown
-            data={`${chgideminc}`}
+            data={chgideminc}
             defaultButtonText={'1'}
             onSelect={(selectedItem, index) => {
               setIndexG(selectedItem - 1)
@@ -94,8 +95,8 @@ return (
           />
        </View>
            <ExportPdf data={totalData[indexG]} weekNumber={indexG+1}/>
-         </View> 
-        </View>  
+         </View>
+        </View>
       </View>
       <View style={{alignItems:'center',justifyContent:'center'}}>
       <TouchableOpacity style={styles.btn} onPress={() => {
@@ -104,7 +105,7 @@ return (
             <Image source={require('../../assets/img/reset.png')} style={styles.vectorImg} />
             <Text style={styles.btnText}>Reset Data</Text>
           </TouchableOpacity>
-      </View> 
+      </View>
       <Modal
         animationType='slide'
         transparent={true}
@@ -134,7 +135,7 @@ return (
                     let removeStartDate = await AsyncStorage.removeItem('start')
                     let removeWeekData = await AsyncStorage.removeItem('weekData')
                     let removeGlobal = await AsyncStorage.removeItem('globalWeek')
-                    let removeFlag = await AsyncStorage.removeItem('flag') 
+                    let removeFlag = await AsyncStorage.removeItem('flag')
                     setModalVisible(!modalVisible)
                     props.navigation.replace('Start')
                   }}

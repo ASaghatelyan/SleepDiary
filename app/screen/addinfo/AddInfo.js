@@ -93,6 +93,7 @@ export function AddInfo(props) {
         z: '00:00',
         info: 'L'
     })
+    console.log(goSleep,'asasasasas');
     const [wakeUpTime, setWakeUpTime] = useState({
         x: '00:00',
         y: Number(0),
@@ -182,6 +183,7 @@ export function AddInfo(props) {
             data: {}
         },
     ])
+
     const [weekCount, setWeekCount] = useState([weekDay])
     const [generalWeekData, setGeneralWeekData] = useState([])
     const appState = useRef(AppState.currentState);
@@ -192,7 +194,7 @@ export function AddInfo(props) {
     const [weekIndex, setWeekIndex] = useState(0)
     let scrollX = useRef(new Animated.Value(0)).current
     const dayData = {
-        fullDate: weekDay[activeIndex].data.fullDate,
+            fullDate: weekDay[activeIndex].data.fullDate,
         prevDate: moment(new Date(`${moment(weekDay[activeIndex].data.fullDate).format('D MMM YYYY')}`).getTime()).subtract(1, 'days').format('D MMM YYYY'),
         dayInfo,
         prevDayInfo,
@@ -239,6 +241,14 @@ export function AddInfo(props) {
         }
     }
 
+    const XStore = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('xData', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
     const lastActiveDay = async (value) => {
         try {
             const jsonValue = JSON.stringify(value)
@@ -265,6 +275,14 @@ export function AddInfo(props) {
             // saving error
         }
     }
+    const setX = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('x', JSON.stringify(value))
+        } catch (e) {
+            // saving error
+        }
+    }
 
 
     //---------------------Get Acync Storege data------------------------
@@ -281,6 +299,14 @@ export function AddInfo(props) {
     const getWeekData = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem('weekData')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
+    const getXData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('xData')
             return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch (e) {
             // error reading value
@@ -313,14 +339,23 @@ export function AddInfo(props) {
             // error reading value
         }
     }
+    const getX = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('x')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
+    }
 
     let getInfo = async () => {
         let startDate = await getStartDate()
         let lastDay = await getLastDay()
         let infoDay = await getData()
         let weekData = await getWeekData()
-        // console.log(weekData, 'dddddddaataaa');
         let flag = await getFlag()
+
+        let dat = await getXData()
         dayDataSave.current = infoDay
         if (flag === null) {
             flag = 0
@@ -329,7 +364,6 @@ export function AddInfo(props) {
             reasetData()
             await storeData([])
         }
-
         let arr = weekCount[weekIndex]
         infoDay !== null && infoDay.map((data, index) => {
             weekCount[weekIndex].map((item, i) => {
@@ -351,22 +385,29 @@ export function AddInfo(props) {
         } else {
             weekNumber = moment(moment(weekData[weekData.length - 1][0].data.fullDate), "MM-DD-YYYY").week();
         }
-        // console.log(weekData, 'ffff');
-
+        if (weekData !== null) {
+                    setWeekCount(weekData)
+                }
+        // console.log(x, 'sasdsada');
+        // console.log(weekData, 'Storege');
         // console.log(weekCount[0][0].data.fullDate);
         // console.log(+flag, '+flag', +weekNumber, '+weekNumber'
         // );
-        // console.log(weekData !== null && +flag < +weekNumber);
-        if (weekData !== null && +flag < +weekNumber) {
+        console.log(weekData);
+        if (weekData !== null && +flag > +weekNumber) {
             let arrWeek = [...weekData, [...arr]]
             setWeekCount([...weekData, [...arr]])
             weekDataStore(arrWeek)
             setFlag(weekNumber)
         };
-        if (weekData !== null) {
-            setWeekCount(weekData)
-        }
+        // if (dat !== null && x) {
+        //     let arrWeek = [...weekData, [...arr]]
+        //     setWeekCount([...weekData, [...arr]])
+        //     XStore(arrWeek)
+        // };
+
     }
+
     //------------------------- useEffect ---------------------------------
 
     useEffect(() => {
@@ -435,11 +476,10 @@ export function AddInfo(props) {
             return week;
         })(new Date())
 
-
         let arr = weekCount[weekIndex]
         week.map(val => {
             arr.map((data, index) => {
-                if (data.week === moment(val).format('ddd')) {
+                if (data.week === moment(val).format('ddd') ) {
                     data.data.fullDate = moment(val).format('dddd, MMM DD, YYYY')
                 }
             })
@@ -458,7 +498,7 @@ export function AddInfo(props) {
 
     //------------------------------------------------------------------------------
 
-    //------------------------ Converters-------------------------------- 
+    //------------------------ Converters--------------------------------
     function convertMtoH(n) {
         let num = n;
         let hours = (num / 60);
@@ -583,9 +623,9 @@ export function AddInfo(props) {
         let arr = weekCount[weekIndex]
         arr[activeIndex].data = dayData
         setWeekDay([...arr])
-        reasetData()
         weekDataStore(weekCount)
         setModalVisible(!modalVisible)
+         reasetData()
     }
 
     const handleForward = () => {
@@ -601,15 +641,15 @@ export function AddInfo(props) {
     }
 
     // function dates(current) {
-    //     let week= new Array();  
+    //     let week= new Array();
     //     current.setDate((current.getDate() - current.getDay() +1));
     //     for (var i = 0; i < 7; i++) {
     //         week.push(
     //             new Date(current)
-    //         ); 
+    //         );
     //         current.setDate(current.getDate() +1);
     //     }
-    //     return week; 
+    //     return week;
     // }
 
 
@@ -645,6 +685,7 @@ export function AddInfo(props) {
             </Animated.View>
         )
     })
+
 
     //----------------------------------------------------------------------------------------------------
 
@@ -682,6 +723,7 @@ export function AddInfo(props) {
                     </View>
                     <View style={styles.weekDayName}>
                         {weekCount[weekIndex].map((item, index) => {
+
                             return (
                                 <View key={index}>
                                     <TouchableOpacity onPress={() => {
@@ -719,7 +761,7 @@ export function AddInfo(props) {
                 {Object.keys(weekCount[weekIndex][activeIndex].data).length > 1 ?
                     (<View style={styles.content}>
                         <Text style={styles.title}>{weekCount[weekIndex][activeIndex].data.fullDate}</Text>
-                       
+
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Before your last bedtime,what time did you have coffee, cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker}>
@@ -824,13 +866,13 @@ export function AddInfo(props) {
                                     style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.outOfBed.x === '00:00' ? 'N/A' : weekCount[weekIndex][activeIndex].data.outOfBed.x}</Text>
                             </TouchableOpacity>
                         </View>
-                        
-                         <View style={styles.chooseType}>
-                         <Text style={styles.globalText}>What type of day is {weekCount[weekIndex][activeIndex].data.fullDate}?</Text>
-                         <TouchableOpacity style={styles.dataPicker}>
-                             <Text style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.dayInfo}</Text>
-                         </TouchableOpacity>
-                     </View>
+
+                        <View style={styles.chooseType}>
+                            <Text style={styles.globalText}>What type of day is {weekCount[weekIndex][activeIndex].data.fullDate}?</Text>
+                            <TouchableOpacity style={styles.dataPicker}>
+                                <Text style={styles.selectText}>{weekCount[weekIndex][activeIndex].data.dayInfo}</Text>
+                            </TouchableOpacity>
+                        </View>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Sleep Medications</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -866,7 +908,7 @@ export function AddInfo(props) {
                     </View>)
                     :
                     <View style={styles.content}>
-                        <Text style={styles.title}>{weekDay[activeIndex].data.fullDate}</Text>
+                        <Text style={styles.title}>{weekCount[weekIndex][activeIndex].data.fullDate}</Text>
                         <View style={styles.chooseType}>
                             <Text style={styles.globalText}>Before your last bedtime,what time did you have coffee, cola or tea?</Text>
                             <TouchableOpacity style={styles.dataPicker} onPress={() => setOpenCoffee(true)}>
@@ -878,7 +920,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openCoffee}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
                                 onConfirm={(time) => {
                                     setOpenCoffee(false)
                                     setCoffee({
@@ -903,7 +945,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openAlco}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
                                 onConfirm={(time) => {
                                     setOpenAlco(false)
                                     setAlcoDrinks({
@@ -931,7 +973,7 @@ export function AddInfo(props) {
                                         modal
                                         mode={'datetime'}
                                         open={openExFrom}
-                                        date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                        date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
                                         onConfirm={(time) => {
                                             setOpenExFrom(false)
                                             setExerciseFrom({
@@ -955,7 +997,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openExTo}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate) }
                                 onConfirm={(time) => {
                                     setOpenExTo(false)
                                     setExerciseTo({
@@ -982,7 +1024,7 @@ export function AddInfo(props) {
                                         modal
                                         mode={'datetime'}
                                         open={openNapFrom}
-                                        date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                        date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
                                         onConfirm={(time) => {
                                             setOpenNapFrom(false)
                                             setNapFrom({
@@ -1006,7 +1048,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openNapTo}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
                                 onConfirm={(time) => {
                                     setOpenNapTo(false)
                                     setNapTo({
@@ -1030,7 +1072,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openIntoBed}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
                                 onConfirm={(time) => {
                                     setOpenIntoBed(false)
                                     setIntoBed({
@@ -1056,7 +1098,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openGoSleep}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate) }
                                 onConfirm={(time) => {
                                     setOpenGoSleep(false)
                                     setGoSleep({
@@ -1163,7 +1205,7 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openOutOfBed}
-                                date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                                date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
                                 onConfirm={(time) => {
                                     setOpenOutOfBed(false)
                                     setOutOfBed({
@@ -1180,7 +1222,7 @@ export function AddInfo(props) {
                         </View>
 
                         <View style={styles.chooseType}>
-                            <Text style={styles.globalText}>What type of day is {`${moment(weekDay[activeIndex].data.fullDate).format('D MMM YYYY')}`}?</Text>
+                            <Text style={styles.globalText}>What type of day is {`${moment(weekCount[weekIndex][activeIndex].data.fullDate).format('D MMM YYYY')}`}?</Text>
                             <SelectDropdown
                                 data={countries}
                                 buttonStyle={styles.selectStyle}
@@ -1255,6 +1297,7 @@ export function AddInfo(props) {
                             let bedTime = intoBed.z
                             let outOfBedTime = outOfBed.z
                             let finalWakeUp = wakeUpTime.z
+                            
                             setResults([{
                                 sleepTime,
                                 timeInBed,
@@ -1276,7 +1319,7 @@ export function AddInfo(props) {
                 <DataPickerGlobal
                     showHide={showHide}
                     open={openWakeUpFrom}
-                    date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
+                    date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate) }
                     confirm={(time) => {
                         setShowHide(false)
                         let data = addWakeUp;

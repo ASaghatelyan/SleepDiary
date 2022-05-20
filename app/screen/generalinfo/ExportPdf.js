@@ -125,7 +125,7 @@ const ExportPdf = (props) => {
      </thead>
      ${weekState.length > 0 && weekState.map((data, index) => {
          return data[1].map((val) => {
-             return (`<tbody class='dayTBody'>
+             return (`<tbody class='dayTBodyh'>
            <tr>
            <th><p class='data'>${moment(data[0].prevDate).format('D/M/YYYY')}</p></th>
                       <th><p class='fullDate'>${moment(data[0].fullDate).format('ddd')}</p></th>
@@ -2091,12 +2091,7 @@ const htmlStyles = `
  
  .dots{
    margin-top:-5.65px
- }
-.dayTBody:before {
-  content: "";
-  display:block;
-  border-top:2px solid red;
-}
+ } 
 .therapistDiv{
   display:flex;
   justify-content: flex-start  
@@ -2255,10 +2250,11 @@ width: 60%;
   display: block; 
   position: absolute;
   border: 1px solid black;
+  z-index:9999999999;
   transform: rotate(90deg);
   width:22px;
   top: 10px;
-  left: -3.5px;
+  left: -4.7px;
   border-radius:20px` :
     `content: "";
   display: block; 
