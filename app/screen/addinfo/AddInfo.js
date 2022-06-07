@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import StarRating from 'react-native-star-rating';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
+import { is24HourFormat } from 'react-native-device-time-format'
 
 
 let Width = Dimensions.get('window').width
@@ -93,7 +94,7 @@ export function AddInfo(props) {
         z: '00:00',
         info: 'L'
     })
-    console.log(goSleep,'asasasasas');
+    console.log(goSleep, 'asasasasas');
     const [wakeUpTime, setWakeUpTime] = useState({
         x: '00:00',
         y: Number(0),
@@ -194,7 +195,7 @@ export function AddInfo(props) {
     const [weekIndex, setWeekIndex] = useState(0)
     let scrollX = useRef(new Animated.Value(0)).current
     const dayData = {
-            fullDate: weekDay[activeIndex].data.fullDate,
+        fullDate: weekDay[activeIndex].data.fullDate,
         prevDate: moment(new Date(`${moment(weekDay[activeIndex].data.fullDate).format('D MMM YYYY')}`).getTime()).subtract(1, 'days').format('D MMM YYYY'),
         dayInfo,
         prevDayInfo,
@@ -221,6 +222,10 @@ export function AddInfo(props) {
     }
 
 
+    const getCurrentHourFormat = async (date) => {
+        const is24Hour = await is24HourFormat()
+        return console.log(moment(date).format(is24Hour ? 'HH:mm' : 'h:mm A'))
+    }
     //---------------------Set Acync Storege data------------------------;
 
     const storeData = async (value) => {
@@ -386,8 +391,8 @@ export function AddInfo(props) {
             weekNumber = moment(moment(weekData[weekData.length - 1][0].data.fullDate), "MM-DD-YYYY").week();
         }
         if (weekData !== null) {
-                    setWeekCount(weekData)
-                }
+            setWeekCount(weekData)
+        }
         // console.log(x, 'sasdsada');
         // console.log(weekData, 'Storege');
         // console.log(weekCount[0][0].data.fullDate);
@@ -420,12 +425,16 @@ export function AddInfo(props) {
 
 
     useEffect(() => {
+        // console.log(DateFormat.is24HourFormat(), 'DateFormat.is24HourFormat');
         scrollX.addListener(({ value }) => {
             setWeekIndex(Math.round(value / Width))
         })
         return (() => {
             scrollX.removeAllListeners()
         })
+
+
+
     }, [])
 
     useEffect(() => {
@@ -479,7 +488,7 @@ export function AddInfo(props) {
         let arr = weekCount[weekIndex]
         week.map(val => {
             arr.map((data, index) => {
-                if (data.week === moment(val).format('ddd') ) {
+                if (data.week === moment(val).format('ddd')) {
                     data.data.fullDate = moment(val).format('dddd, MMM DD, YYYY')
                 }
             })
@@ -625,7 +634,7 @@ export function AddInfo(props) {
         setWeekDay([...arr])
         weekDataStore(weekCount)
         setModalVisible(!modalVisible)
-         reasetData()
+        reasetData()
     }
 
     const handleForward = () => {
@@ -672,7 +681,7 @@ export function AddInfo(props) {
                     <View>
                         <TouchableOpacity onPress={handleBackward}>
                             <Image source={require('../../assets/img/leftpassive.png')}
-                                style={{ width: 10, height: 15 }} />
+                                style={{ width: 10, height: 15,tintColor:'#489bc4' }} />
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.week}>Week {item.index + 1}</Text>
@@ -920,11 +929,13 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openCoffee}
-                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
-                                onConfirm={(time) => {
+                                date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
+                                    
                                     setOpenCoffee(false)
                                     setCoffee({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment().format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         info: "C"
                                     })
@@ -945,11 +956,12 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openAlco}
-                                date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
-                                onConfirm={(time) => {
+                                date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
                                     setOpenAlco(false)
                                     setAlcoDrinks({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         info: "A"
                                     })
@@ -968,16 +980,16 @@ export function AddInfo(props) {
                                     </TouchableOpacity>
                                     <DatePicker
                                         minuteInterval={5}
-                                        is24hourSource={'device'}
-
+                                        is24hourSource={'device'} 
                                         modal
                                         mode={'datetime'}
                                         open={openExFrom}
-                                        date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
-                                        onConfirm={(time) => {
+                                        date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
+                                        onConfirm={async (time) => {
+                                            const is24Hour = await is24HourFormat()
                                             setOpenExFrom(false)
                                             setExerciseFrom({
-                                                x: moment(time).format('hh:mm A'),
+                                                x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                                 y: new Date(time).getTime(),
                                                 info: 'E'
                                             })
@@ -997,11 +1009,12 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openExTo}
-                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate) }
-                                onConfirm={(time) => {
+                                date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
                                     setOpenExTo(false)
                                     setExerciseTo({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         info: "E"
                                     })
@@ -1024,11 +1037,12 @@ export function AddInfo(props) {
                                         modal
                                         mode={'datetime'}
                                         open={openNapFrom}
-                                        date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
-                                        onConfirm={(time) => {
+                                        date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
+                                        onConfirm={async (time) => {
+                                            const is24Hour = await is24HourFormat()
                                             setOpenNapFrom(false)
                                             setNapFrom({
-                                                x: moment(time).format('hh:mm A'),
+                                                x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                                 y: new Date(time).getTime(),
                                                 info: "N"
                                             })
@@ -1048,11 +1062,12 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openNapTo}
-                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
-                                onConfirm={(time) => {
+                                date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
                                     setOpenNapTo(false)
                                     setNapTo({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime()
                                     })
                                 }}
@@ -1072,11 +1087,12 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openIntoBed}
-                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
-                                onConfirm={(time) => {
+                                date={new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
                                     setOpenIntoBed(false)
                                     setIntoBed({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         z: moment(time).format('hh:mm'),
                                         info: "B"
@@ -1098,11 +1114,13 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openGoSleep}
-                                date={  new Date(weekCount[weekIndex][activeIndex].data.fullDate) }
-                                onConfirm={(time) => {
+                                date={new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
+                                onConfirm={async (time) => {
                                     setOpenGoSleep(false)
+                                    const is24Hour = await is24HourFormat()
                                     setGoSleep({
-                                        x: moment(time).format('hh:mm A'),
+
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         z: moment(time).format('hh:mm'),
                                         info: 'L'
@@ -1181,10 +1199,11 @@ export function AddInfo(props) {
                                 mode={'datetime'}
                                 open={openWakeUpTime}
                                 date={weekDay[activeIndex].data.fullDate ? new Date(weekDay[activeIndex].data.fullDate) : new Date()}
-                                onConfirm={(time) => {
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
                                     setOpenWakeUpTime(false)
                                     setWakeUpTime({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         z: moment(time).format('hh:mm'),
                                     })
@@ -1205,11 +1224,12 @@ export function AddInfo(props) {
                                 modal
                                 mode={'datetime'}
                                 open={openOutOfBed}
-                                date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate)  }
-                                onConfirm={(time) => {
+                                date={new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
+                                onConfirm={async (time) => {
+                                    const is24Hour = await is24HourFormat()
                                     setOpenOutOfBed(false)
                                     setOutOfBed({
-                                        x: moment(time).format('hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         z: moment(time).format('hh:mm'),
                                         info: "U"
@@ -1297,7 +1317,7 @@ export function AddInfo(props) {
                             let bedTime = intoBed.z
                             let outOfBedTime = outOfBed.z
                             let finalWakeUp = wakeUpTime.z
-                            
+
                             setResults([{
                                 sleepTime,
                                 timeInBed,
@@ -1319,12 +1339,13 @@ export function AddInfo(props) {
                 <DataPickerGlobal
                     showHide={showHide}
                     open={openWakeUpFrom}
-                    date={ new Date(weekCount[weekIndex][activeIndex].data.fullDate) }
-                    confirm={(time) => {
+                    date={new Date(weekCount[weekIndex][activeIndex].data.fullDate)}
+                    confirm={async (time) => {
+                        const is24Hour = await is24HourFormat()
                         setShowHide(false)
                         let data = addWakeUp;
                         data[openDataTime.index][openDataTime.type] = {
-                            x: moment(time).format('hh:mm A'),
+                            x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                             y: new Date(time).getTime()
                         }
                         setAddWakeUp([...data]);

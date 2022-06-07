@@ -2097,7 +2097,7 @@ const htmlStyles = `
   justify-content: flex-start  
 }
 .therapist{
-  color:red;
+  color:blue;
   font-size:18px;
 }
  
@@ -2254,7 +2254,7 @@ width: 60%;
   transform: rotate(90deg);
   width:22px;
   top: 10px;
-  left: -4.7px;
+  left: -3.5px;
   border-radius:20px` :
     `content: "";
   display: block; 
@@ -2271,7 +2271,7 @@ width: 60%;
   top: ${Platform.OS === 'ios' ? '-2px' : '-1.5px'};
   left: 0.1px;
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'}; 
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .top-leftt{
@@ -2279,7 +2279,7 @@ width: 60%;
   top:${Platform.OS === 'ios' ? '2.5px' : '4.5px'};;
   left: 0.1px;
   font-size: ${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red ;
+  color:blue ;
   z-index:9999999
 }
 .top-lefttt{
@@ -2287,7 +2287,7 @@ width: 60%;
   top: ${Platform.OS === 'ios' ? '7px' : '11px'};;
   left: 0.1px;
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};   
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .top-leftttt{
@@ -2295,7 +2295,7 @@ width: 60%;
   top:${Platform.OS === 'ios' ? '11.6px' : '16.5px'};
   left:0.1px ;
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};   
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .top-lefttttt{
@@ -2303,7 +2303,7 @@ width: 60%;
   top:${Platform.OS === 'ios' ? '16px' : '22.5px'};
   left:0.1px ;
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};   
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .top-leftttttt{
@@ -2311,7 +2311,7 @@ width: 60%;
   top:${Platform.OS === 'ios' ? '-2px' : '-1.5px'};
   left:${Platform.OS === 'ios' ? '3.5px' : '4.6px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};   
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .bottom-righttttt{
@@ -2319,31 +2319,31 @@ width: 60%;
   right:0.1px;
   bottom: ${Platform.OS === 'ios' ? '-2.5px' : '-2px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .bottom-rightttt{
   position: absolute;
   right:0.1px;
-  bottom: ${Platform.OS === 'ios' ? '2.1px' : '4.1px'};;
+  bottom: ${Platform.OS === 'ios' ? '2.1px' : '4.1px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .bottom-righttt{
   position: absolute;
   right:0.1px;
-  bottom: ${Platform.OS === 'ios' ? '6.5px' : '10px'};;
+  bottom: ${Platform.OS === 'ios' ? '6.5px' : '10px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .bottom-rightt{
   position: absolute;
   right:0.1px;
-  bottom: ${Platform.OS === 'ios' ? '10.7px' : '16px'};;
+  bottom: ${Platform.OS === 'ios' ? '10.7px' : '16px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .bottom-rightttttt{
@@ -2351,15 +2351,15 @@ width: 60%;
   right:${Platform.OS === 'ios' ? '3.5px' : '4.5px'};
   bottom: ${Platform.OS === 'ios' ? '14.9px' : '22px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .bottom-right{
   position: absolute;
   right:0.1px;
-  bottom: ${Platform.OS === 'ios' ? '14.9px' : '22px'};;
+  bottom: ${Platform.OS === 'ios' ? '14.9px' : '22px'};
   font-size:${Platform.OS === 'ios' ? '6px' : '0.5px'};  
-  color:red;
+  color:blue;
   z-index:9999999
 }
 .todays{

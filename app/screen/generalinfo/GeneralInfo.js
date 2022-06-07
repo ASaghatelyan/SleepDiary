@@ -59,7 +59,7 @@ return (
         <Text style={styles.headerText}>Information</Text>
       </View>
       <View style={styles.bottomSide}>
-        <Text style={styles.title}>Made by Sam Chow</Text>
+        <Text style={styles.title}>Made by Discovery Sleep</Text>
         <Text style={styles.text}>This app stores information locally on your phone. </Text>
         <Text style={styles.text}>This means that the information you put in will be erased if you delete the app. </Text>
         <Text style={styles.text}>It also means that only the operator of the app will have access to user information.</Text>
