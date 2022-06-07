@@ -93,8 +93,7 @@ export function AddInfo(props) {
         y: Number(0),
         z: '00:00',
         info: 'L'
-    })
-    console.log(goSleep, 'asasasasas');
+    }) 
     const [wakeUpTime, setWakeUpTime] = useState({
         x: '00:00',
         y: Number(0),
@@ -398,7 +397,7 @@ export function AddInfo(props) {
         // console.log(weekCount[0][0].data.fullDate);
         // console.log(+flag, '+flag', +weekNumber, '+weekNumber'
         // );
-        console.log(weekData);
+       
         if (weekData !== null && +flag > +weekNumber) {
             let arrWeek = [...weekData, [...arr]]
             setWeekCount([...weekData, [...arr]])
@@ -672,22 +671,17 @@ export function AddInfo(props) {
             <Animated.View key={item.index} style={{
                 width: Width,
             }}>
-                <View style={{
-                    height: 60,
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    paddingHorizontal: 12
-                }}>
+                <View style={styles.contentView}>
                     <View>
                         <TouchableOpacity onPress={handleBackward}>
                             <Image source={require('../../assets/img/leftpassive.png')}
-                                style={{ width: 10, height: 15,tintColor:'#489bc4' }} />
+                                style={styles.nextPrevBtn} />
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.week}>Week {item.index + 1}</Text>
                     <View>
                         <TouchableOpacity onPress={handleForward}>
-                            <Image source={require('../../assets/img/right.png')} style={{ width: 10, height: 15 }} />
+                            <Image source={require('../../assets/img/right.png')} style={styles.nextPrevBtn} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -932,7 +926,7 @@ export function AddInfo(props) {
                                 date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
                                 onConfirm={async (time) => {
                                     const is24Hour = await is24HourFormat()
-                                    
+
                                     setOpenCoffee(false)
                                     setCoffee({
                                         x: moment().format(is24Hour ? 'HH:mm' : 'hh:mm A'),
@@ -980,7 +974,7 @@ export function AddInfo(props) {
                                     </TouchableOpacity>
                                     <DatePicker
                                         minuteInterval={5}
-                                        is24hourSource={'device'} 
+                                        is24hourSource={'device'}
                                         modal
                                         mode={'datetime'}
                                         open={openExFrom}

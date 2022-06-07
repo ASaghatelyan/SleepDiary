@@ -5,7 +5,13 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         backgroundColor: '#FFFFFF',
     },
-    activLoad: {
+    contentView:{
+        height: 60,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        paddingHorizontal: 12
+    },
+        activLoad: {
         flex: 1,
         justifyContent: "center",
         flexDirection: "row",
@@ -18,6 +24,10 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 132,
     },
+    nextPrevBtn:{
+         width: 10,
+          height: 15 ,
+          tintColor:'#2B91BF' },
     weekDayName: {
         width: '100%',
         flexDirection: 'row',

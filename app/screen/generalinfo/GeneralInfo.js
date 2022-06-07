@@ -42,7 +42,7 @@ export function GeneralInfo(props) {
   useEffect(() => {
     if( totalData.length){
       let arr = []
-        console.log(totalData, 'totalData');
+      
         totalData.map((item, index)=>{
         arr.push(index+1)
       })

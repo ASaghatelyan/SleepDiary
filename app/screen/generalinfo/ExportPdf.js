@@ -1997,11 +1997,8 @@ const ExportPdf = (props) => {
 
   const createPDF = async () => {
     let options = {
-      //Content to print
       html: htmlContent,
-      //File Name
       fileName: `Sleep Diary Data Week ${props.weekNumber}`,
-      //File directory
       directory: 'Download',
       base64: true,
       width: 2000,
@@ -2011,7 +2008,6 @@ const ExportPdf = (props) => {
     
 
     let file = await RNHTMLtoPDF.convert(options)
-    // console.log(file.filePath);
     Alert.alert('Successfully Exported',   "", [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Open', onPress: () => openFile(file.filePath) }
