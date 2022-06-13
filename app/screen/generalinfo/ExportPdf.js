@@ -89,14 +89,13 @@ const ExportPdf = (props) => {
      <thead>
          <tr class='headerSpans'>
              <th class='todays'><span >Previous Day's Data</span></th>
-             <th class='week'><span> Day of the week</span></th>
              <th><span>Noon</span></th>
              <th><span>1PM</span></th>
              <th><span>2</span></th>
              <th><span>3</span></th>
              <th><span>4</span></th>
              <th><span>5</span></th>
-             <th><span>6PM</span></th>
+             <th><span>6PM</span></th>git
              <th><span>7</span></th>
              <th><span>8</span></th>
              <th><span>9</span></th>
@@ -115,6 +114,7 @@ const ExportPdf = (props) => {
              <th><span>10</span></th>
              <th><span>11AM</span></th>
              <th class='todays'><span >Today's Data</span></th>
+             <th class='week'><span> Day of the week</span></th>
              <th class='typeOfDay'>
                  <span>Type of Day
                      <p class='type'>Work,School</p>
@@ -127,9 +127,7 @@ const ExportPdf = (props) => {
          return data[1].map((val) => {
              return (`<tbody class='dayTBodyh'>
            <tr>
-           <th><p class='data'>${moment(data[0].prevDate).format('D/M/YYYY')}</p></th>
-                      <th><p class='fullDate'>${moment(data[0].fullDate).format('ddd')}</p></th>
-                     
+           <th><p class='data'>${moment(data[0].prevDate).format('D/M/YYYY')}</p></th>    
                     <th class='splite'>
                         <div class='top-left'>${(new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:00`).getTime() <= val.alco.y && val.alco.y < new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:30`).getTime()) ? val.alco.info : ''}</div>
                         <div class='top-leftt'>${(new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:00`).getTime() <= val.coffee.y && val.coffee.y < new Date(`${moment(data[0].fullDate).format('D MMM YYYY')} 12:30`).getTime()) ? val.coffee.info : ''}</div>
@@ -1729,6 +1727,7 @@ const ExportPdf = (props) => {
                                                  ''}
                    </th>
                    <th><p class='data'>${moment(data[0].fullDate).format('D/M/YYYY')}</p></th>
+                   <th><p class='fullDate'>${moment(data[0].fullDate).format('ddd')}</p></th>
                    <th ><p class='dayInfo'>${data[0].dayInfo === '' ? '-' : (data[0].dayInfo)}</p></th> 
                  </tr>
                </tbody>
