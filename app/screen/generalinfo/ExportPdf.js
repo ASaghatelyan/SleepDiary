@@ -95,7 +95,7 @@ const ExportPdf = (props) => {
              <th><span>3</span></th>
              <th><span>4</span></th>
              <th><span>5</span></th>
-             <th><span>6PM</span></th>git
+             <th><span>6PM</span></th>
              <th><span>7</span></th>
              <th><span>8</span></th>
              <th><span>9</span></th>

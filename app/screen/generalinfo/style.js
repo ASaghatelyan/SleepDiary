@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     chooseView: {
         flexDirection: 'row',
         alignItems: 'center',
-         
+
     },
     chooseStyle: {
         marginRight: 10,
@@ -135,6 +135,22 @@ const styles = StyleSheet.create({
     iconStyle: {
         width: 12,
         height: 7
+    },
+    policyView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    policyIcon: {
+        width: 23,
+        height: 23,
+        tintColor: '#2B91BF',
+        marginLeft:12
+    },
+    textPolicy: {
+        color: '#2B91BF',
+        marginVertical: 16,
+        fontFamily: "Quicksand-Regular",
+        fontSize: 18
     }
 })
 

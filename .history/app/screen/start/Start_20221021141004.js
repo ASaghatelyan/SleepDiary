@@ -70,7 +70,7 @@ export function Start(props) {
                         onPressArrowLeft={(goBack) => {
                             goBack()
                         }}
-                       
+                        enableSwipeMonths
                         onPressArrowRight={(goFuture) => {
                             goFuture()
                         }}

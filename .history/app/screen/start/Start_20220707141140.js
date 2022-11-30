@@ -60,9 +60,9 @@ export function Start(props) {
                         disableMonthChange={true}
                         enableSwipeMonths={true}
                         minDate={`${(moment(new Date()).format('DD MMM YYYY'))}`}
-                        // renderHeader={(date) => {
-                        //     return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
-                        // }}
+                        renderHeader={(date) => {
+                            return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
+                        }}
                         maxDate={`${moment(new Date()).format('DD MMM YYYY')}`}
                         renderHeader={(date) => {
                             return (<Text style={{ color: "#000" }}> {moment(date[0]).format('DD MMM YYYY')}</Text>)
@@ -70,7 +70,7 @@ export function Start(props) {
                         onPressArrowLeft={(goBack) => {
                             goBack()
                         }}
-                       
+                        enableSwipeMonths
                         onPressArrowRight={(goFuture) => {
                             goFuture()
                         }}

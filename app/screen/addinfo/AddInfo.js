@@ -925,11 +925,10 @@ export function AddInfo(props) {
                                 open={openCoffee}
                                 date={new Date(moment(weekCount[weekIndex][activeIndex].data.fullDate).subtract(1, 'days').toString())}
                                 onConfirm={async (time) => {
-                                    const is24Hour = await is24HourFormat()
-
+                                    const is24Hour = await is24HourFormat() 
                                     setOpenCoffee(false)
                                     setCoffee({
-                                        x: moment().format(is24Hour ? 'HH:mm' : 'hh:mm A'),
+                                        x: moment(time).format(is24Hour ? 'HH:mm' : 'hh:mm A'),
                                         y: new Date(time).getTime(),
                                         info: "C"
                                     })

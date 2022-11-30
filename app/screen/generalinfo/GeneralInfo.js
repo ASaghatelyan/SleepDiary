@@ -4,6 +4,7 @@ import styles from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ExportPdf from './ExportPdf';
 import SelectDropdown from 'react-native-select-dropdown';
+import policy from '../../assets/img/policy.png'
 
 export function GeneralInfo(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,7 +24,7 @@ export function GeneralInfo(props) {
 
   let getInfo = async () => {
     let weekInfo = await getWeekData()
-    weekInfo!==null &&  setTotalData(weekInfo)
+    weekInfo !== null && setTotalData(weekInfo)
   }
 
   useEffect(() => {
@@ -40,19 +41,19 @@ export function GeneralInfo(props) {
 
 
   useEffect(() => {
-    if( totalData.length){
+    if (totalData.length) {
       let arr = []
-      
-        totalData.map((item, index)=>{
-        arr.push(index+1)
+
+      totalData.map((item, index) => {
+        arr.push(index + 1)
       })
-        setChgideminc([...arr])
+      setChgideminc([...arr])
     }
   }, [totalData])
 
 
 
-return (
+  return (
     <ScrollView contentContainerStyle={styles.scrollView}>
       <StatusBar backgroundColor={'#EFEFEF'} barStyle='dark-content' />
       <View style={styles.topSide}>
@@ -63,48 +64,54 @@ return (
         <Text style={styles.text}>This app stores information locally on your phone. </Text>
         <Text style={styles.text}>This means that the information you put in will be erased if you delete the app. </Text>
         <Text style={styles.text}>It also means that only the operator of the app will have access to user information.</Text>
+        <TouchableOpacity 
+        onPress={()=>props.navigation.navigate('PrivacyPolicy')}
+        style={styles.policyView}>
+          <Text style={styles.textPolicy}>Privacy Policy</Text>
+          <Image source={policy} style={styles.policyIcon}/>
+        </TouchableOpacity>
         <View style={styles.btnView}>
-         <View style={styles.dowlandPdf}>
-       <View style={styles.chooseView}>
-       <Text style={styles.chooseStyle} >Choose Week</Text>
-          <SelectDropdown
-            data={chgideminc}
-            defaultButtonText={'1'}
-            onSelect={(selectedItem, index) => {
-              setIndexG(selectedItem - 1)
-          }}
-          buttonStyle={styles.selectStyle}
-          buttonTextStyle={styles.selectText}
-          dropdownIconPosition='right'
-          rowTextStyle={{
-            color: '#2B91BF',
-            fontFamily: "Quicksand-Regular",
-          }}
-          dropdownStyle={{
-              backgroundColor: '#FFF',
-              borderRadius: 10
-            }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            return selectedItem
-          }}
-          rowTextForSelection={(item, index) => {
-            return item
-          }}
-          renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
-            style={styles.iconStyle} />}
-          />
-       </View>
-           <ExportPdf data={totalData[indexG]} weekNumber={indexG+1}/>
-         </View>
+          <View style={styles.dowlandPdf}>
+            <View style={styles.chooseView}>
+              <Text style={styles.chooseStyle} >Choose Week</Text>
+              <SelectDropdown
+                data={chgideminc}
+                defaultButtonText={'1'}
+                onSelect={(selectedItem, index) => {
+                  setIndexG(selectedItem - 1)
+                }}
+                buttonStyle={styles.selectStyle}
+                buttonTextStyle={styles.selectText}
+                dropdownIconPosition='right'
+                rowTextStyle={{
+                  color: '#2B91BF',
+                  fontFamily: "Quicksand-Regular",
+                }}
+                dropdownStyle={{
+                  backgroundColor: '#FFF',
+                  borderRadius: 10
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item
+                }}
+                renderDropdownIcon={() => <Image source={require('../../assets/img/open.png')}
+                  style={styles.iconStyle} />}
+              />
+            </View>
+            <ExportPdf data={totalData[indexG]} weekNumber={indexG + 1} />
+          </View>
         </View>
       </View>
-      <View style={{alignItems:'center',justifyContent:'center'}}>
-      <TouchableOpacity style={styles.btn} onPress={() => {
-            setModalVisible(true)
-          }}>
-            <Image source={require('../../assets/img/reset.png')} style={styles.vectorImg} />
-            <Text style={styles.btnText}>Reset Data</Text>
-          </TouchableOpacity>
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity style={styles.btn} onPress={() => {
+          setModalVisible(true)
+        }}>
+          <Image source={require('../../assets/img/reset.png')} style={styles.vectorImg} />
+          <Text style={styles.btnText}>Reset Data</Text>
+        </TouchableOpacity>
       </View>
       <Modal
         animationType='slide'

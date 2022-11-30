@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     scrollView: {
         flexGrow: 1,
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF', 
     },
     groupView: {
         flex: 1,
